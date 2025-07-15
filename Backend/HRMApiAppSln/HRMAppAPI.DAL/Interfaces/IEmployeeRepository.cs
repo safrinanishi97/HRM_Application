@@ -1,0 +1,19 @@
+﻿using HRMApiApp.Models;
+using HRMApiApp.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HRMApiApp.DAL.Interfaces
+{
+    public interface IEmployeeRepository
+    {
+        List<EmployeeViewModel> GetAllEmployees();
+        Employee GetEmployeeById(int id);
+        bool AddEmployee(Employee employee);
+        bool UpdateEmployee(Employee employee);
+        bool DeleteEmployee(int id);
+    }
+}
