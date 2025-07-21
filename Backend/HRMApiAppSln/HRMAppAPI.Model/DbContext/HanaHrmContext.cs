@@ -202,7 +202,7 @@ public partial class HanaHrmContext : DbContext
 
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeDocuments)
                 .HasForeignKey(d => new { d.IdClient, d.IdEmployee })
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_EmployeeDocument_Employee");
         });
 
@@ -242,7 +242,7 @@ public partial class HanaHrmContext : DbContext
 
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeEducationInfos)
                 .HasForeignKey(d => new { d.IdClient, d.IdEmployee })
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_EmployeeEducationInfo_Employee");
         });
 
@@ -290,7 +290,7 @@ public partial class HanaHrmContext : DbContext
 
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeProfessionalCertifications)
                 .HasForeignKey(d => new { d.IdClient, d.IdEmployee })
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_EmployeeProfessionalCertification_Employee");
         });
 

@@ -10,9 +10,11 @@ using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddDbContext<HanaHrmContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("con")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("con"))
+    );
+
 
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();

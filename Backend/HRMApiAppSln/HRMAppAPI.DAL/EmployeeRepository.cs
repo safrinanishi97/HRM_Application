@@ -63,9 +63,74 @@ namespace HRMApiApp.DAL
         }
         public async Task<Employee> UpdateAsync(Employee employee, CancellationToken cancellationToken)
         {
-            _context.Employees.Update(employee);
+            var existingEmployee = await _context.Employees
+        .Include(e => e.EmployeeDocuments)
+        .Include(e => e.EmployeeEducationInfos)
+        .Include(e => e.EmployeeProfessionalCertifications)
+        .FirstOrDefaultAsync(e => e.IdClient == employee.IdClient && e.Id == employee.Id, cancellationToken);
+
+            if (existingEmployee == null)
+                throw new Exception("Employee not found");
+
+
+            _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
+
+            _context.EmployeeDocuments.RemoveRange(existingEmployee.EmployeeDocuments
+                .Where(ed => !employee.EmployeeDocuments.Any(d => d.IdClient == ed.IdClient && d.Id == ed.Id)));
+
+            foreach (var doc in employee.EmployeeDocuments)
+            {
+                var existingDoc = existingEmployee.EmployeeDocuments
+                    .FirstOrDefault(ed => ed.IdClient == doc.IdClient && ed.Id == doc.Id);
+
+                if (existingDoc != null)
+                {
+                    _context.Entry(existingDoc).CurrentValues.SetValues(doc);
+                }
+                else
+                {
+                    existingEmployee.EmployeeDocuments.Add(doc);
+                }
+            }
+
+            _context.EmployeeEducationInfos.RemoveRange(existingEmployee.EmployeeEducationInfos
+                .Where(edu => !employee.EmployeeEducationInfos.Any(d => d.IdClient == edu.IdClient && d.Id == edu.Id)));
+
+            foreach (var edu in employee.EmployeeEducationInfos)
+            {
+                var existingEdu = existingEmployee.EmployeeEducationInfos
+                    .FirstOrDefault(e => e.IdClient == edu.IdClient && e.Id == edu.Id);
+
+                if (existingEdu != null)
+                {
+                    _context.Entry(existingEdu).CurrentValues.SetValues(edu);
+                }
+                else
+                {
+                    existingEmployee.EmployeeEducationInfos.Add(edu);
+                }
+            }
+
+            _context.EmployeeProfessionalCertifications.RemoveRange(existingEmployee.EmployeeProfessionalCertifications
+                .Where(cert => !employee.EmployeeProfessionalCertifications.Any(d => d.IdClient == cert.IdClient && d.Id == cert.Id)));
+
+            foreach (var cert in employee.EmployeeProfessionalCertifications)
+            {
+                var existingCert = existingEmployee.EmployeeProfessionalCertifications
+                    .FirstOrDefault(c => c.IdClient == cert.IdClient && c.Id == cert.Id);
+
+                if (existingCert != null)
+                {
+                    _context.Entry(existingCert).CurrentValues.SetValues(cert);
+                }
+                else
+                {
+                    existingEmployee.EmployeeProfessionalCertifications.Add(cert);
+                }
+            }
+
             await _context.SaveChangesAsync(cancellationToken);
-            return employee;
+            return existingEmployee;
         }
         //Hard delete
         //public bool DeleteEmployee(int id)

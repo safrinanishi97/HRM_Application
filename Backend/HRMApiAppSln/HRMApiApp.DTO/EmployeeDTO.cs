@@ -57,6 +57,7 @@ namespace HRMApiApp.DTO
     {
         public int Id { get; set; }
         public int IdClient { get; set; }
+
         public string? EmployeeName { get; set; }
         public string? EmployeeNameBangla { get; set; }
         public string? FatherName { get; set; }
@@ -80,6 +81,7 @@ namespace HRMApiApp.DTO
     {
         public int Id { get; set; }
         public int IdClient { get; set; }
+        public int IdEmployee { get; set; }
         public string DocumentName { get; set; } = null!;
         public string FileName { get; set; } = null!;
         public DateTime UploadDate { get; set; }
@@ -90,6 +92,7 @@ namespace HRMApiApp.DTO
     {
         public int Id { get; set; }
         public int IdClient { get; set; }
+        public int IdEmployee { get; set; }
         public int IdEducationLevel { get; set; }
         public int IdEducationExamination { get; set; }
         public int IdEducationResult { get; set; }
@@ -107,6 +110,7 @@ namespace HRMApiApp.DTO
     {
         public int Id { get; set; }
         public int IdClient { get; set; }
+        public int IdEmployee { get; set; }
         public string CertificationTitle { get; set; } = null!;
         public string CertificationInstitute { get; set; } = null!;
         public string InstituteLocation { get; set; } = null!;

@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -214,211 +216,74 @@ namespace HRMApiApp.BLL
             return true;
         }
 
-        //public async Task<string> UpdateAsync(EmployeeUpdateDTO employeeDto,CancellationToken cancellationToken)
-        //{
-        //    var existingEmployee = await _employeeRepository.GetByIdForUpdate(employeeDto.Id, employeeDto.IdClient,cancellationToken);
-        //    if (existingEmployee == null) return ("Employee not found");
-
-        //    existingEmployee.EmployeeName = employeeDto.EmployeeName ?? existingEmployee.EmployeeName;
-        //    existingEmployee.EmployeeNameBangla = employeeDto.EmployeeNameBangla ?? existingEmployee.EmployeeNameBangla;
-        //    existingEmployee.FatherName = employeeDto.FatherName ?? existingEmployee.FatherName;
-        //    existingEmployee.IdDepartment = employeeDto.IdDepartment;
-        //    existingEmployee.IdSection= employeeDto.IdSection;
-        //    existingEmployee.MotherName = employeeDto.MotherName ?? existingEmployee.MotherName;
-        //    existingEmployee.BirthDate = employeeDto.BirthDate ?? existingEmployee.BirthDate;
-        //    existingEmployee.Address = employeeDto.Address ?? existingEmployee.Address;
-        //    existingEmployee.PresentAddress = employeeDto.PresentAddress ?? existingEmployee.PresentAddress;
-        //    existingEmployee.NationalIdentificationNumber = employeeDto.NationalIdentificationNumber ?? existingEmployee.NationalIdentificationNumber;
-        //    existingEmployee.ContactNo = employeeDto.ContactNo ?? existingEmployee.ContactNo;
-        //    existingEmployee.IsActive = employeeDto.IsActive ?? existingEmployee.IsActive;
-        //    existingEmployee.SetDate = DateTime.UtcNow;
-
-
-        //    //if (employeeDto.Documents != null)
-        //    //{
-        //    //    var dtoDocuments = employeeDto.Documents;
-        //    //    var existingDocs = existingEmployee.EmployeeDocuments;
-
-        //    //    var toRemove = existingDocs
-        //    //        .Where(ed => !dtoDocuments.Any(d => d.Id == ed.Id && d.IdClient == ed.IdClient))
-        //    //        .ToList();
-        //    //    foreach (var doc in toRemove)
-        //    //        existingDocs.Remove(doc);
-
-        //    //    foreach (var docDto in dtoDocuments)
-        //    //    {
-        //    //        var existingDoc = existingDocs.FirstOrDefault(d => d.Id == docDto.Id && d.IdClient == docDto.IdClient);
-
-        //    //        if (existingDoc != null)
-        //    //        {
-
-        //    //            existingDoc.DocumentName = docDto.DocumentName;
-        //    //            existingDoc.FileName = docDto.FileName;
-        //    //            existingDoc.UploadDate = docDto.UploadDate;
-        //    //            existingDoc.UploadedFileExtention = docDto.UploadedFileExtention;
-        //    //            // existingDoc.UploadedFile = docDto.UploadedFile;
-        //    //        }
-        //    //        else
-        //    //        {
-        //    //            existingDocs.Add(new EmployeeDocument
-        //    //            {
-        //    //                IdClient = docDto.IdClient,
-        //    //                DocumentName = docDto.DocumentName,
-        //    //                FileName = docDto.FileName,
-        //    //                UploadDate = docDto.UploadDate,
-        //    //                UploadedFileExtention = docDto.UploadedFileExtention,
-        //    //                // UploadedFile = docDto.UploadedFile,
-        //    //                SetDate = DateTime.UtcNow
-        //    //            });
-        //    //        }
-        //    //    }
-        //    //}
-
-        //    if (employeeDto.EducationInfos != null)
-        //    {
-        //        var dtoEduInfo = employeeDto.EducationInfos;
-        //        var existingInfos = existingEmployee.EmployeeEducationInfos;
-
-        //        var toRemove = existingInfos
-        //            .Where(ed => !dtoEduInfo.Any(d => d.Id == ed.Id && d.IdClient == ed.IdClient))
-        //            .ToList();
-        //        foreach (var info in toRemove)
-        //            existingInfos.Remove(info);
-
-        //        foreach (var infoDto in dtoEduInfo)
-        //        {
-        //            var existingInfo = existingInfos.FirstOrDefault(d => d.Id == infoDto.Id && d.IdClient == infoDto.IdClient);
-
-        //            if (existingInfo != null)
-        //            {
-
-        //                existingInfo.IdEducationExamination = infoDto.IdEducationExamination;
-        //                existingInfo.IdEducationLevel = infoDto.IdEducationLevel;
-        //                existingInfo.IdEducationResult = infoDto.IdEducationResult;
-        //                existingInfo.PassingYear = infoDto.PassingYear;
-        //                existingInfo.InstituteName = infoDto.InstituteName;
-        //                existingInfo.Major=infoDto.Major;
-        //                existingInfo.IsForeignInstitute = infoDto.IsForeignInstitute;
-
-        //            }
-        //            else
-        //            {
-        //                existingInfos.Add(new EmployeeEducationInfo
-        //                {
-        //                    IdClient = infoDto.IdClient,
-        //                    IdEducationExamination= infoDto.IdEducationExamination,
-        //                    IdEducationLevel = infoDto.IdEducationLevel,
-        //                    IdEducationResult = infoDto.IdEducationResult,
-        //                    PassingYear = infoDto.PassingYear,
-        //                    InstituteName = infoDto.InstituteName,
-        //                    Major=infoDto.Major,
-        //                    IsForeignInstitute= infoDto.IsForeignInstitute,
-        //                    SetDate = DateTime.UtcNow
-        //                });
-        //            }
-        //        }
-        //    }
-
-
-        //    try
-        //    {
-        //        var updatedEmployee = await _employeeRepository.UpdateAsync(existingEmployee, cancellationToken);
-        //        return "Employee Updated Successfully"; 
-        //    }
-        //    catch
-        //    {
-        //        return "Failed to update"; 
-        //    }
-
-        //}
-
-
-
-
-
         public async Task<string> UpdateAsync(EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
         {
+            var existingEmployee = await _employeeRepository.GetByIdForUpdate(employeeDto.IdClient, employeeDto.Id, cancellationToken);
+            if (existingEmployee == null)
+                return "Employee not found";
+
+            existingEmployee.EmployeeName = employeeDto.EmployeeName ?? existingEmployee.EmployeeName;
+            existingEmployee.EmployeeNameBangla = employeeDto.EmployeeNameBangla ?? existingEmployee.EmployeeNameBangla;
+            existingEmployee.FatherName = employeeDto.FatherName ?? existingEmployee.FatherName;
+            existingEmployee.MotherName = employeeDto.MotherName ?? existingEmployee.MotherName;
+            existingEmployee.IdDepartment = employeeDto.IdDepartment;
+            existingEmployee.IdSection = employeeDto.IdSection;
+            existingEmployee.BirthDate = employeeDto.BirthDate ?? existingEmployee.BirthDate;
+            existingEmployee.Address = employeeDto.Address ?? existingEmployee.Address;
+            existingEmployee.PresentAddress = employeeDto.PresentAddress ?? existingEmployee.PresentAddress;
+            existingEmployee.NationalIdentificationNumber = employeeDto.NationalIdentificationNumber ?? existingEmployee.NationalIdentificationNumber;
+            existingEmployee.ContactNo = employeeDto.ContactNo ?? existingEmployee.ContactNo;
+            existingEmployee.IsActive = employeeDto.IsActive ?? existingEmployee.IsActive;
+            existingEmployee.SetDate = DateTime.UtcNow;
+
+
+            existingEmployee.EmployeeDocuments = employeeDto.Documents.Select(docDto => new EmployeeDocument
+            {
+                Id = docDto.Id,
+                IdClient = docDto.IdClient,
+                IdEmployee = docDto.IdEmployee,
+                DocumentName = docDto.DocumentName,
+                FileName = docDto.FileName,
+                UploadDate = docDto.UploadDate,
+                UploadedFileExtention = docDto.UploadedFileExtention,
+                SetDate = DateTime.UtcNow
+            }).ToList();
+
+            existingEmployee.EmployeeEducationInfos = employeeDto.EducationInfos.Select(eduDto => new EmployeeEducationInfo
+            {
+                Id = eduDto.Id,
+                IdClient = eduDto.IdClient,
+                IdEmployee = eduDto.IdEmployee,
+                IdEducationLevel = eduDto.IdEducationLevel,
+                IdEducationExamination = eduDto.IdEducationExamination,
+                IdEducationResult = eduDto.IdEducationResult,
+                Cgpa = eduDto.Cgpa,
+                Marks = eduDto.Marks,
+                PassingYear = eduDto.PassingYear,
+                InstituteName = eduDto.InstituteName,
+                Major = eduDto.Major,
+                IsForeignInstitute = eduDto.IsForeignInstitute,
+                Duration = eduDto.Duration,
+                Achievement = eduDto.Achievement,
+                SetDate = DateTime.UtcNow
+            }).ToList();
+
+            existingEmployee.EmployeeProfessionalCertifications = employeeDto.Certifications.Select(certDto => new EmployeeProfessionalCertification
+            {
+                Id = certDto.Id,
+                IdClient = certDto.IdClient,
+                IdEmployee = certDto.IdEmployee,
+                CertificationTitle = certDto.CertificationTitle,
+                CertificationInstitute = certDto.CertificationInstitute,
+                InstituteLocation = certDto.InstituteLocation,
+                FromDate = certDto.FromDate,
+                ToDate = certDto.ToDate,
+                SetDate = DateTime.UtcNow
+            }).ToList();
+
+
             try
             {
-                var existingEmployee = await _employeeRepository.GetByIdForUpdate(employeeDto.IdClient, employeeDto.Id, cancellationToken);
-                if (existingEmployee == null)
-                    return "Employee not found";
-
-                existingEmployee.EmployeeName = employeeDto.EmployeeName ?? existingEmployee.EmployeeName;
-                existingEmployee.EmployeeNameBangla = employeeDto.EmployeeNameBangla ?? existingEmployee.EmployeeNameBangla;
-                existingEmployee.FatherName = employeeDto.FatherName ?? existingEmployee.FatherName;
-                existingEmployee.MotherName = employeeDto.MotherName ?? existingEmployee.MotherName;
-                existingEmployee.BirthDate = employeeDto.BirthDate ?? existingEmployee.BirthDate;
-              
-                existingEmployee.Address = employeeDto.Address ?? existingEmployee.Address;
-                existingEmployee.PresentAddress = employeeDto.PresentAddress ?? existingEmployee.PresentAddress;
-                existingEmployee.NationalIdentificationNumber = employeeDto.NationalIdentificationNumber ?? existingEmployee.NationalIdentificationNumber;
-                existingEmployee.ContactNo = employeeDto.ContactNo ?? existingEmployee.ContactNo;
-                existingEmployee.IdDepartment = employeeDto.IdDepartment;
-                existingEmployee.IdSection = employeeDto.IdSection;
-                existingEmployee.IsActive = employeeDto.IsActive ?? existingEmployee.IsActive;
-                existingEmployee.SetDate = DateTime.UtcNow;
-
-                if (employeeDto.Documents != null)
-                {
-                    existingEmployee.EmployeeDocuments.Clear();
-                    foreach (var doc in employeeDto.Documents)
-                    {
-                        existingEmployee.EmployeeDocuments.Add(new EmployeeDocument
-                        {
-                            IdClient = doc.IdClient,
-                            DocumentName = doc.DocumentName,
-                            FileName = doc.FileName,
-                            UploadDate = doc.UploadDate,
-                            UploadedFileExtention = doc.UploadedFileExtention,
-                            SetDate = DateTime.UtcNow
-                        });
-                    }
-                }
-
-                if (employeeDto.EducationInfos != null)
-                {
-                    existingEmployee.EmployeeEducationInfos.Clear();
-                    foreach (var edu in employeeDto.EducationInfos)
-                    {
-                        existingEmployee.EmployeeEducationInfos.Add(new EmployeeEducationInfo
-                        {
-                            IdClient = edu.IdClient,
-                            IdEducationLevel = edu.IdEducationLevel,
-                            IdEducationExamination = edu.IdEducationExamination,
-                            IdEducationResult = edu.IdEducationResult,
-                            Cgpa = edu.Cgpa,
-                            Marks = edu.Marks,
-                            Major = edu.Major,
-                            PassingYear = edu.PassingYear,
-                            InstituteName = edu.InstituteName,
-                            IsForeignInstitute = edu.IsForeignInstitute,
-                            Duration = edu.Duration,
-                            Achievement = edu.Achievement,
-                            SetDate = DateTime.UtcNow
-                        });
-                    }
-                }
-
-             
-                if (employeeDto.Certifications != null)
-                {
-                    existingEmployee.EmployeeProfessionalCertifications.Clear();
-                    foreach (var cert in employeeDto.Certifications)
-                    {
-                        existingEmployee.EmployeeProfessionalCertifications.Add(new EmployeeProfessionalCertification
-                        {
-                            IdClient = cert.IdClient,
-                            CertificationTitle = cert.CertificationTitle,
-                            CertificationInstitute = cert.CertificationInstitute,
-                            InstituteLocation = cert.InstituteLocation,
-                            FromDate = cert.FromDate,
-                            ToDate = cert.ToDate,
-                            SetDate = DateTime.UtcNow
-                        });
-                    }
-                }
-
                 await _employeeRepository.UpdateAsync(existingEmployee, cancellationToken);
                 return "Success";
             }
@@ -426,7 +291,107 @@ namespace HRMApiApp.BLL
             {
                 return $"Error: {ex.Message}";
             }
+
         }
+
+
+
+
+
+        //public async Task<string> UpdateAsync(EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
+        //{
+        //    try
+        //    {
+        //        var existingEmployee = await _employeeRepository.GetByIdForUpdate(employeeDto.IdClient, employeeDto.Id, cancellationToken);
+        //        if (existingEmployee == null)
+        //            return "Employee not found";
+
+        //        existingEmployee.EmployeeName = employeeDto.EmployeeName ?? existingEmployee.EmployeeName;
+        //        existingEmployee.EmployeeNameBangla = employeeDto.EmployeeNameBangla ?? existingEmployee.EmployeeNameBangla;
+        //        existingEmployee.FatherName = employeeDto.FatherName ?? existingEmployee.FatherName;
+        //        existingEmployee.MotherName = employeeDto.MotherName ?? existingEmployee.MotherName;
+        //        existingEmployee.BirthDate = employeeDto.BirthDate ?? existingEmployee.BirthDate;
+              
+        //        existingEmployee.Address = employeeDto.Address ?? existingEmployee.Address;
+        //        existingEmployee.PresentAddress = employeeDto.PresentAddress ?? existingEmployee.PresentAddress;
+        //        existingEmployee.NationalIdentificationNumber = employeeDto.NationalIdentificationNumber ?? existingEmployee.NationalIdentificationNumber;
+        //        existingEmployee.ContactNo = employeeDto.ContactNo ?? existingEmployee.ContactNo;
+        //        existingEmployee.IdDepartment = employeeDto.IdDepartment;
+        //        existingEmployee.IdSection = employeeDto.IdSection;
+        //        existingEmployee.IsActive = employeeDto.IsActive ?? existingEmployee.IsActive;
+        //        existingEmployee.SetDate = DateTime.UtcNow;
+
+        //        if (employeeDto.Documents != null)
+        //        {
+        //            existingEmployee.EmployeeDocuments.Clear();
+        //            foreach (var doc in employeeDto.Documents)
+        //            {
+        //                existingEmployee.EmployeeDocuments.Add(new EmployeeDocument
+        //                {
+        //                    IdClient = doc.IdClient,
+        //                    IdEmployee=doc.IdEmployee,
+        //                    DocumentName = doc.DocumentName,
+        //                    FileName = doc.FileName,
+        //                    UploadDate = doc.UploadDate,
+        //                    UploadedFileExtention = doc.UploadedFileExtention,
+        //                    SetDate = DateTime.UtcNow
+        //                });
+        //            }
+        //        }
+
+        //        if (employeeDto.EducationInfos != null)
+        //        {
+        //            existingEmployee.EmployeeEducationInfos.Clear();
+        //            foreach (var edu in employeeDto.EducationInfos)
+        //            {
+        //                existingEmployee.EmployeeEducationInfos.Add(new EmployeeEducationInfo
+        //                {
+        //                    IdClient = edu.IdClient,
+        //                    IdEmployee = edu.IdEmployee,
+        //                    IdEducationLevel = edu.IdEducationLevel,
+        //                    IdEducationExamination = edu.IdEducationExamination,
+        //                    IdEducationResult = edu.IdEducationResult,
+        //                    Cgpa = edu.Cgpa,
+        //                    Marks = edu.Marks,
+        //                    Major = edu.Major,
+        //                    PassingYear = edu.PassingYear,
+        //                    InstituteName = edu.InstituteName,
+        //                    IsForeignInstitute = edu.IsForeignInstitute,
+        //                    Duration = edu.Duration,
+        //                    Achievement = edu.Achievement,
+        //                    SetDate = DateTime.UtcNow
+        //                });
+        //            }
+        //        }
+
+             
+        //        if (employeeDto.Certifications != null)
+        //        {
+        //            existingEmployee.EmployeeProfessionalCertifications.Clear();
+        //            foreach (var cert in employeeDto.Certifications)
+        //            {
+        //                existingEmployee.EmployeeProfessionalCertifications.Add(new EmployeeProfessionalCertification
+        //                {
+        //                    IdClient = cert.IdClient,
+        //                    IdEmployee = cert.IdEmployee,
+        //                    CertificationTitle = cert.CertificationTitle,
+        //                    CertificationInstitute = cert.CertificationInstitute,
+        //                    InstituteLocation = cert.InstituteLocation,
+        //                    FromDate = cert.FromDate,
+        //                    ToDate = cert.ToDate,
+        //                    SetDate = DateTime.UtcNow
+        //                });
+        //            }
+        //        }
+
+        //        await _employeeRepository.UpdateAsync(existingEmployee, cancellationToken);
+        //        return "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return $"Error: {ex.Message}";
+        //    }
+        //}
 
 
 
