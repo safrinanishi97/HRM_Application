@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HRMApiApp.DTO\HRMApiApp.DTO.csproj" />
     <ProjectReference Include="..\HRMApiApp.ViewModel\HRMApiApp.ViewModel.csproj" />
     <ProjectReference Include="..\HRMAppAPI.Model\HRMApiApp.Model.csproj" />
   </ItemGroup>

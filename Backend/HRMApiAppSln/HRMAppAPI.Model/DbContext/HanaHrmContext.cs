@@ -53,7 +53,7 @@ public partial class HanaHrmContext : DbContext
     public virtual DbSet<WeekOff> WeekOffs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=192.168.70.89;Database=HANA-HRM;User=SA;Password=Sa@123456; TrustServerCertificate=true");
+        => optionsBuilder.UseSqlServer("Server=192.168.70.89;Database=HANA-HRM;User=SA;Password=Sa@123456; TrustServerCertificate=true; MultipleActiveResultSets=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

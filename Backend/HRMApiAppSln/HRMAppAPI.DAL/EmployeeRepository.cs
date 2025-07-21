@@ -1,4 +1,5 @@
 ﻿using HRMApiApp.DAL.Interfaces;
+using HRMApiApp.DTO;
 using HRMApiApp.Model;
 using HRMApiApp.Models;
 using HRMApiApp.ViewModels;
@@ -15,14 +16,9 @@ namespace HRMApiApp.DAL
 {
 
 
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository(HanaHrmContext context) : IEmployeeRepository
     {
-        private readonly HanaHrmContext _context;
-
-        public EmployeeRepository(HanaHrmContext context)
-        {
-            _context = context;
-        }
+        private readonly HanaHrmContext _context = context;
 
         public async Task<Employee?> GetByIdAsync(int idClient, int id, CancellationToken cancellationToken)
         {
@@ -53,85 +49,192 @@ namespace HRMApiApp.DAL
             return true;
         }
 
-        public async Task<Employee?> GetByIdForUpdate(int idClient, int id, CancellationToken cancellationToken)
+        public async Task<int> UpdateAsync(EmployeeUpdateDTO employee, CancellationToken cancellationToken)
         {
-            var employee= await _context.Employees
+            if (employee == null)
+                throw new Exception($"data not found: {nameof(employee)}");
+
+            var idClient = employee.IdClient;
+            var id = employee.Id;
+
+            var existingEmployee = await _context.Employees
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
-                .Include(e => e.EmployeeProfessionalCertifications).FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id, cancellationToken);
-            return employee;
+                .Include(e => e.EmployeeProfessionalCertifications)
+                .FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id, cancellationToken);
+
+            if (existingEmployee == null) return 0;
+
+            existingEmployee.EmployeeName = employee.EmployeeName ?? existingEmployee.EmployeeName;
+            existingEmployee.EmployeeNameBangla = employee.EmployeeNameBangla ?? existingEmployee.EmployeeNameBangla;
+            existingEmployee.FatherName = employee.FatherName ?? existingEmployee.FatherName;
+            existingEmployee.MotherName = employee.MotherName ?? existingEmployee.MotherName;
+            existingEmployee.IdDepartment = employee.IdDepartment;
+            existingEmployee.IdSection =   employee.IdSection;
+            existingEmployee.BirthDate = employee.BirthDate ?? existingEmployee.BirthDate;
+            existingEmployee.Address = employee.Address ?? existingEmployee.Address;
+            existingEmployee.PresentAddress =   employee.PresentAddress ?? existingEmployee.PresentAddress;
+            existingEmployee.NationalIdentificationNumber = employee.NationalIdentificationNumber ?? existingEmployee.NationalIdentificationNumber;
+            existingEmployee.ContactNo = employee.ContactNo ?? existingEmployee.ContactNo;
+            existingEmployee.IsActive = employee.IsActive ?? existingEmployee.IsActive;
+            existingEmployee.SetDate = DateTime.Now;
+
+
+            //delete obsolete data
+
+            var deletedEmployeeDocumentList = existingEmployee.EmployeeDocuments
+                .Where(ed => ed.IdClient == ed.IdClient && !employee.Documents.Any(d => d.IdClient == ed.IdClient && d.Id == ed.Id))
+                .ToList();
+            if(deletedEmployeeDocumentList!=null)
+            {
+                _context.EmployeeDocuments.RemoveRange(deletedEmployeeDocumentList);
+            }
+
+            var deletedEmployeeEducationInfoList = existingEmployee.EmployeeEducationInfos
+                .Where(eei => eei.IdClient == eei.IdClient && !employee.EducationInfos.Any(ei => ei.IdClient == eei.IdClient && ei.Id == eei.Id))
+                .ToList();
+            if (deletedEmployeeEducationInfoList != null)
+            {
+                _context.EmployeeEducationInfos.RemoveRange(deletedEmployeeEducationInfoList);
+            }
+
+            var deletedCertificationList = existingEmployee.EmployeeProfessionalCertifications
+                .Where(epc => epc.IdClient == epc.IdClient && !employee.Certifications.Any(c => c.IdClient == epc.IdClient && c.Id == epc.Id))
+                .ToList();
+
+            if (deletedCertificationList != null) 
+            {
+                _context.EmployeeProfessionalCertifications.RemoveRange(deletedCertificationList);
+            }
+
+
+            //up/insert information
+            
+            foreach(var item in employee.Documents)
+            {
+                var existingEntry = existingEmployee.EmployeeDocuments.FirstOrDefault(ed=>ed.IdClient == item.IdClient && ed.Id == item.Id);
+                if (existingEntry != null) 
+                {
+                    existingEntry.DocumentName = item.DocumentName;
+                    existingEntry.FileName = item.FileName;
+                    existingEntry.UploadDate = item.UploadDate;
+                    existingEntry.UploadedFileExtention = item.UploadedFileExtention;
+                    existingEntry.SetDate = DateTime.UtcNow;
+                }
+                else
+                {
+                    var newEmployeeDocument = new EmployeeDocument()
+                    {
+                        IdClient = item.IdClient,
+                        IdEmployee = existingEmployee.Id,
+                        DocumentName = item.DocumentName,
+                        FileName = item.FileName,
+                        UploadDate = item.UploadDate,
+                        UploadedFileExtention = item.UploadedFileExtention,
+                        SetDate = DateTime.UtcNow
+                    };
+
+                    existingEmployee.EmployeeDocuments.Add(newEmployeeDocument);
+                }
+            }
+
+
+            foreach (var item in employee.EducationInfos)
+            {
+                var existingEntry = existingEmployee.EmployeeEducationInfos.FirstOrDefault(ei => ei.IdClient == item.IdClient && ei.Id == item.Id);
+                if (existingEntry != null)
+                {
+                    existingEntry.IdEducationLevel = item.IdEducationLevel;
+                    existingEntry.IdEducationExamination = item.IdEducationExamination;
+                    existingEntry.IdEducationResult = item.IdEducationResult;
+                    existingEntry.Cgpa = item.Cgpa;
+                    existingEntry.Marks = item.Marks;
+                    existingEntry.PassingYear = item.PassingYear;
+                    existingEntry.InstituteName = item.InstituteName;
+                    existingEntry.Major = item.Major;
+                    existingEntry.IsForeignInstitute = item.IsForeignInstitute;
+                    existingEntry.Duration = item.Duration;
+                    existingEntry.Achievement = item.Achievement;
+                    existingEntry.SetDate = DateTime.Now;
+                }
+                else
+                {
+                    var newEmployeeEducationInfo = new EmployeeEducationInfo()
+                    {
+                        IdClient = item.IdClient,
+                        IdEmployee = existingEmployee.Id,
+                        IdEducationLevel = item.IdEducationLevel,
+                        IdEducationExamination = item.IdEducationExamination,
+                        IdEducationResult = item.IdEducationResult,
+                        Cgpa = item.Cgpa,
+                        Marks = item.Marks,
+                        PassingYear = item.PassingYear,
+                        InstituteName = item.InstituteName,
+                        Major = item.Major,
+                        IsForeignInstitute = item.IsForeignInstitute,
+                        Duration = item.Duration,
+                        Achievement = item.Achievement,
+                        SetDate = DateTime.UtcNow
+                    };
+
+                    existingEmployee.EmployeeEducationInfos.Add(newEmployeeEducationInfo);
+                }
+            }
+
+
+            foreach (var item in employee.Certifications)
+            {
+                var existingEntry = existingEmployee.EmployeeProfessionalCertifications.FirstOrDefault(ei => ei.IdClient == item.IdClient && ei.Id == item.Id);
+                if (existingEntry != null)
+                {
+                    existingEntry.CertificationTitle = item.CertificationTitle;
+                    existingEntry.CertificationInstitute = item.CertificationInstitute;
+                    existingEntry.InstituteLocation = item.InstituteLocation;
+                    existingEntry.FromDate = item.FromDate;
+                    existingEntry.ToDate = item.ToDate;
+                    existingEntry.SetDate = DateTime.Now;
+                }
+                else
+                {
+                    var newCertification = new EmployeeProfessionalCertification
+                    {
+                        IdClient = item.IdClient,
+                        IdEmployee = existingEmployee.Id,
+                        CertificationTitle = item.CertificationTitle,
+                        CertificationInstitute = item.CertificationInstitute,
+                        InstituteLocation = item.InstituteLocation,
+                        FromDate = item.FromDate,
+                        ToDate = item.ToDate,
+                        SetDate = DateTime.Now
+                    };
+                    existingEmployee.EmployeeProfessionalCertifications.Add(newCertification);
+                }
+            }
+
+            var result = await _context.SaveChangesAsync();
+
+            return result;
         }
-        public async Task<Employee> UpdateAsync(Employee employee, CancellationToken cancellationToken)
-        {
-            var existingEmployee = await _context.Employees
-        .Include(e => e.EmployeeDocuments)
-        .Include(e => e.EmployeeEducationInfos)
-        .Include(e => e.EmployeeProfessionalCertifications)
-        .FirstOrDefaultAsync(e => e.IdClient == employee.IdClient && e.Id == employee.Id, cancellationToken);
-
-            if (existingEmployee == null)
-                throw new Exception("Employee not found");
 
 
-            _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
 
-            _context.EmployeeDocuments.RemoveRange(existingEmployee.EmployeeDocuments
-                .Where(ed => !employee.EmployeeDocuments.Any(d => d.IdClient == ed.IdClient && d.Id == ed.Id)));
 
-            foreach (var doc in employee.EmployeeDocuments)
-            {
-                var existingDoc = existingEmployee.EmployeeDocuments
-                    .FirstOrDefault(ed => ed.IdClient == doc.IdClient && ed.Id == doc.Id);
+        //public async Task<int> UpdateAsync(EmployeeUpdateDTO upEmployee, CancellationToken cancellationToken)
+        //{
+           
+        //    var employee = await _context.Employees
+        //       .Include(e => e.EmployeeDocuments)
+        //       .Include(e => e.EmployeeEducationInfos)
+        //       .Include(e => e.EmployeeProfessionalCertifications)
+        //       .FirstOrDefaultAsync(e => e.IdClient == upEmployee.IdClient && e.Id == upEmployee.Id, cancellationToken);
+        //    if (employee == null) return 0;
 
-                if (existingDoc != null)
-                {
-                    _context.Entry(existingDoc).CurrentValues.SetValues(doc);
-                }
-                else
-                {
-                    existingEmployee.EmployeeDocuments.Add(doc);
-                }
-            }
+        //    employee.EmployeeName=upEmployee.EmployeeName;
 
-            _context.EmployeeEducationInfos.RemoveRange(existingEmployee.EmployeeEducationInfos
-                .Where(edu => !employee.EmployeeEducationInfos.Any(d => d.IdClient == edu.IdClient && d.Id == edu.Id)));
 
-            foreach (var edu in employee.EmployeeEducationInfos)
-            {
-                var existingEdu = existingEmployee.EmployeeEducationInfos
-                    .FirstOrDefault(e => e.IdClient == edu.IdClient && e.Id == edu.Id);
 
-                if (existingEdu != null)
-                {
-                    _context.Entry(existingEdu).CurrentValues.SetValues(edu);
-                }
-                else
-                {
-                    existingEmployee.EmployeeEducationInfos.Add(edu);
-                }
-            }
+        //}
 
-            _context.EmployeeProfessionalCertifications.RemoveRange(existingEmployee.EmployeeProfessionalCertifications
-                .Where(cert => !employee.EmployeeProfessionalCertifications.Any(d => d.IdClient == cert.IdClient && d.Id == cert.Id)));
-
-            foreach (var cert in employee.EmployeeProfessionalCertifications)
-            {
-                var existingCert = existingEmployee.EmployeeProfessionalCertifications
-                    .FirstOrDefault(c => c.IdClient == cert.IdClient && c.Id == cert.Id);
-
-                if (existingCert != null)
-                {
-                    _context.Entry(existingCert).CurrentValues.SetValues(cert);
-                }
-                else
-                {
-                    existingEmployee.EmployeeProfessionalCertifications.Add(cert);
-                }
-            }
-
-            await _context.SaveChangesAsync(cancellationToken);
-            return existingEmployee;
-        }
         //Hard delete
         //public bool DeleteEmployee(int id)
         //{

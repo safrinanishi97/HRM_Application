@@ -218,73 +218,9 @@ namespace HRMApiApp.BLL
 
         public async Task<string> UpdateAsync(EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
         {
-            var existingEmployee = await _employeeRepository.GetByIdForUpdate(employeeDto.IdClient, employeeDto.Id, cancellationToken);
-            if (existingEmployee == null)
-                return "Employee not found";
-
-            existingEmployee.EmployeeName = employeeDto.EmployeeName ?? existingEmployee.EmployeeName;
-            existingEmployee.EmployeeNameBangla = employeeDto.EmployeeNameBangla ?? existingEmployee.EmployeeNameBangla;
-            existingEmployee.FatherName = employeeDto.FatherName ?? existingEmployee.FatherName;
-            existingEmployee.MotherName = employeeDto.MotherName ?? existingEmployee.MotherName;
-            existingEmployee.IdDepartment = employeeDto.IdDepartment;
-            existingEmployee.IdSection = employeeDto.IdSection;
-            existingEmployee.BirthDate = employeeDto.BirthDate ?? existingEmployee.BirthDate;
-            existingEmployee.Address = employeeDto.Address ?? existingEmployee.Address;
-            existingEmployee.PresentAddress = employeeDto.PresentAddress ?? existingEmployee.PresentAddress;
-            existingEmployee.NationalIdentificationNumber = employeeDto.NationalIdentificationNumber ?? existingEmployee.NationalIdentificationNumber;
-            existingEmployee.ContactNo = employeeDto.ContactNo ?? existingEmployee.ContactNo;
-            existingEmployee.IsActive = employeeDto.IsActive ?? existingEmployee.IsActive;
-            existingEmployee.SetDate = DateTime.UtcNow;
-
-
-            existingEmployee.EmployeeDocuments = employeeDto.Documents.Select(docDto => new EmployeeDocument
-            {
-                Id = docDto.Id,
-                IdClient = docDto.IdClient,
-                IdEmployee = docDto.IdEmployee,
-                DocumentName = docDto.DocumentName,
-                FileName = docDto.FileName,
-                UploadDate = docDto.UploadDate,
-                UploadedFileExtention = docDto.UploadedFileExtention,
-                SetDate = DateTime.UtcNow
-            }).ToList();
-
-            existingEmployee.EmployeeEducationInfos = employeeDto.EducationInfos.Select(eduDto => new EmployeeEducationInfo
-            {
-                Id = eduDto.Id,
-                IdClient = eduDto.IdClient,
-                IdEmployee = eduDto.IdEmployee,
-                IdEducationLevel = eduDto.IdEducationLevel,
-                IdEducationExamination = eduDto.IdEducationExamination,
-                IdEducationResult = eduDto.IdEducationResult,
-                Cgpa = eduDto.Cgpa,
-                Marks = eduDto.Marks,
-                PassingYear = eduDto.PassingYear,
-                InstituteName = eduDto.InstituteName,
-                Major = eduDto.Major,
-                IsForeignInstitute = eduDto.IsForeignInstitute,
-                Duration = eduDto.Duration,
-                Achievement = eduDto.Achievement,
-                SetDate = DateTime.UtcNow
-            }).ToList();
-
-            existingEmployee.EmployeeProfessionalCertifications = employeeDto.Certifications.Select(certDto => new EmployeeProfessionalCertification
-            {
-                Id = certDto.Id,
-                IdClient = certDto.IdClient,
-                IdEmployee = certDto.IdEmployee,
-                CertificationTitle = certDto.CertificationTitle,
-                CertificationInstitute = certDto.CertificationInstitute,
-                InstituteLocation = certDto.InstituteLocation,
-                FromDate = certDto.FromDate,
-                ToDate = certDto.ToDate,
-                SetDate = DateTime.UtcNow
-            }).ToList();
-
-
             try
             {
-                await _employeeRepository.UpdateAsync(existingEmployee, cancellationToken);
+                await _employeeRepository.UpdateAsync(employeeDto, cancellationToken);
                 return "Success";
             }
             catch (Exception ex)
