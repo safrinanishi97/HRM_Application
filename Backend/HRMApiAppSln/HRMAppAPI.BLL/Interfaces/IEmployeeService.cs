@@ -11,11 +11,11 @@ namespace HRMApiApp.BLL.Interfaces
 {
     public interface IEmployeeService
     {
-        List<EmployeeViewModel> GetAllEmployees();
-        Employee GetEmployeeById(int id);
-        bool AddEmployee(EmployeeDTO employeeDto);
-        bool UpdateEmployee(EmployeeDTO employeeDTO);
 
-        bool DeleteEmployee(int id);
+        Task<EmployeeDTO?> GetByIdAsync(int id, int idClient, CancellationToken cancellationToken);
+        Task<List<EmployeeDTO>> GetAllAsync(CancellationToken cancellationToken);
+        Task<bool> CreateAsync(EmployeeCreateDTO employeeDto, CancellationToken cancellationToken);
+        Task<string> UpdateAsync(EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken);
+        Task<bool> DeleteAsync(int idClient, int id, CancellationToken cancellationToken);
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace HRMApiApp.Controllers
 {
+    //    [Route("api//{idClient}/employees")]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeesController : ControllerBase
@@ -19,56 +20,72 @@ namespace HRMApiApp.Controllers
             _employeeService = employeeService;
         }
 
-        [HttpGet]
-        public ActionResult<List<Employee>> GetAll()
+        [HttpGet("allemployees")]
+        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployees(CancellationToken cancellationToken)
         {
-            var employees = _employeeService.GetAllEmployees();
+            var employees = await _employeeService.GetAllAsync(cancellationToken);
             return Ok(employees);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetEmployeeById(int id)
+        public async Task<IActionResult> GetEmployeeById([FromQuery] int idClient, int id, CancellationToken cancellationToken)
         {
-            var employee = _employeeService.GetEmployeeById(id);
+            var employee = await _employeeService.GetByIdAsync(idClient, id, cancellationToken);
             if (employee == null)
                 return NotFound();
 
             return Ok(employee);
         }
 
-        [HttpPost]
-        public ActionResult<bool> AddEmployee([FromBody] EmployeeDTO empDto) {
-
-            bool emp = _employeeService.AddEmployee(empDto);
-            if (emp) return Ok("Employee added successfully");
-            return Ok(false);
-        }
-
-        [HttpPut("{id}")]
-        public ActionResult<bool> UpdateEmployee(int id,[FromBody] EmployeeDTO empDto)
+        [HttpPost("createemployeewithdetails")]
+        public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateDTO employeeDto, CancellationToken cancellationToken)
         {
-            //if (id != empDto.Id)
-            //{
-            //    return BadRequest("ID mismatch");
-            //}
-
-            bool emp = _employeeService.UpdateEmployee(empDto);
-            if (emp) return Ok("Employee updated successfully");
-            return Ok(false);
-            //return result ? Ok(true) : BadRequest("Update failed");
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult <bool> DeleteEmployee(int id)
-        {
-            var result = _employeeService.DeleteEmployee(id);
-
-            if (result)
+            if (!ModelState.IsValid)
             {
-                return NoContent();
+                return BadRequest(ModelState);
             }
 
-            return NotFound();
-        }  
-   }
+            var success = await _employeeService.CreateAsync(employeeDto, cancellationToken);
+
+            if (success)
+                return Created("", new
+                {
+                    Success = true,
+                    Message = "Employee created successfully"
+                });
+            else
+                return BadRequest("Failed to create employee");
+        }
+
+        [HttpPut("{idClient}/{id}")]
+        public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _employeeService.UpdateAsync(employeeDto, cancellationToken);
+
+            return result switch
+            {
+                "Success" => Ok("Employee updated successfully"),
+                "Employee not found" => NotFound("Employee not found"),
+                var error when error.StartsWith("Error:") => StatusCode(500, error),
+                _ => StatusCode(500, "Unexpected error")
+            };
+        }
+
+        [HttpDelete("{idClient}/{id}")]
+        public async Task<IActionResult> DeleteEmployee(int idClient, int id, CancellationToken cancellationToken)
+        {
+            var result = await _employeeService.DeleteAsync(id, idClient, cancellationToken);
+            if (!result)
+            {
+                return NotFound("Employee not found.");
+            }
+
+            return Ok(new { message = "Employee soft deleted successfully." });
+        }
+    }
 }

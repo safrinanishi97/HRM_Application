@@ -65,7 +65,7 @@ public partial class Employee
 
     public virtual Designation? Designation { get; set; }
 
-    public virtual ICollection<EmployeeDocument> EmployeeDocuments { get; set; } = new List<EmployeeDocument>();
+    public virtual List<EmployeeDocument> EmployeeDocuments { get; set; } = [];
 
     public virtual ICollection<EmployeeEducationInfo> EmployeeEducationInfos { get; set; } = new List<EmployeeEducationInfo>();
 
