@@ -124,8 +124,8 @@ namespace HRMApiApp.DAL
             foreach(var item in employee.Documents)
             {
                 var existingEntry = existingEmployee.EmployeeDocuments.FirstOrDefault(ed=>ed.IdClient == item.IdClient && ed.Id == item.Id);
-                var uploadedBytes = await ConvertFileToByteArrayAsync(item.File);
-                var extension = Path.GetExtension(item.File?.FileName);
+                var uploadedBytes = await ConvertFileToByteArrayAsync(item.UpFile);
+                var extension = Path.GetExtension(item.UpFile?.FileName);
                 if (existingEntry != null) 
                 {
                     existingEntry.DocumentName = item.DocumentName;

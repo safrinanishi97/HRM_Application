@@ -29,7 +29,8 @@ namespace HRMApiApp.DTO
         public List<EmployeeDocumentDTO> Documents { get; set; } = [];
         public List<EmployeeEducationInfoDTO> EducationInfos { get; set; } = [];
         public List<EmployeeProfessionalCertificationDTO> Certifications { get; set; } = [];
-      public IFormFile? ProfileImage { get; set; }
+        public IFormFile? ProfileImage { get; set; }
+        public string? FileBase64 { get; set; }
 
     }
 
@@ -54,6 +55,7 @@ namespace HRMApiApp.DTO
         public List<EmployeeEducationInfoDTO> EducationInfos { get; set; } = [];
         public List<EmployeeProfessionalCertificationDTO> Certifications { get; set; } = [];
         public IFormFile? ProfileImage { get; set; }
+
     }
 
 
@@ -92,7 +94,8 @@ namespace HRMApiApp.DTO
         public DateTime UploadDate { get; set; }
         public string? UploadedFileExtention { get; set; }
 
-        public IFormFile? File { get; set; }
+        public IFormFile? UpFile { get; set; }
+        public string? FileBase64 { get; set; }
     }
     public class EmployeeEducationInfoDTO
     {

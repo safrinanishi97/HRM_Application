@@ -49,6 +49,8 @@ namespace HRMApiApp.BLL
                 NationalIdentificationNumber = employee.NationalIdentificationNumber,
                 ContactNo = employee.ContactNo,
                 IsActive = employee.IsActive,
+                //FileBase64 = employee.EmployeeImage != null ? Convert.ToBase64String(employee.EmployeeImage) : null,
+                FileBase64 = employee.EmployeeImage != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(employee.EmployeeImage)}" : null,
 
                 Documents = employee.EmployeeDocuments.Select(d => new EmployeeDocumentDTO
                 {
@@ -58,7 +60,8 @@ namespace HRMApiApp.BLL
                     FileName = d.FileName,
                     UploadDate = d.UploadDate,
                     UploadedFileExtention = d.UploadedFileExtention,
-                    //UploadedFile = d.UploadedFile
+                    //FileBase64 = d.UploadedFile != null ? Convert.ToBase64String(d.UploadedFile) : null,
+                    FileBase64 = d.UploadedFile != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(d.UploadedFile)}" : null,
                 }).ToList(),
 
                 EducationInfos = employee.EmployeeEducationInfos.Select(e => new EmployeeEducationInfoDTO
@@ -114,6 +117,8 @@ namespace HRMApiApp.BLL
                 NationalIdentificationNumber = e.NationalIdentificationNumber,
                 ContactNo = e.ContactNo,
                 IsActive = e.IsActive,
+                //FileBase64 = e.EmployeeImage != null ? Convert.ToBase64String(e.EmployeeImage) : null,
+                FileBase64 = e.EmployeeImage != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(e.EmployeeImage)}" : null,
                 Documents = e.EmployeeDocuments.Select(d => new EmployeeDocumentDTO
                 {
                     IdClient = d.IdClient,
@@ -121,7 +126,9 @@ namespace HRMApiApp.BLL
                     FileName = d.FileName,
                     UploadDate = d.UploadDate,
                     UploadedFileExtention = d.UploadedFileExtention,
-                   // UploadedFile = d.UploadedFile
+                    //FileBase64 = d.UploadedFile != null ? Convert.ToBase64String(d.UploadedFile) : null,
+                    FileBase64 = d.UploadedFile != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(d.UploadedFile)}" : null,
+
                 }).ToList(),
 
                 EducationInfos = e.EmployeeEducationInfos.Select(ed => new EmployeeEducationInfoDTO
@@ -245,8 +252,8 @@ namespace HRMApiApp.BLL
    
             foreach (var doc in employeeDto.Documents)
             {
-                var uploadedBytes = await ConvertFileToByteArrayAsync(doc.File);
-                var extension = Path.GetExtension(doc.File?.FileName);
+                var uploadedBytes = await ConvertFileToByteArrayAsync(doc.UpFile);
+                var extension = Path.GetExtension(doc.UpFile?.FileName);
                 employee.EmployeeDocuments.Add(new EmployeeDocument
                 {
                     IdClient = doc.IdClient,
@@ -277,110 +284,6 @@ namespace HRMApiApp.BLL
             }
 
         }
-
-
-
-
-
-        //public async Task<string> UpdateAsync(EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
-        //{
-        //    try
-        //    {
-        //        var existingEmployee = await _employeeRepository.GetByIdForUpdate(employeeDto.IdClient, employeeDto.Id, cancellationToken);
-        //        if (existingEmployee == null)
-        //            return "Employee not found";
-
-        //        existingEmployee.EmployeeName = employeeDto.EmployeeName ?? existingEmployee.EmployeeName;
-        //        existingEmployee.EmployeeNameBangla = employeeDto.EmployeeNameBangla ?? existingEmployee.EmployeeNameBangla;
-        //        existingEmployee.FatherName = employeeDto.FatherName ?? existingEmployee.FatherName;
-        //        existingEmployee.MotherName = employeeDto.MotherName ?? existingEmployee.MotherName;
-        //        existingEmployee.BirthDate = employeeDto.BirthDate ?? existingEmployee.BirthDate;
-              
-        //        existingEmployee.Address = employeeDto.Address ?? existingEmployee.Address;
-        //        existingEmployee.PresentAddress = employeeDto.PresentAddress ?? existingEmployee.PresentAddress;
-        //        existingEmployee.NationalIdentificationNumber = employeeDto.NationalIdentificationNumber ?? existingEmployee.NationalIdentificationNumber;
-        //        existingEmployee.ContactNo = employeeDto.ContactNo ?? existingEmployee.ContactNo;
-        //        existingEmployee.IdDepartment = employeeDto.IdDepartment;
-        //        existingEmployee.IdSection = employeeDto.IdSection;
-        //        existingEmployee.IsActive = employeeDto.IsActive ?? existingEmployee.IsActive;
-        //        existingEmployee.SetDate = DateTime.UtcNow;
-
-        //        if (employeeDto.Documents != null)
-        //        {
-        //            existingEmployee.EmployeeDocuments.Clear();
-        //            foreach (var doc in employeeDto.Documents)
-        //            {
-        //                existingEmployee.EmployeeDocuments.Add(new EmployeeDocument
-        //                {
-        //                    IdClient = doc.IdClient,
-        //                    IdEmployee=doc.IdEmployee,
-        //                    DocumentName = doc.DocumentName,
-        //                    FileName = doc.FileName,
-        //                    UploadDate = doc.UploadDate,
-        //                    UploadedFileExtention = doc.UploadedFileExtention,
-        //                    SetDate = DateTime.UtcNow
-        //                });
-        //            }
-        //        }
-
-        //        if (employeeDto.EducationInfos != null)
-        //        {
-        //            existingEmployee.EmployeeEducationInfos.Clear();
-        //            foreach (var edu in employeeDto.EducationInfos)
-        //            {
-        //                existingEmployee.EmployeeEducationInfos.Add(new EmployeeEducationInfo
-        //                {
-        //                    IdClient = edu.IdClient,
-        //                    IdEmployee = edu.IdEmployee,
-        //                    IdEducationLevel = edu.IdEducationLevel,
-        //                    IdEducationExamination = edu.IdEducationExamination,
-        //                    IdEducationResult = edu.IdEducationResult,
-        //                    Cgpa = edu.Cgpa,
-        //                    Marks = edu.Marks,
-        //                    Major = edu.Major,
-        //                    PassingYear = edu.PassingYear,
-        //                    InstituteName = edu.InstituteName,
-        //                    IsForeignInstitute = edu.IsForeignInstitute,
-        //                    Duration = edu.Duration,
-        //                    Achievement = edu.Achievement,
-        //                    SetDate = DateTime.UtcNow
-        //                });
-        //            }
-        //        }
-
-             
-        //        if (employeeDto.Certifications != null)
-        //        {
-        //            existingEmployee.EmployeeProfessionalCertifications.Clear();
-        //            foreach (var cert in employeeDto.Certifications)
-        //            {
-        //                existingEmployee.EmployeeProfessionalCertifications.Add(new EmployeeProfessionalCertification
-        //                {
-        //                    IdClient = cert.IdClient,
-        //                    IdEmployee = cert.IdEmployee,
-        //                    CertificationTitle = cert.CertificationTitle,
-        //                    CertificationInstitute = cert.CertificationInstitute,
-        //                    InstituteLocation = cert.InstituteLocation,
-        //                    FromDate = cert.FromDate,
-        //                    ToDate = cert.ToDate,
-        //                    SetDate = DateTime.UtcNow
-        //                });
-        //            }
-        //        }
-
-        //        await _employeeRepository.UpdateAsync(existingEmployee, cancellationToken);
-        //        return "Success";
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return $"Error: {ex.Message}";
-        //    }
-        //}
-
-
-
-
-
 
         public async Task<bool> DeleteAsync(int idClient, int id, CancellationToken cancellationToken)
         {

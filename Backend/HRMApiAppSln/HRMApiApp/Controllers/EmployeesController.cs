@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace HRMApiApp.Controllers
 {
-    //    [Route("api//{idClient}/employees")]
+
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeesController : ControllerBase
@@ -55,10 +55,10 @@ namespace HRMApiApp.Controllers
 
             foreach (var doc in employeeDto.Documents)
             {
-                if (doc.File == null)
+                if (doc.UpFile == null)
                     Console.WriteLine($"Document [{doc.DocumentName}] File is NULL");
                 else
-                    Console.WriteLine($"Document [{doc.DocumentName}] File Name: {doc.File.FileName}");
+                    Console.WriteLine($"Document [{doc.DocumentName}] File Name: {doc.UpFile.FileName}");
             }
             var success = await _employeeService.CreateAsync(employeeDto, cancellationToken);
 
@@ -73,7 +73,7 @@ namespace HRMApiApp.Controllers
         }
 
         [HttpPut("{idClient}/{id}")]
-        public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateEmployee([FromForm] EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
