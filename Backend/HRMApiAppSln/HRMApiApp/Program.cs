@@ -38,7 +38,7 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty;
     });
 }
-
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();

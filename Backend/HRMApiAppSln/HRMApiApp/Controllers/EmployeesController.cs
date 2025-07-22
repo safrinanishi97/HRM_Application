@@ -38,13 +38,28 @@ namespace HRMApiApp.Controllers
         }
 
         [HttpPost("createemployeewithdetails")]
-        public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateDTO employeeDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateEmployee([FromForm] EmployeeCreateDTO employeeDto, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            if (employeeDto.ProfileImage == null)
+            {
+                Console.WriteLine("ProfileImage is NULL");
+            }
+            else
+            {
+                Console.WriteLine($"ProfileImage: {employeeDto.ProfileImage.FileName}");
+            }
 
+            foreach (var doc in employeeDto.Documents)
+            {
+                if (doc.File == null)
+                    Console.WriteLine($"Document [{doc.DocumentName}] File is NULL");
+                else
+                    Console.WriteLine($"Document [{doc.DocumentName}] File Name: {doc.File.FileName}");
+            }
             var success = await _employeeService.CreateAsync(employeeDto, cancellationToken);
 
             if (success)

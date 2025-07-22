@@ -3,7 +3,10 @@ using HRMApiApp.DAL.Interfaces;
 using HRMApiApp.DTO;
 using HRMApiApp.Models;
 using HRMApiApp.ViewModels;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +20,12 @@ namespace HRMApiApp.BLL
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IHostEnvironment _environment;
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository, IHostEnvironment environment)
         {
             _employeeRepository = employeeRepository;
+            _environment = environment;
         }
 
         public async Task<EmployeeDTO?> GetByIdAsync(int id, int idClient, CancellationToken cancellationToken)
@@ -148,11 +153,45 @@ namespace HRMApiApp.BLL
            
             }).ToList();
             return allEmp;
-           
+
         }
+
+
+        //private async Task<string?> SaveFileAsync(IFormFile file)
+        //{
+        //    if (file == null || file.Length == 0)
+        //        return null;
+
+        //    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+
+        //    var uploadPath = Path.Combine(_environment.ContentRootPath, "uploads/employees");
+        //    Directory.CreateDirectory(uploadPath);
+
+        //    var filePath = Path.Combine(uploadPath, fileName);
+
+        //    using (var stream = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        await file.CopyToAsync(stream);
+        //    }
+
+        //    return $"/uploads/employees/{fileName}";
+        //}
+
+
 
         public async Task<bool> CreateAsync(EmployeeCreateDTO employeeDto, CancellationToken cancellationToken)
         {
+
+            async Task<byte[]?> ConvertFileToByteArrayAsync(IFormFile? file)
+            {
+                if (file == null || file.Length == 0)
+                    return null;
+
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+
             var employee = new Employee
             {
                 IdClient = employeeDto.IdClient,
@@ -160,6 +199,7 @@ namespace HRMApiApp.BLL
                 EmployeeNameBangla = employeeDto.EmployeeNameBangla,
                 FatherName = employeeDto.FatherName,
                 MotherName = employeeDto.MotherName,
+                EmployeeImage = await ConvertFileToByteArrayAsync(employeeDto.ProfileImage),
                 IdDepartment = employeeDto.IdDepartment,
                 IdSection = employeeDto.IdSection,
                 BirthDate = employeeDto.BirthDate,
@@ -169,19 +209,9 @@ namespace HRMApiApp.BLL
                 NationalIdentificationNumber = employeeDto.NationalIdentificationNumber,
                 ContactNo = employeeDto.ContactNo,
                 IsActive = true,
-                SetDate = DateTime.UtcNow,
+                SetDate = DateTime.Now,
 
-                EmployeeDocuments = employeeDto.Documents.Select(d => new EmployeeDocument
-                {
-                    IdClient = d.IdClient,
-                    DocumentName = d.DocumentName,
-                    FileName = d.FileName,
-                    UploadDate = d.UploadDate,
-                    UploadedFileExtention = d.UploadedFileExtention,
-                    //UploadedFile = d.UploadedFile,
-                    SetDate = DateTime.UtcNow
-                }).ToList(),
-
+                EmployeeDocuments = new List<EmployeeDocument>(),
                 EmployeeEducationInfos = employeeDto.EducationInfos.Select(e => new EmployeeEducationInfo
                 {
                     IdClient = e.IdClient,
@@ -197,7 +227,7 @@ namespace HRMApiApp.BLL
                     IsForeignInstitute = e.IsForeignInstitute,
                     Duration = e.Duration,
                     Achievement = e.Achievement,
-                    SetDate = DateTime.UtcNow
+                    SetDate = DateTime.Now
                 }).ToList(),
 
                 EmployeeProfessionalCertifications = employeeDto.Certifications.Select(c => new EmployeeProfessionalCertification
@@ -208,13 +238,31 @@ namespace HRMApiApp.BLL
                     InstituteLocation = c.InstituteLocation,
                     FromDate = c.FromDate,
                     ToDate = c.ToDate,
-                    SetDate = DateTime.UtcNow
+                    SetDate = DateTime.Now
                 }).ToList()
             };
 
-            var createdEmployee = await _employeeRepository.CreateAsync(employee, cancellationToken);
+   
+            foreach (var doc in employeeDto.Documents)
+            {
+                var uploadedBytes = await ConvertFileToByteArrayAsync(doc.File);
+                var extension = Path.GetExtension(doc.File?.FileName);
+                employee.EmployeeDocuments.Add(new EmployeeDocument
+                {
+                    IdClient = doc.IdClient,
+                    DocumentName = doc.DocumentName,
+                    FileName = doc.FileName,
+                    UploadDate = doc.UploadDate,
+                    UploadedFileExtention = extension,
+                    UploadedFile = uploadedBytes,
+                    SetDate = DateTime.Now
+                });
+            }
+
+            await _employeeRepository.CreateAsync(employee, cancellationToken);
             return true;
         }
+
 
         public async Task<string> UpdateAsync(EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
         {

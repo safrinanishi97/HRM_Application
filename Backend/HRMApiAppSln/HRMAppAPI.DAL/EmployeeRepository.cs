@@ -3,6 +3,7 @@ using HRMApiApp.DTO;
 using HRMApiApp.Model;
 using HRMApiApp.Models;
 using HRMApiApp.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,15 @@ namespace HRMApiApp.DAL
 
         public async Task<int> UpdateAsync(EmployeeUpdateDTO employee, CancellationToken cancellationToken)
         {
+            async Task<byte[]?> ConvertFileToByteArrayAsync(IFormFile? file)
+            {
+                if (file == null || file.Length == 0)
+                    return null;
+
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
             if (employee == null)
                 throw new Exception($"data not found: {nameof(employee)}");
 
@@ -69,6 +79,7 @@ namespace HRMApiApp.DAL
             existingEmployee.EmployeeNameBangla = employee.EmployeeNameBangla ?? existingEmployee.EmployeeNameBangla;
             existingEmployee.FatherName = employee.FatherName ?? existingEmployee.FatherName;
             existingEmployee.MotherName = employee.MotherName ?? existingEmployee.MotherName;
+            existingEmployee.EmployeeImage = await ConvertFileToByteArrayAsync(employee.ProfileImage) ?? existingEmployee.EmployeeImage;
             existingEmployee.IdDepartment = employee.IdDepartment;
             existingEmployee.IdSection =   employee.IdSection;
             existingEmployee.BirthDate = employee.BirthDate ?? existingEmployee.BirthDate;
@@ -113,13 +124,16 @@ namespace HRMApiApp.DAL
             foreach(var item in employee.Documents)
             {
                 var existingEntry = existingEmployee.EmployeeDocuments.FirstOrDefault(ed=>ed.IdClient == item.IdClient && ed.Id == item.Id);
+                var uploadedBytes = await ConvertFileToByteArrayAsync(item.File);
+                var extension = Path.GetExtension(item.File?.FileName);
                 if (existingEntry != null) 
                 {
                     existingEntry.DocumentName = item.DocumentName;
                     existingEntry.FileName = item.FileName;
                     existingEntry.UploadDate = item.UploadDate;
                     existingEntry.UploadedFileExtention = item.UploadedFileExtention;
-                    existingEntry.SetDate = DateTime.UtcNow;
+                    existingEntry.UploadedFile = uploadedBytes ?? existingEntry.UploadedFile;
+                    existingEntry.SetDate = DateTime.Now;
                 }
                 else
                 {
@@ -130,8 +144,9 @@ namespace HRMApiApp.DAL
                         DocumentName = item.DocumentName,
                         FileName = item.FileName,
                         UploadDate = item.UploadDate,
-                        UploadedFileExtention = item.UploadedFileExtention,
-                        SetDate = DateTime.UtcNow
+                        UploadedFileExtention = extension,
+                        UploadedFile = uploadedBytes,
+                        SetDate = DateTime.Now
                     };
 
                     existingEmployee.EmployeeDocuments.Add(newEmployeeDocument);
@@ -174,7 +189,7 @@ namespace HRMApiApp.DAL
                         IsForeignInstitute = item.IsForeignInstitute,
                         Duration = item.Duration,
                         Achievement = item.Achievement,
-                        SetDate = DateTime.UtcNow
+                        SetDate = DateTime.Now
                     };
 
                     existingEmployee.EmployeeEducationInfos.Add(newEmployeeEducationInfo);
@@ -219,21 +234,6 @@ namespace HRMApiApp.DAL
 
 
 
-        //public async Task<int> UpdateAsync(EmployeeUpdateDTO upEmployee, CancellationToken cancellationToken)
-        //{
-           
-        //    var employee = await _context.Employees
-        //       .Include(e => e.EmployeeDocuments)
-        //       .Include(e => e.EmployeeEducationInfos)
-        //       .Include(e => e.EmployeeProfessionalCertifications)
-        //       .FirstOrDefaultAsync(e => e.IdClient == upEmployee.IdClient && e.Id == upEmployee.Id, cancellationToken);
-        //    if (employee == null) return 0;
-
-        //    employee.EmployeeName=upEmployee.EmployeeName;
-
-
-
-        //}
 
         //Hard delete
         //public bool DeleteEmployee(int id)
@@ -250,7 +250,7 @@ namespace HRMApiApp.DAL
         //}
 
         //soft delete
-        public async Task<bool> SoftDeleteAsync(int idClient, int id,CancellationToken cancellationToken)
+        public async Task<bool> SoftDeleteAsync(int idClient, int id, CancellationToken cancellationToken)
         {
             var employee = await _context.Employees.FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id);
             //.FirstOrDefaultAsync(e => e.IdClient == 10001001 && e.Id == id);

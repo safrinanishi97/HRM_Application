@@ -1,4 +1,5 @@
 ﻿using HRMApiApp.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace HRMApiApp.DTO
         public List<EmployeeDocumentDTO> Documents { get; set; } = [];
         public List<EmployeeEducationInfoDTO> EducationInfos { get; set; } = [];
         public List<EmployeeProfessionalCertificationDTO> Certifications { get; set; } = [];
+      public IFormFile? ProfileImage { get; set; }
+
     }
 
     public class EmployeeCreateDTO
@@ -50,6 +53,7 @@ namespace HRMApiApp.DTO
 
         public List<EmployeeEducationInfoDTO> EducationInfos { get; set; } = [];
         public List<EmployeeProfessionalCertificationDTO> Certifications { get; set; } = [];
+        public IFormFile? ProfileImage { get; set; }
     }
 
 
@@ -76,6 +80,7 @@ namespace HRMApiApp.DTO
         public List<EmployeeDocumentDTO> Documents { get; set; } = [];
         public List<EmployeeEducationInfoDTO> EducationInfos { get; set; } = [];
         public List<EmployeeProfessionalCertificationDTO> Certifications { get; set; } = [];
+        public IFormFile? ProfileImage { get; set; }
     }
     public class EmployeeDocumentDTO
     {
@@ -86,7 +91,8 @@ namespace HRMApiApp.DTO
         public string FileName { get; set; } = null!;
         public DateTime UploadDate { get; set; }
         public string? UploadedFileExtention { get; set; }
-        //public byte[]? UploadedFile { get; set; }
+
+        public IFormFile? File { get; set; }
     }
     public class EmployeeEducationInfoDTO
     {

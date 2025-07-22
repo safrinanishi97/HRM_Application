@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\HRMApiApp.DTO\HRMApiApp.DTO.csproj" />
     <ProjectReference Include="..\HRMApiApp.ViewModel\HRMApiApp.ViewModel.csproj" />
     <ProjectReference Include="..\HRMAppAPI.DAL\HRMApiApp.DAL.csproj" />
