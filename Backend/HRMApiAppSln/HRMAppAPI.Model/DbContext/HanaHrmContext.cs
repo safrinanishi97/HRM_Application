@@ -5,52 +5,43 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HRMApiApp.Model;
 
-public partial class HanaHrmContext : DbContext
+public partial class HanaHrmContext(DbContextOptions<HanaHrmContext> options) : DbContext(options)
 {
-    public HanaHrmContext()
-    {
-    }
+    public DbSet<Department> Departments { get; set; }
 
-    public HanaHrmContext(DbContextOptions<HanaHrmContext> options)
-        : base(options)
-    {
-    }
+    public DbSet<Designation> Designations { get; set; }
 
-    public virtual DbSet<Department> Departments { get; set; }
+    public DbSet<EducationExamination> EducationExaminations { get; set; }
 
-    public virtual DbSet<Designation> Designations { get; set; }
+    public DbSet<EducationLevel> EducationLevels { get; set; }
 
-    public virtual DbSet<EducationExamination> EducationExaminations { get; set; }
+    public DbSet<EducationResult> EducationResults { get; set; }
 
-    public virtual DbSet<EducationLevel> EducationLevels { get; set; }
+    public DbSet<Employee> Employees { get; set; }
 
-    public virtual DbSet<EducationResult> EducationResults { get; set; }
+    public DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
 
-    public virtual DbSet<Employee> Employees { get; set; }
+    public DbSet<EmployeeEducationInfo> EmployeeEducationInfos { get; set; }
 
-    public virtual DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
+    public DbSet<EmployeeFamilyInfo> EmployeeFamilyInfos { get; set; }
 
-    public virtual DbSet<EmployeeEducationInfo> EmployeeEducationInfos { get; set; }
+    public DbSet<EmployeeProfessionalCertification> EmployeeProfessionalCertifications { get; set; }
 
-    public virtual DbSet<EmployeeFamilyInfo> EmployeeFamilyInfos { get; set; }
+    public DbSet<EmployeeType> EmployeeTypes { get; set; }
 
-    public virtual DbSet<EmployeeProfessionalCertification> EmployeeProfessionalCertifications { get; set; }
+    public DbSet<Gender> Genders { get; set; }
 
-    public virtual DbSet<EmployeeType> EmployeeTypes { get; set; }
+    public DbSet<JobType> JobTypes { get; set; }
 
-    public virtual DbSet<Gender> Genders { get; set; }
+    public DbSet<MaritalStatus> MaritalStatuses { get; set; }
 
-    public virtual DbSet<JobType> JobTypes { get; set; }
+    public DbSet<Relationship> Relationships { get; set; }
 
-    public virtual DbSet<MaritalStatus> MaritalStatuses { get; set; }
+    public DbSet<Religion> Religions { get; set; }
 
-    public virtual DbSet<Relationship> Relationships { get; set; }
+    public DbSet<Section> Sections { get; set; }
 
-    public virtual DbSet<Religion> Religions { get; set; }
-
-    public virtual DbSet<Section> Sections { get; set; }
-
-    public virtual DbSet<WeekOff> WeekOffs { get; set; }
+    public DbSet<WeekOff> WeekOffs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Server=192.168.70.89;Database=HANA-HRM;User=SA;Password=Sa@123456; TrustServerCertificate=true; MultipleActiveResultSets=True");

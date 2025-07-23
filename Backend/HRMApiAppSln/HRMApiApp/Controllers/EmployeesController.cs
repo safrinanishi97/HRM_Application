@@ -17,7 +17,7 @@ namespace HRMApiApp.Controllers
     {
         private readonly IEmployeeService _employeeService = employeeService;
         private readonly IValidator<EmployeeCreateDTO> _validator = validator;
-
+         
         [HttpGet("allemployees")]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployees(CancellationToken cancellationToken)
         {
