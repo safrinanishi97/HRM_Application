@@ -1,6 +1,8 @@
 ﻿using HRMApiApp.DAL.Interfaces;
 using HRMApiApp.Model;
+using HRMApiApp.Models;
 using HRMApiApp.ViewModel;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,112 +11,120 @@ using System.Threading.Tasks;
 
 namespace HRMApiApp.DAL
 {
-    public class CommonRepository : ICommonRepository
+    public class CommonRepository(HanaHrmContext context) : ICommonRepository
     {
 
-        public readonly HanaHrmContext _context;
+        public readonly HanaHrmContext _context = context;
 
-        public CommonRepository(HanaHrmContext context)
+        public async Task<List<CommonViewModel>> GetAllDepartment(CancellationToken cancellationToken)
         {
-            _context = context;
-        }
-
-        public List<CommonViewModel> GetAllDepartment()
-        {
-            return _context.Departments.Select(e => new CommonViewModel {
+            var dept= await _context.Departments.Select(e => new CommonViewModel {
              Id = e.Id,
              Name=e.DepartName
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return dept;
         }
 
-        public List<CommonViewModel> GetAllDesignation()
+
+        public async Task<List<CommonViewModel>> GetAllDesignation(CancellationToken cancellationToken)
         {
-            return _context.Designations.Select(e => new CommonViewModel
+            var desig= await _context.Designations.Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Name = e.DesignationName
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return desig;
         }
 
-        public List<CommonViewModel> GetAllEducationLevel()
+        public async Task<List<CommonViewModel>> GetAllEducationLevel(CancellationToken cancellationToken)
         {
-            return _context.EducationLevels.Select(e => new CommonViewModel
+            var eduLevel= await _context.EducationLevels.Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Name = e.EducationLevelName
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return eduLevel;
         }
 
-        public List<CommonViewModel> GetAllEducationResult()
+        public async Task<List<CommonViewModel>> GetAllEducationResult(CancellationToken cancellationToken)
         {
-            return _context.EducationResults.Select(e => new CommonViewModel
+            var eduResult= await _context.EducationResults.Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Name = e.ResultName
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return eduResult;
         }
 
-        public List<CommonViewModel> GetAllEmployeeType()
+        public async Task<List<CommonViewModel>> GetAllEmployeeType(CancellationToken cancellationToken)
         {
-            return _context.EmployeeTypes.Select(e => new CommonViewModel
+            var empType = await _context.EmployeeTypes.Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Name = e.TypeName
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return empType;
         }
 
-        public List<CommonViewModel> GetAllGender()
+        public async Task<List<CommonViewModel>> GetAllGender(CancellationToken cancellationToken)
         {
-            return _context.Genders.Select(e => new CommonViewModel
+            var gender = await _context.Genders.Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Name = e.GenderName
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return gender;
         }
 
-        public List<CommonViewModel> GetAllJobType()
+        public async Task<List<CommonViewModel>> GetAllJobType(CancellationToken cancellationToken)
         {
-            return _context.JobTypes.Select(e => new CommonViewModel
+            var jobType = await _context.JobTypes.Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Name = e.JobTypeName
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return jobType;
         }
 
-        public List<CommonViewModel> GetAllMaritalStatus()
+        public async Task<List<CommonViewModel>> GetAllMaritalStatus(CancellationToken cancellationToken)
         {
-            return _context.MaritalStatuses.Select(e => new CommonViewModel
+            var maritalStatus = await _context.MaritalStatuses.Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Name = e.MaritalStatusName
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return maritalStatus;
+
         }
 
-        public List<CommonViewModel> GetAllRelationship()
+        public async Task<List<CommonViewModel>> GetAllRelationship(CancellationToken cancellationToken)
         {
-            return _context.Relationships.Select(e => new CommonViewModel
+            var relation = await _context.Relationships.Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Name = e.RelationName
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return relation;
         }
 
-        public List<CommonViewModel> GetAllReligion()
+        public async Task<List<CommonViewModel>> GetAllReligion(CancellationToken cancellationToken)
         {
-            return _context.Religions.Select(e => new CommonViewModel
+            var religion = await _context.Religions.Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Name = e.ReligionName
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return religion;
         }
 
-        public List<CommonViewModel> GetAllWeekOff()
+        public async Task<List<CommonViewModel>> GetAllWeekOff(CancellationToken cancellationToken)
         {
-            return _context.WeekOffs.Select(e => new CommonViewModel
+            var weekOff =await _context.WeekOffs.Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Name = e.WeekOffDay
-            }).ToList();
+            }).ToListAsync(cancellationToken);
+            return weekOff;
         }
     }
 }

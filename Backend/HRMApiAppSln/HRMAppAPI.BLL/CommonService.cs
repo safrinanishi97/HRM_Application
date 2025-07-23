@@ -1,6 +1,7 @@
 ﻿using HRMApiApp.BLL.Interfaces;
 using HRMApiApp.DAL;
 using HRMApiApp.DAL.Interfaces;
+using HRMApiApp.DTO;
 using HRMApiApp.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -10,67 +11,64 @@ using System.Threading.Tasks;
 
 namespace HRMApiApp.BLL
 {
-    public class CommonService:ICommonService
+    public class CommonService(ICommonRepository commonRepository) : ICommonService
     {
-        private readonly ICommonRepository _commonRepository;
-        public CommonService(ICommonRepository commonRepository)
+        private readonly ICommonRepository _commonRepository = commonRepository;
+
+        
+        public async Task<List<CommonViewModel>> GetAllDepartment(CancellationToken cancellationToken)
         {
-            _commonRepository = commonRepository;
+            return await _commonRepository.GetAllDepartment(cancellationToken);
         }
 
-        public List<CommonViewModel> GetAllDepartment()
+        public async Task<List<CommonViewModel>> GetAllDesignation(CancellationToken cancellationToken)
         {
-            return _commonRepository.GetAllDepartment();
+            return await _commonRepository.GetAllDesignation(cancellationToken);
         }
 
-        public List<CommonViewModel> GetAllDesignation()
+        public async Task<List<CommonViewModel>> GetAllEducationLevel(CancellationToken cancellationToken)
         {
-            return _commonRepository.GetAllDesignation();
+            return await _commonRepository.GetAllEducationLevel(cancellationToken);
         }
 
-        public List<CommonViewModel> GetAllEducationLevel()
+        public async Task<List<CommonViewModel>> GetAllEducationResult(CancellationToken cancellationToken)
         {
-            return _commonRepository.GetAllEducationLevel();
+            return await _commonRepository.GetAllEducationResult(cancellationToken);
         }
 
-        public List<CommonViewModel> GetAllEducationResult()
-        {
-            return _commonRepository.GetAllEducationResult();
+        public async Task<List<CommonViewModel>> GetAllEmployeeType(CancellationToken cancellationToken)
+        {   
+            return await _commonRepository.GetAllEmployeeType(cancellationToken);
         }
 
-        public List<CommonViewModel> GetAllEmployeeType()
+        public async Task<List<CommonViewModel>> GetAllGender(CancellationToken cancellationToken)
         {
-            return _commonRepository.GetAllEmployeeType();
+            return await _commonRepository.GetAllGender(cancellationToken);
         }
 
-        public List<CommonViewModel> GetAllGender()
+        public async Task<List<CommonViewModel>> GetAllJobType(CancellationToken cancellationToken)
         {
-            return _commonRepository.GetAllGender();
+            return await _commonRepository.GetAllJobType(cancellationToken);
         }
 
-        public List<CommonViewModel> GetAllJobType()
+        public async Task<List<CommonViewModel>> GetAllMaritalStatus(CancellationToken cancellationToken)
         {
-            return _commonRepository.GetAllJobType();
+            return await _commonRepository.GetAllMaritalStatus(cancellationToken);
         }
 
-        public List<CommonViewModel> GetAllMaritalStatus()
+        public async Task<List<CommonViewModel>> GetAllRelationship(CancellationToken cancellationToken)
         {
-            return _commonRepository.GetAllMaritalStatus();
+            return await _commonRepository.GetAllRelationship(cancellationToken);
         }
 
-        public List<CommonViewModel> GetAllRelationship()
+        public async Task<List<CommonViewModel>> GetAllReligion(CancellationToken cancellationToken)
         {
-            return _commonRepository.GetAllRelationship();
+            return await _commonRepository.GetAllReligion(cancellationToken);
         }
 
-        public List<CommonViewModel> GetAllReligion()
+        public async Task<List<CommonViewModel>> GetAllWeekOff(CancellationToken cancellationToken)
         {
-            return _commonRepository.GetAllReligion();
-        }
-
-        public List<CommonViewModel> GetAllWeekOff()
-        {
-            return _commonRepository.GetAllWeekOff();
+            return await _commonRepository.GetAllWeekOff(cancellationToken);
         }
     }
 }

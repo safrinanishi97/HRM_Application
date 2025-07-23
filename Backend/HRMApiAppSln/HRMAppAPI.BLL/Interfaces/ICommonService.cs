@@ -9,16 +9,16 @@ namespace HRMApiApp.BLL.Interfaces
 {
     public interface ICommonService
     {
-        List<CommonViewModel> GetAllDepartment();
-        List<CommonViewModel> GetAllDesignation();
-        List<CommonViewModel> GetAllEducationLevel();
-        List<CommonViewModel> GetAllEducationResult();
-        List<CommonViewModel> GetAllEmployeeType();
-        List<CommonViewModel> GetAllGender();
-        List<CommonViewModel> GetAllJobType();
-        List<CommonViewModel> GetAllMaritalStatus();
-        List<CommonViewModel> GetAllRelationship();
-        List<CommonViewModel> GetAllReligion();
-        List<CommonViewModel> GetAllWeekOff();
+        Task<List<CommonViewModel>> GetAllDepartment(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllDesignation(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllEducationLevel(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllEducationResult(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllEmployeeType(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllGender(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllJobType(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllMaritalStatus(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllRelationship(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllReligion(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllWeekOff(CancellationToken cancellationToken);
     }
 }
