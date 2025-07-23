@@ -17,16 +17,9 @@ using System.Threading.Tasks;
 
 namespace HRMApiApp.BLL
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployeeService
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IHostEnvironment _environment;
-
-        public EmployeeService(IEmployeeRepository employeeRepository, IHostEnvironment environment)
-        {
-            _employeeRepository = employeeRepository;
-            _environment = environment;
-        }
+        private readonly IEmployeeRepository _employeeRepository = employeeRepository;
 
         public async Task<EmployeeDTO?> GetByIdAsync(int id, int idClient, CancellationToken cancellationToken)
         {
@@ -95,7 +88,79 @@ namespace HRMApiApp.BLL
             };
             return emloyee;
         }
+        public async Task<(byte[]? fileData, string mimeType)> GetEmployeeFileAsync(
+     int idClient,
+     int id,
+     string fileType,
+     int? documentId,
+     CancellationToken cancellationToken)
+        {
+            var employee = await _employeeRepository.GetByIdAsync(idClient, id, cancellationToken);
 
+            if (employee == null)
+                return (null, string.Empty);
+
+            byte[]? fileBytes = null;
+
+            if (fileType.ToLower() == "image")
+            {
+                if (employee.EmployeeImage == null)
+                    return (null, string.Empty);
+
+                fileBytes = employee.EmployeeImage;
+            }
+            else if (fileType.ToLower() == "document")
+            {
+                if (documentId == null)
+                    return (null, string.Empty);
+
+                var document = employee.EmployeeDocuments
+                    .FirstOrDefault(d => d.IdClient == idClient && d.Id == documentId);
+
+                if (document == null || document.UploadedFile == null)
+                    return (null, string.Empty);
+
+                fileBytes = document.UploadedFile;
+            }
+            else
+            {
+                return (null, string.Empty);
+            }
+
+            var mimeType = GetMimeTypeFromBytes(fileBytes);
+            return (fileBytes, mimeType);
+        }
+
+        private string GetMimeTypeFromBytes(byte[] data)
+        {
+            if (data.Length > 4)
+            {
+                if (data[0] == 0xFF && data[1] == 0xD8)
+                    return "image/jpeg";
+                if (data[0] == 0x89 && data[1] == 0x50 && data[2] == 0x4E && data[3] == 0x47)
+                    return "image/png";
+                if (data[0] == 0x47 && data[1] == 0x49 && data[2] == 0x46)
+                    return "image/gif";
+                if (data[0] == 0x25 && data[1] == 0x50 && data[2] == 0x44 && data[3] == 0x46)
+                    return "application/pdf";
+                if (data[0] == 0x50 && data[1] == 0x4B && data[2] == 0x03 && data[3] == 0x04)
+                    return "application/zip";
+                if (data[0] == 0xD0 && data[1] == 0xCF && data[2] == 0x11 && data[3] == 0xE0)
+                    return "application/vnd.ms-excel";
+
+                // Check if text
+                bool isText = true;
+                for (int i = 0; i < Math.Min(data.Length, 512); i++)
+                {
+                    if (data[i] < 0x09) { isText = false; break; }
+                    if (data[i] > 0x0D && data[i] < 0x20) { isText = false; break; }
+                }
+                if (isText)
+                    return "text/plain";
+            }
+
+            return "application/octet-stream";
+        }
         public async Task<List<EmployeeDTO>> GetAllAsync(CancellationToken cancellationToken)
         {
             var employees = await _employeeRepository.GetAllAsync(cancellationToken);

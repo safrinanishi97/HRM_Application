@@ -17,5 +17,9 @@ namespace HRMApiApp.BLL.Interfaces
         Task<bool> CreateAsync(EmployeeCreateDTO employeeDto, CancellationToken cancellationToken);
         Task<string> UpdateAsync(EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken);
         Task<bool> DeleteAsync(int idClient, int id, CancellationToken cancellationToken);
+
+
+        Task<(byte[]? fileData, string mimeType)> GetEmployeeFileAsync(int idClient, int id, string fileType, int? documentId,
+            CancellationToken cancellationToken);
     }
 }

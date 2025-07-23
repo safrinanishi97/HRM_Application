@@ -1,7 +1,9 @@
+using FluentValidation;
 using HRMApiApp.BLL;
 using HRMApiApp.BLL.Interfaces;
 using HRMApiApp.DAL;
 using HRMApiApp.DAL.Interfaces;
+using HRMApiApp.DTO;
 using HRMApiApp.Model;
 using HRMApiApp.Models;
 using Microsoft.AspNetCore.Builder;
@@ -21,13 +23,13 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 builder.Services.AddScoped<ICommonRepository, CommonRepository>();
 builder.Services.AddScoped<ICommonService, CommonService>();
+builder.Services.AddScoped<IValidator<EmployeeCreateDTO>, EmployeeCreateDTOValidator>();
+
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

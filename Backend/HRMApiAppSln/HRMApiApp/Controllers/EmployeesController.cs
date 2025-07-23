@@ -1,9 +1,11 @@
-﻿using HRMApiApp.BLL.Interfaces;
+﻿using FluentValidation;
+using HRMApiApp.BLL.Interfaces;
 using HRMApiApp.DTO;
 using HRMApiApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace HRMApiApp.Controllers
@@ -11,14 +13,10 @@ namespace HRMApiApp.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeesController : ControllerBase
+    public class EmployeesController(IEmployeeService employeeService, IValidator<EmployeeCreateDTO> validator) : ControllerBase
     {
-        private readonly IEmployeeService _employeeService;
-
-        public EmployeesController(IEmployeeService employeeService)
-        {
-            _employeeService = employeeService;
-        }
+        private readonly IEmployeeService _employeeService = employeeService;
+        private readonly IValidator<EmployeeCreateDTO> _validator = validator;
 
         [HttpGet("allemployees")]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployees(CancellationToken cancellationToken)
@@ -27,8 +25,8 @@ namespace HRMApiApp.Controllers
             return Ok(employees);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployeeById([FromQuery] int idClient, int id, CancellationToken cancellationToken)
+        [HttpGet("getbyid/{idClient:int}/{id:int}")]
+        public async Task<IActionResult> GetEmployeeById(int idClient, int id, CancellationToken cancellationToken)
         {
             var employee = await _employeeService.GetByIdAsync(idClient, id, cancellationToken);
             if (employee == null)
@@ -37,12 +35,25 @@ namespace HRMApiApp.Controllers
             return Ok(employee);
         }
 
+        [HttpGet("file/{idClient:int}/{id:int}")]
+        public async Task<IActionResult> GetEmployeeFile(int idClient, int id,string fileType,int? documentId,CancellationToken cancellationToken)
+        {
+            var (fileData, mimeType) = await _employeeService.GetEmployeeFileAsync(idClient, id, fileType, documentId, cancellationToken);
+
+            if (fileData == null || string.IsNullOrEmpty(mimeType))
+                return NotFound();
+
+            return File(fileData, mimeType);
+        }
+
         [HttpPost("createemployeewithdetails")]
         public async Task<IActionResult> CreateEmployee([FromForm] EmployeeCreateDTO employeeDto, CancellationToken cancellationToken)
         {
-            if (!ModelState.IsValid)
+            var validationResult = await _validator.ValidateAsync(employeeDto);
+
+            if (!validationResult.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
             }
             if (employeeDto.ProfileImage == null)
             {
@@ -72,7 +83,7 @@ namespace HRMApiApp.Controllers
                 return BadRequest("Failed to create employee");
         }
 
-        [HttpPut("{idClient}/{id}")]
+        [HttpPut("updateemployee/{idClient}/{id}")]
         public async Task<IActionResult> UpdateEmployee([FromForm] EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
@@ -91,7 +102,7 @@ namespace HRMApiApp.Controllers
             };
         }
 
-        [HttpDelete("{idClient}/{id}")]
+        [HttpDelete("deleteemployee/{idClient}/{id}")]
         public async Task<IActionResult> DeleteEmployee(int idClient, int id, CancellationToken cancellationToken)
         {
             var result = await _employeeService.DeleteAsync(id, idClient, cancellationToken);
