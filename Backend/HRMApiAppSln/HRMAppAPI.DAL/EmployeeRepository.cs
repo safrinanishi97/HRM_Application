@@ -17,41 +17,48 @@ namespace HRMApiApp.DAL
 {
 
 
-    public class EmployeeRepository(HanaHrmContext context) : IEmployeeRepository
+    public class EmployeeRepository(HanaHrmContext _context) : IEmployeeRepository
     {
-        private readonly HanaHrmContext _context = context;
-
-        public async Task<Employee?> GetByIdAsync(int idClient, int id, CancellationToken cancellationToken)
+        public async Task<Employee?> GetByIdAsync(int idClient, int id)
         {
+            var cts = new CancellationTokenSource();
+            CancellationToken token = cts.Token;
             var emp = await _context.Employees
               .AsNoTracking()
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
-                .Include(e => e.EmployeeProfessionalCertifications).FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id, cancellationToken);
+                .Include(e => e.EmployeeProfessionalCertifications).FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id);
             return emp;
         }
 
-        public async Task<List<Employee>> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<List<Employee>> GetAllAsync(int idClient)
         {
+
+            var cts = new CancellationTokenSource();
+            CancellationToken token = cts.Token;
             var emp= await _context.Employees
                 .AsNoTracking()
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
                 .Include(e => e.EmployeeProfessionalCertifications)
-                .Where(e => e.IsActive != false)
-                .ToListAsync(cancellationToken);
+                .Where(e => e.IdClient == idClient)
+                .ToListAsync(token);
             return emp;
         }
 
-        public async Task<bool> CreateAsync(Employee employee, CancellationToken cancellationToken)
+        public async Task<bool> CreateAsync(Employee employee)
         {
+            var cts = new CancellationTokenSource();
+            CancellationToken token = cts.Token;
             _context.Employees.Add(employee);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(token);
             return true;
         }
 
-        public async Task<int> UpdateAsync(EmployeeUpdateDTO employee, CancellationToken cancellationToken)
+        public async Task<int> UpdateAsync(EmployeeUpdateDTO employee)
         {
+            var cts = new CancellationTokenSource();
+            CancellationToken token = cts.Token;
             async Task<byte[]?> ConvertFileToByteArrayAsync(IFormFile? file)
             {
                 if (file == null || file.Length == 0)
@@ -71,7 +78,7 @@ namespace HRMApiApp.DAL
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
                 .Include(e => e.EmployeeProfessionalCertifications)
-                .FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id, cancellationToken);
+                .FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id);
 
             if (existingEmployee == null) return 0;
 
@@ -226,7 +233,7 @@ namespace HRMApiApp.DAL
                 }
             }
 
-            var result = await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync(token);
 
             return result;
         }
@@ -250,8 +257,10 @@ namespace HRMApiApp.DAL
         //}
 
         //soft delete
-        public async Task<bool> SoftDeleteAsync(int idClient, int id, CancellationToken cancellationToken)
+        public async Task<bool> SoftDeleteAsync(int idClient, int id)
         {
+            var cts = new CancellationTokenSource();
+            CancellationToken token = cts.Token;
             var employee = await _context.Employees.FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id);
             //.FirstOrDefaultAsync(e => e.IdClient == 10001001 && e.Id == id);
 
@@ -260,7 +269,7 @@ namespace HRMApiApp.DAL
                 return false;
             }
             employee.IsActive = false;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(token);
             return true;
         }
 

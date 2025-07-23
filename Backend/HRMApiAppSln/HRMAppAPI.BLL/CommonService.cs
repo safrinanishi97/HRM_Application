@@ -11,64 +11,62 @@ using System.Threading.Tasks;
 
 namespace HRMApiApp.BLL
 {
-    public class CommonService(ICommonRepository commonRepository) : ICommonService
+    public class CommonService(ICommonRepository _commonRepository) : ICommonService
     {
-        private readonly ICommonRepository _commonRepository = commonRepository;
 
-        
-        public async Task<List<CommonViewModel>> GetAllDepartment(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllDepartment(int idClient)
         {
-            return await _commonRepository.GetAllDepartment(cancellationToken);
+            return await _commonRepository.GetAllDepartment(idClient);
         }
 
-        public async Task<List<CommonViewModel>> GetAllDesignation(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllDesignation(int idClient)
         {
-            return await _commonRepository.GetAllDesignation(cancellationToken);
+            return await _commonRepository.GetAllDesignation(idClient);
         }
 
-        public async Task<List<CommonViewModel>> GetAllEducationLevel(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllEducationLevel(int idClient)
         {
-            return await _commonRepository.GetAllEducationLevel(cancellationToken);
+            return await _commonRepository.GetAllEducationLevel(idClient);
         }
 
-        public async Task<List<CommonViewModel>> GetAllEducationResult(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllEducationResult(int idClient)
         {
-            return await _commonRepository.GetAllEducationResult(cancellationToken);
+            return await _commonRepository.GetAllEducationResult(idClient);
         }
 
-        public async Task<List<CommonViewModel>> GetAllEmployeeType(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllEmployeeType(int idClient)
         {   
-            return await _commonRepository.GetAllEmployeeType(cancellationToken);
+            return await _commonRepository.GetAllEmployeeType(idClient);
         }
 
-        public async Task<List<CommonViewModel>> GetAllGender(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllGender(int idClient)
         {
-            return await _commonRepository.GetAllGender(cancellationToken);
+            return await _commonRepository.GetAllGender(idClient);
         }
 
-        public async Task<List<CommonViewModel>> GetAllJobType(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllJobType(int idClient)
         {
-            return await _commonRepository.GetAllJobType(cancellationToken);
+            return await _commonRepository.GetAllJobType(idClient);
         }
 
-        public async Task<List<CommonViewModel>> GetAllMaritalStatus(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllMaritalStatus(int idClient)
         {
-            return await _commonRepository.GetAllMaritalStatus(cancellationToken);
+            return await _commonRepository.GetAllMaritalStatus(idClient);
         }
 
-        public async Task<List<CommonViewModel>> GetAllRelationship(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllRelationship(int idClient)
         {
-            return await _commonRepository.GetAllRelationship(cancellationToken);
+            return await _commonRepository.GetAllRelationship(idClient);
         }
 
-        public async Task<List<CommonViewModel>> GetAllReligion(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllReligion(int idClient)
         {
-            return await _commonRepository.GetAllReligion(cancellationToken);
+            return await _commonRepository.GetAllReligion(idClient);
         }
 
-        public async Task<List<CommonViewModel>> GetAllWeekOff(CancellationToken cancellationToken)
+        public async Task<List<CommonViewModel>> GetAllWeekOff(int idClient)
         {
-            return await _commonRepository.GetAllWeekOff(cancellationToken);
+            return await _commonRepository.GetAllWeekOff(idClient);
         }
     }
 }

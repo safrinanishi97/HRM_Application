@@ -11,10 +11,10 @@ namespace HRMApiApp.DAL.Interfaces
 {
     public interface IEmployeeRepository
     {
-        Task<Employee?> GetByIdAsync(int idClient, int id, CancellationToken cancellationToken);
-        Task<List<Employee>> GetAllAsync(CancellationToken cancellationToken);
-        Task<bool> CreateAsync(Employee employee, CancellationToken cancellationToken);
-        Task<int> UpdateAsync(EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken);
-        Task<bool> SoftDeleteAsync(int idClient, int id, CancellationToken cancellationToken);
+        Task<Employee?> GetByIdAsync(int idClient, int id);
+        Task<List<Employee>> GetAllAsync(int idClient);
+        Task<bool> CreateAsync(Employee employee);
+        Task<int> UpdateAsync(EmployeeUpdateDTO employeeDto);
+        Task<bool> SoftDeleteAsync(int idClient, int id);
     }
 }

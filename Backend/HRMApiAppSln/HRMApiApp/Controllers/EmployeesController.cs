@@ -11,67 +11,41 @@ using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 namespace HRMApiApp.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("api/employee")]
     [ApiController]
-    public class EmployeesController(IEmployeeService employeeService, IValidator<EmployeeCreateDTO> validator) : ControllerBase
-    {
-        private readonly IEmployeeService _employeeService = employeeService;
-        private readonly IValidator<EmployeeCreateDTO> _validator = validator;
-         
+    public class EmployeesController(IEmployeeService _employeeService, IValidator<EmployeeCreateDTO> _validator) : ControllerBase
+    {    
         [HttpGet("allemployees")]
-        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployees(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployees(int idClient)
         {
-            var employees = await _employeeService.GetAllAsync(cancellationToken);
+            var employees = await _employeeService.GetAllAsync(idClient);
             return Ok(employees);
         }
 
-        [HttpGet("getbyid/{idClient:int}/{id:int}")]
-        public async Task<IActionResult> GetEmployeeById(int idClient, int id, CancellationToken cancellationToken)
+        [HttpGet("getbyid")]
+        public async Task<IActionResult> GetEmployeeById([FromQuery]int idClient, [FromQuery] int id)
         {
-            var employee = await _employeeService.GetByIdAsync(idClient, id, cancellationToken);
+            var employee = await _employeeService.GetByIdAsync(idClient, id);
             if (employee == null)
                 return NotFound();
 
             return Ok(employee);
         }
 
-        [HttpGet("file/{idClient:int}/{id:int}")]
-        public async Task<IActionResult> GetEmployeeFile(int idClient, int id,string fileType,int? documentId,CancellationToken cancellationToken)
-        {
-            var (fileData, mimeType) = await _employeeService.GetEmployeeFileAsync(idClient, id, fileType, documentId, cancellationToken);
-
-            if (fileData == null || string.IsNullOrEmpty(mimeType))
-                return NotFound();
-
-            return File(fileData, mimeType);
-        }
+      
 
         [HttpPost("createemployeewithdetails")]
-        public async Task<IActionResult> CreateEmployee([FromForm] EmployeeCreateDTO employeeDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateEmployee([FromForm] EmployeeCreateDTO employeeDto)
         {
             var validationResult = await _validator.ValidateAsync(employeeDto);
 
             if (!validationResult.IsValid)
             {
-                return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(validationResult.Errors
+                    .Select(e => e.ErrorMessage));
             }
-            if (employeeDto.ProfileImage == null)
-            {
-                Console.WriteLine("ProfileImage is NULL");
-            }
-            else
-            {
-                Console.WriteLine($"ProfileImage: {employeeDto.ProfileImage.FileName}");
-            }
-
-            foreach (var doc in employeeDto.Documents)
-            {
-                if (doc.UpFile == null)
-                    Console.WriteLine($"Document [{doc.DocumentName}] File is NULL");
-                else
-                    Console.WriteLine($"Document [{doc.DocumentName}] File Name: {doc.UpFile.FileName}");
-            }
-            var success = await _employeeService.CreateAsync(employeeDto, cancellationToken);
+          
+            var success = await _employeeService.CreateAsync(employeeDto);
 
             if (success)
                 return Created("", new
@@ -83,15 +57,15 @@ namespace HRMApiApp.Controllers
                 return BadRequest("Failed to create employee");
         }
 
-        [HttpPut("updateemployee/{idClient}/{id}")]
-        public async Task<IActionResult> UpdateEmployee([FromForm] EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
+        [HttpPut("updateemployee")]
+        public async Task<IActionResult> UpdateEmployee([FromForm] EmployeeUpdateDTO employeeDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _employeeService.UpdateAsync(employeeDto, cancellationToken);
+            var result = await _employeeService.UpdateAsync(employeeDto);
 
             return result switch
             {
@@ -102,16 +76,28 @@ namespace HRMApiApp.Controllers
             };
         }
 
-        [HttpDelete("deleteemployee/{idClient}/{id}")]
-        public async Task<IActionResult> DeleteEmployee(int idClient, int id, CancellationToken cancellationToken)
+        [HttpDelete("deleteemployee")]
+        public async Task<IActionResult> DeleteEmployee(int idClient, int id)
         {
-            var result = await _employeeService.DeleteAsync(id, idClient, cancellationToken);
+            var result = await _employeeService.DeleteAsync(idClient, id);
             if (!result)
             {
                 return NotFound("Employee not found.");
             }
 
             return Ok(new { message = "Employee soft deleted successfully." });
+        }
+
+        [HttpGet("file")]
+        public async Task<IActionResult> GetEmployeeFile([FromQuery] int idClient, [FromQuery] int id, [FromQuery] string fileType, [FromQuery] int? documentId)
+        {
+            var (fileData, mimeType) = await _employeeService.GetEmployeeFileAsync(idClient, id, fileType, documentId);
+
+            if (fileData == null || string
+                .IsNullOrEmpty(mimeType))
+                return NotFound();
+
+            return File(fileData, mimeType);
         }
     }
 }

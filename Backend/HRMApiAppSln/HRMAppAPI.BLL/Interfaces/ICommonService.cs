@@ -9,16 +9,16 @@ namespace HRMApiApp.BLL.Interfaces
 {
     public interface ICommonService
     {
-        Task<List<CommonViewModel>> GetAllDepartment(CancellationToken cancellationToken);
-        Task<List<CommonViewModel>> GetAllDesignation(CancellationToken cancellationToken);
-        Task<List<CommonViewModel>> GetAllEducationLevel(CancellationToken cancellationToken);
-        Task<List<CommonViewModel>> GetAllEducationResult(CancellationToken cancellationToken);
-        Task<List<CommonViewModel>> GetAllEmployeeType(CancellationToken cancellationToken);
-        Task<List<CommonViewModel>> GetAllGender(CancellationToken cancellationToken);
-        Task<List<CommonViewModel>> GetAllJobType(CancellationToken cancellationToken);
-        Task<List<CommonViewModel>> GetAllMaritalStatus(CancellationToken cancellationToken);
-        Task<List<CommonViewModel>> GetAllRelationship(CancellationToken cancellationToken);
-        Task<List<CommonViewModel>> GetAllReligion(CancellationToken cancellationToken);
-        Task<List<CommonViewModel>> GetAllWeekOff(CancellationToken cancellationToken);
+        Task<List<CommonViewModel>> GetAllDepartment(int idClient);
+        Task<List<CommonViewModel>> GetAllDesignation(int idClient);
+        Task<List<CommonViewModel>> GetAllEducationLevel(int idClient);
+        Task<List<CommonViewModel>> GetAllEducationResult(int idClient);
+        Task<List<CommonViewModel>> GetAllEmployeeType(int idClient);
+        Task<List<CommonViewModel>> GetAllGender(int idClient);
+        Task<List<CommonViewModel>> GetAllJobType(int idClient);
+        Task<List<CommonViewModel>> GetAllMaritalStatus(int idClient);
+        Task<List<CommonViewModel>> GetAllRelationship(int idClient);
+        Task<List<CommonViewModel>> GetAllReligion(int idClient);
+        Task<List<CommonViewModel>> GetAllWeekOff(int idClient);
     }
 }

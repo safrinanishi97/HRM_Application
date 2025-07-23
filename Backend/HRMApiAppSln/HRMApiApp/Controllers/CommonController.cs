@@ -1,5 +1,6 @@
 ﻿using HRMApiApp.BLL;
 using HRMApiApp.BLL.Interfaces;
+using HRMApiApp.DTO;
 using HRMApiApp.Models;
 using HRMApiApp.ViewModel;
 using HRMApiApp.ViewModels;
@@ -8,76 +9,76 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HRMApiApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/common")]
     [ApiController]
-    public class CommonController(ICommonService commonService) : ControllerBase
+    public class CommonController(ICommonService _commonService) : ControllerBase
     {
-        private readonly ICommonService _commonService = commonService;
+ 
 
         [HttpGet("departments")]
-        public ActionResult<List<Department>> GetAllDepartments(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllDepartments(int idClient)
         {
-            var dept = _commonService.GetAllDepartment(cancellationToken);
+            var dept = await _commonService.GetAllDepartment(idClient);
             return Ok(dept);
         }
         [HttpGet("designation")]
-        public ActionResult<List<Designation>> GetAllDesignations(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllDesignations(int idClient)
         {
-            var desig = _commonService.GetAllDesignation(cancellationToken);
+            var desig = await _commonService.GetAllDesignation(idClient);
             return Ok(desig);
         }
-        [HttpGet("educationLevel")]
-        public ActionResult<List<EducationLevel>> GetAllEducationLevels(CancellationToken cancellationToken)
+        [HttpGet("educationlevel")]
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEducationLevels(int idClient)
         {
-            var eduLevel = _commonService.GetAllEducationLevel(cancellationToken);
+            var eduLevel = await _commonService.GetAllEducationLevel(idClient);
             return Ok(eduLevel);
         }
-        [HttpGet("educationResults")]
-        public ActionResult<List<EducationResult>> GetAllEducationResults(CancellationToken cancellationToken)
+        [HttpGet("educationresults")]
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEducationResults(int idClient)
         {
-            var eduResult = _commonService.GetAllEducationResult(cancellationToken);
+            var eduResult = await _commonService.GetAllEducationResult(idClient);
             return Ok(eduResult);
         }
-        [HttpGet("employeeType")]
-        public ActionResult<List<EmployeeType>> GetAllEmployeeTypes(CancellationToken cancellationToken)
+        [HttpGet("employeetype")]
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEmployeeTypes(int idClient)
         {
-            var empType = _commonService.GetAllEmployeeType(cancellationToken);
-            return Ok(empType);
+            var empType =await _commonService.GetAllEmployeeType(idClient);
+            return Ok(empType); 
         }
         [HttpGet("gender")]
-        public ActionResult<List<Gender>> GetAllGenders(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllGenders(int idClient)
         {
-            var gender = _commonService.GetAllGender(cancellationToken);
+            var gender = await _commonService.GetAllGender(idClient);
             return Ok(gender);
         }
-        [HttpGet("jobType")]
-        public ActionResult<List<JobType>> GetAllJobTypes(CancellationToken cancellationToken)
+        [HttpGet("jobtype")]
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllJobTypes(int idClient)
         {
-            var jobType = _commonService.GetAllJobType(cancellationToken);
+            var jobType = await _commonService.GetAllJobType(idClient);
             return Ok(jobType);
         }
-        [HttpGet("maritalStatus")]
-        public ActionResult<List<MaritalStatus>> GetAllMaritalStatus(CancellationToken cancellationToken)
+        [HttpGet("maritalstatus")]
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllMaritalStatus(int idClient)
         {
-            var maritalStatus = _commonService.GetAllMaritalStatus(cancellationToken);
+            var maritalStatus = await _commonService.GetAllMaritalStatus(idClient);
             return Ok(maritalStatus);
         }
         [HttpGet("relationship")]
-        public ActionResult<List<Relationship>> GetAllRelationship(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllRelationship(int idClient)
         {
-            var relation = _commonService.GetAllRelationship(cancellationToken);
+            var relation = await _commonService.GetAllRelationship(idClient);
             return Ok(relation);
         }
         [HttpGet("religion")]
-        public ActionResult<List<Religion>> GetAllReligions(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllReligions(int idClient)
         {
-            var religion = _commonService.GetAllReligion(cancellationToken);
+            var religion = await _commonService.GetAllReligion(idClient);
             return Ok(religion);
         }
-        [HttpGet("weeksOff")]
-        public ActionResult<List<Employee>> GetAllWeekOffs(CancellationToken cancellationToken)
+        [HttpGet("weeksoff")]
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllWeekOffs(int idClient)
         {
-            var weeksOff = _commonService.GetAllWeekOff(cancellationToken);
+            var weeksOff = await _commonService.GetAllWeekOff(idClient);
             return Ok(weeksOff);
         }
 
