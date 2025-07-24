@@ -34,7 +34,7 @@ namespace HRMApiApp.Controllers
 
       
 
-        [HttpPost("createemployeewithdetails")]
+        [HttpPost]
         public async Task<IActionResult> CreateEmployee([FromForm] EmployeeCreateDTO employeeDto)
         {
             var validationResult = await _validator.ValidateAsync(employeeDto);
@@ -57,7 +57,7 @@ namespace HRMApiApp.Controllers
                 return BadRequest("Failed to create employee");
         }
 
-        [HttpPut("updateemployee")]
+        [HttpPut]
         public async Task<IActionResult> UpdateEmployee([FromForm] EmployeeUpdateDTO employeeDto)
         {
             if (!ModelState.IsValid)
@@ -76,7 +76,7 @@ namespace HRMApiApp.Controllers
             };
         }
 
-        [HttpDelete("deleteemployee/{idClient}/{id}")]
+        [HttpDelete("{idClient}/{id}")]
         public async Task<IActionResult> DeleteEmployee([FromRoute] int idClient, [FromRoute] int id)
         {
             var result = await _employeeService.DeleteAsync(idClient, id);
