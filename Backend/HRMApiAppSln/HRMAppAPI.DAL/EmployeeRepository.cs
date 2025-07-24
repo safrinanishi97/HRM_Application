@@ -103,7 +103,7 @@ namespace HRMApiApp.DAL
             var deletedEmployeeDocumentList = existingEmployee.EmployeeDocuments
                 .Where(ed => ed.IdClient == idClient && !employee.Documents.Any(d => d.IdClient == ed.IdClient && d.Id == ed.Id))
                 .ToList();
-            if(deletedEmployeeDocumentList!=null)
+            if(deletedEmployeeDocumentList.Any())
             {
                 _context.EmployeeDocuments.RemoveRange(deletedEmployeeDocumentList);
             }
@@ -111,7 +111,7 @@ namespace HRMApiApp.DAL
             var deletedEmployeeEducationInfoList = existingEmployee.EmployeeEducationInfos
                 .Where(eei => eei.IdClient == idClient && !employee.EducationInfos.Any(ei => ei.IdClient == eei.IdClient && ei.Id == eei.Id))
                 .ToList();
-            if (deletedEmployeeEducationInfoList != null)
+            if (deletedEmployeeDocumentList.Any())
             {
                 _context.EmployeeEducationInfos.RemoveRange(deletedEmployeeEducationInfoList);
             }
@@ -120,7 +120,7 @@ namespace HRMApiApp.DAL
                 .Where(epc => epc.IdClient == idClient && !employee.Certifications.Any(c => c.IdClient == epc.IdClient && c.Id == epc.Id))
                 .ToList();
 
-            if (deletedCertificationList != null) 
+            if (deletedEmployeeDocumentList.Any()) 
             {
                 _context.EmployeeProfessionalCertifications.RemoveRange(deletedCertificationList);
             }
