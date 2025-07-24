@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HRMApiApp.Models;
 
-public partial class EmployeeEducationInfo
+public class EmployeeEducationInfo
 {
     public int IdClient { get; set; }
 
