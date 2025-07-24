@@ -19,10 +19,11 @@ namespace HRMApiApp.DAL
             CancellationToken token = cts.Token;
             var dept= await _context.Departments
                 .AsNoTracking()
+                .Where(d=>d.IdClient==idClient)
                 .Select(e => new CommonViewModel 
             {
                 Id = e.Id,
-                Name =e.DepartName
+                Text = e.DepartName
             }).ToListAsync(token);
             return dept;
         }
@@ -34,10 +35,11 @@ namespace HRMApiApp.DAL
             CancellationToken token = cts.Token;
             var desig= await _context.Designations
                 .AsNoTracking()
+                .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
-                Name = e.DesignationName
+                Text = e.DesignationName
             }).ToListAsync(token);
             return desig;
         }
@@ -46,10 +48,11 @@ namespace HRMApiApp.DAL
         {
             var eduLevel= await _context.EducationLevels
                 .AsNoTracking()
+                 .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
-                Name = e.EducationLevelName
+                Text = e.EducationLevelName
             }).ToListAsync();
             return eduLevel;
         }
@@ -60,10 +63,11 @@ namespace HRMApiApp.DAL
             CancellationToken token = cts.Token;
             var eduResult= await _context.EducationResults
                 .AsNoTracking()
+                 .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
-                Name = e.ResultName
+                Text = e.ResultName
             }).ToListAsync(token);
             return eduResult;
         }
@@ -74,10 +78,11 @@ namespace HRMApiApp.DAL
             CancellationToken token = cts.Token;
             var empType = await _context.EmployeeTypes
                 .AsNoTracking()
+                 .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
-                Name = e.TypeName
+                Text = e.TypeName ?? ""
             }).ToListAsync(token);
             return empType;
         }
@@ -88,10 +93,11 @@ namespace HRMApiApp.DAL
             CancellationToken token = cts.Token;
             var gender = await _context.Genders
                 .AsNoTracking()
+                 .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
-                Name = e.GenderName
+                Text = e.GenderName ?? ""
             }).ToListAsync(token);
             return gender;
         }
@@ -102,10 +108,11 @@ namespace HRMApiApp.DAL
             CancellationToken token = cts.Token;
             var jobType = await _context.JobTypes
                 .AsNoTracking()
+                 .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
-                Name = e.JobTypeName
+                Text = e.JobTypeName
             }).ToListAsync(token);
             return jobType;
         }
@@ -116,10 +123,11 @@ namespace HRMApiApp.DAL
             CancellationToken token = cts.Token;
             var maritalStatus = await _context.MaritalStatuses
                 .AsNoTracking()
+                 .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
-                Name = e.MaritalStatusName
+                Text = e.MaritalStatusName
             }).ToListAsync(token);
             return maritalStatus;
 
@@ -131,10 +139,11 @@ namespace HRMApiApp.DAL
             CancellationToken token = cts.Token;
             var relation = await _context.Relationships
                 .AsNoTracking()
+                 .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
-                Name = e.RelationName
+                Text = e.RelationName
             }).ToListAsync(token);
             return relation;
         }
@@ -145,10 +154,11 @@ namespace HRMApiApp.DAL
             CancellationToken token = cts.Token;
             var religion = await _context.Religions
                 .AsNoTracking()
+                 .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
-                Name = e.ReligionName
+                Text = e.ReligionName
             }).ToListAsync(token);
             return religion;
         }
@@ -159,10 +169,11 @@ namespace HRMApiApp.DAL
             CancellationToken token = cts.Token;
             var weekOff =await _context.WeekOffs
                 .AsNoTracking()
+                 .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
-                Name = e.WeekOffDay
+                Text = e.WeekOffDay ?? ""
             }).ToListAsync(token);
             return weekOff;
         }

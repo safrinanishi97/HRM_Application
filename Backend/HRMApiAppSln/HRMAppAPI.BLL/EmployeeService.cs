@@ -91,7 +91,9 @@ namespace HRMApiApp.BLL
         {
             var employees = await _employeeRepository.GetAllAsync(idClient);
 
-            var allEmp= employees.Select(e => new EmployeeDTO
+            var allEmp= employees
+                .Where(e => e.IdClient == idClient && e.IsActive==true)
+                .Select(e => new EmployeeDTO
             {
                 Id = e.Id,
                 IdClient = e.IdClient,
@@ -110,7 +112,8 @@ namespace HRMApiApp.BLL
                 IsActive = e.IsActive,
                 FileBase64 = e.EmployeeImage != null ? Convert.ToBase64String(e.EmployeeImage) : null,
                 //FileBase64 = e.EmployeeImage != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(e.EmployeeImage)}" : null,
-                Documents = e.EmployeeDocuments.Select(d => new EmployeeDocumentDTO
+                Documents = e.EmployeeDocuments
+                .Select(d => new EmployeeDocumentDTO
                 {
                     Id=d.Id,
                     IdClient = d.IdClient,
@@ -123,7 +126,8 @@ namespace HRMApiApp.BLL
 
                 }).ToList(),
 
-                EducationInfos = e.EmployeeEducationInfos.Select(ed => new EmployeeEducationInfoDTO
+                EducationInfos = e.EmployeeEducationInfos
+                .Select(ed => new EmployeeEducationInfoDTO
                 {
                     Id=ed.Id,
                     IdClient = ed.IdClient,
@@ -141,7 +145,8 @@ namespace HRMApiApp.BLL
                     Achievement = ed.Achievement
                 }).ToList(),
 
-                Certifications = e.EmployeeProfessionalCertifications.Select(c => new EmployeeProfessionalCertificationDTO
+                Certifications = e.EmployeeProfessionalCertifications
+                .Select(c => new EmployeeProfessionalCertificationDTO
                 {   Id = c.Id,
                     IdClient = c.IdClient,
                     CertificationTitle = c.CertificationTitle,
@@ -163,6 +168,11 @@ namespace HRMApiApp.BLL
             {
                 if (file == null || file.Length == 0)
                     return null;
+
+                const long maxFileSize = 10 * 1024 * 1024; 
+
+                if (file.Length > maxFileSize)
+                    throw new Exception("File size cannot exceed 10 MB.");
 
                 using var memoryStream = new MemoryStream();
                 await file.CopyToAsync(memoryStream);
@@ -189,7 +199,8 @@ namespace HRMApiApp.BLL
                 SetDate = DateTime.Now,
 
                 EmployeeDocuments = new List<EmployeeDocument>(),
-                EmployeeEducationInfos = employeeDto.EducationInfos.Select(e => new EmployeeEducationInfo
+                EmployeeEducationInfos = employeeDto.EducationInfos
+                .Select(e => new EmployeeEducationInfo
                 {
                     IdClient = e.IdClient,
                     IdEducationLevel = e.IdEducationLevel,
@@ -207,7 +218,8 @@ namespace HRMApiApp.BLL
                     SetDate = DateTime.Now
                 }).ToList(),
 
-                EmployeeProfessionalCertifications = employeeDto.Certifications.Select(c => new EmployeeProfessionalCertification
+                EmployeeProfessionalCertifications = employeeDto.Certifications
+                .Select(c => new EmployeeProfessionalCertification
                 {
                     IdClient = c.IdClient,
                     CertificationTitle = c.CertificationTitle,
