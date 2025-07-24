@@ -15,7 +15,7 @@ namespace HRMApiApp.DAL
     {
         public async Task<List<CommonViewModel>> GetAllDepartment(int idClient)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var dept= await _context.Departments
                 .AsNoTracking()
@@ -31,7 +31,7 @@ namespace HRMApiApp.DAL
 
         public async Task<List<CommonViewModel>> GetAllDesignation(int idClient)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var desig= await _context.Designations
                 .AsNoTracking()
@@ -59,7 +59,7 @@ namespace HRMApiApp.DAL
 
         public async Task<List<CommonViewModel>> GetAllEducationResult(int idClient)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var eduResult= await _context.EducationResults
                 .AsNoTracking()
@@ -74,7 +74,7 @@ namespace HRMApiApp.DAL
 
         public async Task<List<CommonViewModel>> GetAllEmployeeType(int idClient)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var empType = await _context.EmployeeTypes
                 .AsNoTracking()
@@ -89,7 +89,7 @@ namespace HRMApiApp.DAL
 
         public async Task<List<CommonViewModel>> GetAllGender(int idClient)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var gender = await _context.Genders
                 .AsNoTracking()
@@ -104,7 +104,7 @@ namespace HRMApiApp.DAL
 
         public async Task<List<CommonViewModel>> GetAllJobType(int idClient)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var jobType = await _context.JobTypes
                 .AsNoTracking()
@@ -119,7 +119,7 @@ namespace HRMApiApp.DAL
 
         public async Task<List<CommonViewModel>> GetAllMaritalStatus(int idClient)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var maritalStatus = await _context.MaritalStatuses
                 .AsNoTracking()
@@ -135,7 +135,7 @@ namespace HRMApiApp.DAL
 
         public async Task<List<CommonViewModel>> GetAllRelationship(int idClient)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var relation = await _context.Relationships
                 .AsNoTracking()
@@ -150,7 +150,7 @@ namespace HRMApiApp.DAL
 
         public async Task<List<CommonViewModel>> GetAllReligion(int idClient)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var religion = await _context.Religions
                 .AsNoTracking()
@@ -165,7 +165,7 @@ namespace HRMApiApp.DAL
 
         public async Task<List<CommonViewModel>> GetAllWeekOff(int idClient)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var weekOff =await _context.WeekOffs
                 .AsNoTracking()

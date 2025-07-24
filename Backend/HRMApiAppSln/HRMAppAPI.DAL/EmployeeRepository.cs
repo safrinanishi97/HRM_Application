@@ -21,7 +21,7 @@ namespace HRMApiApp.DAL
     {
         public async Task<Employee?> GetByIdAsync(int idClient, int id)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var emp = await _context.Employees
               .AsNoTracking()
@@ -34,7 +34,7 @@ namespace HRMApiApp.DAL
         public async Task<List<Employee>> GetAllAsync(int idClient)
         {
 
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             var emp= await _context.Employees
                 .AsNoTracking()
@@ -48,7 +48,7 @@ namespace HRMApiApp.DAL
 
         public async Task<bool> CreateAsync(Employee employee)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync(token);
