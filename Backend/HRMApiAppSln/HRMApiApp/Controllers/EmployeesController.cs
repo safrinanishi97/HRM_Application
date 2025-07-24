@@ -15,7 +15,7 @@ namespace HRMApiApp.Controllers
     [ApiController]
     public class EmployeesController(IEmployeeService _employeeService, IValidator<EmployeeCreateDTO> _validator) : ControllerBase
     {    
-        [HttpGet("allemployees")]
+        [HttpGet("getallemployees")]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployees([FromQuery] int idClient)
         {
             var employees = await _employeeService.GetAllAsync(idClient);
@@ -88,7 +88,7 @@ namespace HRMApiApp.Controllers
             return Ok(new { message = "Employee soft deleted successfully." });
         }
 
-        [HttpGet("file")]
+        [HttpGet("getfile")]
         public async Task<IActionResult> GetEmployeeFile([FromQuery] int idClient, [FromQuery] int id, [FromQuery] string fileType, [FromQuery] int? documentId)
         {
             var (fileData, mimeType) = await _employeeService.GetEmployeeFileAsync(idClient, id, fileType, documentId);

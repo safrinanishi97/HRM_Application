@@ -15,35 +15,35 @@ namespace HRMApiApp.Controllers
     {
  
 
-        [HttpGet("departments")]
+        [HttpGet("department")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllDepartments([FromQuery] int idClient)
         {
-            var dept = await _commonService.GetAllDepartment(idClient);
-            return Ok(dept);
+            var depertment = await _commonService.GetAllDepartment(idClient);
+            return Ok(depertment);
         }
         [HttpGet("designation")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllDesignations([FromQuery] int idClient)
         {
-            var desig = await _commonService.GetAllDesignation(idClient);
-            return Ok(desig);
+            var designation = await _commonService.GetAllDesignation(idClient);
+            return Ok(designation);
         }
         [HttpGet("educationlevel")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEducationLevels([FromQuery] int idClient)
         {
-            var eduLevel = await _commonService.GetAllEducationLevel(idClient);
-            return Ok(eduLevel);
+            var educationLevel = await _commonService.GetAllEducationLevel(idClient);
+            return Ok(educationLevel);
         }
-        [HttpGet("educationresults")]
+        [HttpGet("educationresult")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEducationResults([FromQuery] int idClient)
         {
-            var eduResult = await _commonService.GetAllEducationResult(idClient);
-            return Ok(eduResult);
+            var educationResult = await _commonService.GetAllEducationResult(idClient);
+            return Ok(educationResult);
         }
         [HttpGet("employeetype")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEmployeeTypes([FromQuery] int idClient)
         {
-            var empType =await _commonService.GetAllEmployeeType(idClient);
-            return Ok(empType); 
+            var employeeType =await _commonService.GetAllEmployeeType(idClient);
+            return Ok(employeeType); 
         }
         [HttpGet("gender")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllGenders([FromQuery] int idClient)
