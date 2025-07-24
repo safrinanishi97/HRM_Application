@@ -16,7 +16,7 @@ namespace HRMApiApp.Controllers
     public class EmployeesController(IEmployeeService _employeeService, IValidator<EmployeeCreateDTO> _validator) : ControllerBase
     {    
         [HttpGet("allemployees")]
-        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployees(int idClient)
+        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployees([FromQuery] int idClient)
         {
             var employees = await _employeeService.GetAllAsync(idClient);
             return Ok(employees);
@@ -76,8 +76,8 @@ namespace HRMApiApp.Controllers
             };
         }
 
-        [HttpDelete("deleteemployee")]
-        public async Task<IActionResult> DeleteEmployee(int idClient, int id)
+        [HttpDelete("deleteemployee/{idClient}/{id}")]
+        public async Task<IActionResult> DeleteEmployee([FromRoute] int idClient, [FromRoute] int id)
         {
             var result = await _employeeService.DeleteAsync(idClient, id);
             if (!result)

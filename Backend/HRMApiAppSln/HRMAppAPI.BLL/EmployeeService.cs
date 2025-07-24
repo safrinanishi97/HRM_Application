@@ -112,6 +112,7 @@ namespace HRMApiApp.BLL
                 //FileBase64 = e.EmployeeImage != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(e.EmployeeImage)}" : null,
                 Documents = e.EmployeeDocuments.Select(d => new EmployeeDocumentDTO
                 {
+                    Id=d.Id,
                     IdClient = d.IdClient,
                     DocumentName = d.DocumentName,
                     FileName = d.FileName,
@@ -124,6 +125,7 @@ namespace HRMApiApp.BLL
 
                 EducationInfos = e.EmployeeEducationInfos.Select(ed => new EmployeeEducationInfoDTO
                 {
+                    Id=ed.Id,
                     IdClient = ed.IdClient,
                     IdEducationLevel = ed.IdEducationLevel,
                     IdEducationExamination = ed.IdEducationExamination,
@@ -140,7 +142,7 @@ namespace HRMApiApp.BLL
                 }).ToList(),
 
                 Certifications = e.EmployeeProfessionalCertifications.Select(c => new EmployeeProfessionalCertificationDTO
-                {
+                {   Id = c.Id,
                     IdClient = c.IdClient,
                     CertificationTitle = c.CertificationTitle,
                     CertificationInstitute = c.CertificationInstitute,

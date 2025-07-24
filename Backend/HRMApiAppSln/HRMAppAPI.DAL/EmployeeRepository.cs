@@ -101,7 +101,7 @@ namespace HRMApiApp.DAL
             //delete obsolete data
 
             var deletedEmployeeDocumentList = existingEmployee.EmployeeDocuments
-                .Where(ed => ed.IdClient == ed.IdClient && !employee.Documents.Any(d => d.IdClient == ed.IdClient && d.Id == ed.Id))
+                .Where(ed => ed.IdClient == idClient && !employee.Documents.Any(d => d.IdClient == ed.IdClient && d.Id == ed.Id))
                 .ToList();
             if(deletedEmployeeDocumentList!=null)
             {
@@ -109,7 +109,7 @@ namespace HRMApiApp.DAL
             }
 
             var deletedEmployeeEducationInfoList = existingEmployee.EmployeeEducationInfos
-                .Where(eei => eei.IdClient == eei.IdClient && !employee.EducationInfos.Any(ei => ei.IdClient == eei.IdClient && ei.Id == eei.Id))
+                .Where(eei => eei.IdClient == idClient && !employee.EducationInfos.Any(ei => ei.IdClient == eei.IdClient && ei.Id == eei.Id))
                 .ToList();
             if (deletedEmployeeEducationInfoList != null)
             {
@@ -117,7 +117,7 @@ namespace HRMApiApp.DAL
             }
 
             var deletedCertificationList = existingEmployee.EmployeeProfessionalCertifications
-                .Where(epc => epc.IdClient == epc.IdClient && !employee.Certifications.Any(c => c.IdClient == epc.IdClient && c.Id == epc.Id))
+                .Where(epc => epc.IdClient == idClient && !employee.Certifications.Any(c => c.IdClient == epc.IdClient && c.Id == epc.Id))
                 .ToList();
 
             if (deletedCertificationList != null) 
