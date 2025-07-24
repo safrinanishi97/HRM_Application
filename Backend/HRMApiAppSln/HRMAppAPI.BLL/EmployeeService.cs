@@ -160,24 +160,23 @@ namespace HRMApiApp.BLL
             return allEmp;
 
         }
+        private async Task<byte[]?> ConvertFileToByteArrayAsync(IFormFile? file)
+        {
+            if (file == null || file.Length == 0)
+                return null;
+
+            const long maxFileSize = 10 * 1024 * 1024;
+
+            if (file.Length > maxFileSize)
+                throw new Exception("File size cannot exceed 10 MB.");
+
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            return memoryStream.ToArray();
+        }
 
         public async Task<bool> CreateAsync(EmployeeCreateDTO employeeDto)
         {
-
-            async Task<byte[]?> ConvertFileToByteArrayAsync(IFormFile? file)
-            {
-                if (file == null || file.Length == 0)
-                    return null;
-
-                const long maxFileSize = 10 * 1024 * 1024; 
-
-                if (file.Length > maxFileSize)
-                    throw new Exception("File size cannot exceed 10 MB.");
-
-                using var memoryStream = new MemoryStream();
-                await file.CopyToAsync(memoryStream);
-                return memoryStream.ToArray();
-            }
 
             var employee = new Employee
             {

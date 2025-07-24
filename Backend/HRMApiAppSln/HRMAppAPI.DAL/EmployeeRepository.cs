@@ -54,25 +54,25 @@ namespace HRMApiApp.DAL
             await _context.SaveChangesAsync(token);
             return true;
         }
+       private async Task<byte[]?> ConvertFileToByteArrayAsync(IFormFile? file)
+        {
+            if (file == null || file.Length == 0)
+                return null;
 
+            const long maxFileSize = 10 * 1024 * 1024;
+
+            if (file.Length > maxFileSize)
+                throw new Exception("File size cannot exceed 10 MB.");
+
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            return memoryStream.ToArray();
+        }
         public async Task<int> UpdateAsync(EmployeeUpdateDTO employee)
         {
             var cts = new CancellationTokenSource();
             CancellationToken token = cts.Token;
-            async Task<byte[]?> ConvertFileToByteArrayAsync(IFormFile? file)
-            {
-                if (file == null || file.Length == 0)
-                    return null;
-
-                const long maxFileSize = 10 * 1024 * 1024; 
-
-                if (file.Length > maxFileSize)
-                    throw new Exception("File size cannot exceed 10 MB.");
-
-                using var memoryStream = new MemoryStream();
-                await file.CopyToAsync(memoryStream);
-                return memoryStream.ToArray();
-            }
+           
             if (employee == null)
                 throw new Exception($"data not found: {nameof(employee)}");
 
