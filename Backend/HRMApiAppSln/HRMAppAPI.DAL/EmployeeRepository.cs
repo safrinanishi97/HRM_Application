@@ -21,20 +21,18 @@ namespace HRMApiApp.DAL
     {
         public async Task<Employee?> GetByIdAsync(int idClient, int id)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
             var emp = await _context.Employees
               .AsNoTracking()
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
-                .Include(e => e.EmployeeProfessionalCertifications).FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id,token);
+                .Include(e => e.EmployeeProfessionalCertifications).FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id,CancellationToken.None);
             return emp;
         }
 
         public async Task<List<Employee>> GetAllAsync(int idClient)
         {
 
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var cts = new CancellationTokenSource();
             CancellationToken token = cts.Token;
             var emp= await _context.Employees
                 .AsNoTracking()
@@ -51,7 +49,7 @@ namespace HRMApiApp.DAL
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
             _context.Employees.Add(employee);
-            await _context.SaveChangesAsync(token);
+            await _context.SaveChangesAsync(CancellationToken.None);
             return true;
         }
        private async Task<byte[]?> ConvertFileToByteArrayAsync(IFormFile? file)
@@ -70,7 +68,7 @@ namespace HRMApiApp.DAL
         }
         public async Task<int> UpdateAsync(EmployeeUpdateDTO employee)
         {
-            var cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             CancellationToken token = cts.Token;
            
             if (employee == null)
@@ -266,7 +264,7 @@ namespace HRMApiApp.DAL
         {
             var cts = new CancellationTokenSource();
             CancellationToken token = cts.Token;
-            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id);
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id,CancellationToken.None);
             //.FirstOrDefaultAsync(e => e.IdClient == 10001001 && e.Id == id);
 
             if (employee == null)
