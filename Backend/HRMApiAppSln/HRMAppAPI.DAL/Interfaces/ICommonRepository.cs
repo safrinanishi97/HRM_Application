@@ -1,6 +1,5 @@
 ﻿using HRMApiApp.Models;
 using HRMApiApp.ViewModel;
-using HRMApiApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

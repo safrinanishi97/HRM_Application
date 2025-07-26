@@ -2,7 +2,6 @@
 using HRMApiApp.DTO;
 using HRMApiApp.Model;
 using HRMApiApp.Models;
-using HRMApiApp.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,42 +16,40 @@ namespace HRMApiApp.DAL
 {
 
 
-    public class EmployeeRepository(HanaHrmContext _context) : IEmployeeRepository
+    public class EmployeeRepository(HanaHrmContext Context) : IEmployeeRepository
     {
-        public async Task<Employee?> GetByIdAsync(int idClient, int id)
+        public async Task<Employee?> GetByIdAsync(int idClient, int id, CancellationToken cancellationToken)
         {
-            var emp = await _context.Employees
+            var emp = await Context.Employees
               .AsNoTracking()
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
-                .Include(e => e.EmployeeProfessionalCertifications).FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id,CancellationToken.None);
+                .Include(e => e.EmployeeProfessionalCertifications)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id,cancellationToken);
             return emp;
         }
 
-        public async Task<List<Employee>> GetAllAsync(int idClient)
+        public async Task<List<Employee>> GetAllAsync(int idClient, CancellationToken cancellationToken)
         {
-
-            var cts = new CancellationTokenSource();
-            CancellationToken token = cts.Token;
-            var emp= await _context.Employees
+            var emp= await Context.Employees
                 .AsNoTracking()
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
                 .Include(e => e.EmployeeProfessionalCertifications)
+                .AsSplitQuery()
                 .Where(e => e.IdClient == idClient)
-                .ToListAsync(token);
+                .ToListAsync(cancellationToken);
             return emp;
         }
 
-        public async Task<bool> CreateAsync(Employee employee)
+        public async Task<bool> CreateAsync(Employee employee, CancellationToken cancellationToken)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync(CancellationToken.None);
+            Context.Employees.Add(employee);
+            await Context.SaveChangesAsync(cancellationToken);
             return true;
         }
-       private async Task<byte[]?> ConvertFileToByteArrayAsync(IFormFile? file)
+       private async Task<byte[]?> ConvertFileToByteArrayAsync(IFormFile? file,CancellationToken cancellationToken)
         {
             if (file == null || file.Length == 0)
                 return null;
@@ -63,24 +60,22 @@ namespace HRMApiApp.DAL
                 throw new Exception("File size cannot exceed 10 MB.");
 
             using var memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
+            await file.CopyToAsync(memoryStream,cancellationToken);
             return memoryStream.ToArray();
         }
-        public async Task<int> UpdateAsync(EmployeeUpdateDTO employee)
+        public async Task<int> UpdateAsync(EmployeeUpdateDTO employee, CancellationToken cancellationToken)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-           
             if (employee == null)
                 throw new Exception($"data not found: {nameof(employee)}");
 
             var idClient = employee.IdClient;
             var id = employee.Id;
 
-            var existingEmployee = await _context.Employees
+            var existingEmployee = await Context.Employees
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
                 .Include(e => e.EmployeeProfessionalCertifications)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id);
 
             if (existingEmployee == null) return 0;
@@ -89,7 +84,7 @@ namespace HRMApiApp.DAL
             existingEmployee.EmployeeNameBangla = employee.EmployeeNameBangla ?? existingEmployee.EmployeeNameBangla;
             existingEmployee.FatherName = employee.FatherName ?? existingEmployee.FatherName;
             existingEmployee.MotherName = employee.MotherName ?? existingEmployee.MotherName;
-            existingEmployee.EmployeeImage = await ConvertFileToByteArrayAsync(employee.ProfileImage) ?? existingEmployee.EmployeeImage;
+            existingEmployee.EmployeeImage = await ConvertFileToByteArrayAsync(employee.ProfileImage,cancellationToken) ?? existingEmployee.EmployeeImage;
             existingEmployee.IdDepartment = employee.IdDepartment;
             existingEmployee.IdSection =   employee.IdSection;
             existingEmployee.BirthDate = employee.BirthDate ?? existingEmployee.BirthDate;
@@ -108,7 +103,7 @@ namespace HRMApiApp.DAL
                 .ToList();
             if(deletedEmployeeDocumentList.Any())
             {
-                _context.EmployeeDocuments.RemoveRange(deletedEmployeeDocumentList);
+                Context.EmployeeDocuments.RemoveRange(deletedEmployeeDocumentList);
             }
 
             var deletedEmployeeEducationInfoList = existingEmployee.EmployeeEducationInfos
@@ -116,7 +111,7 @@ namespace HRMApiApp.DAL
                 .ToList();
             if (deletedEmployeeDocumentList.Any())
             {
-                _context.EmployeeEducationInfos.RemoveRange(deletedEmployeeEducationInfoList);
+                Context.EmployeeEducationInfos.RemoveRange(deletedEmployeeEducationInfoList);
             }
 
             var deletedCertificationList = existingEmployee.EmployeeProfessionalCertifications
@@ -125,7 +120,7 @@ namespace HRMApiApp.DAL
 
             if (deletedEmployeeDocumentList.Any()) 
             {
-                _context.EmployeeProfessionalCertifications.RemoveRange(deletedCertificationList);
+                Context.EmployeeProfessionalCertifications.RemoveRange(deletedCertificationList);
             }
 
 
@@ -134,7 +129,7 @@ namespace HRMApiApp.DAL
             foreach(var item in employee.Documents)
             {
                 var existingEntry = existingEmployee.EmployeeDocuments.FirstOrDefault(ed=>ed.IdClient == item.IdClient && ed.Id == item.Id);
-                var uploadedBytes = await ConvertFileToByteArrayAsync(item.UpFile);
+                var uploadedBytes = await ConvertFileToByteArrayAsync(item.UpFile, cancellationToken);
                 var extension = Path.GetExtension(item.UpFile?.FileName);
                 if (existingEntry != null) 
                 {
@@ -236,7 +231,7 @@ namespace HRMApiApp.DAL
                 }
             }
 
-            var result = await _context.SaveChangesAsync(token);
+            var result = await Context.SaveChangesAsync(cancellationToken);
 
             return result;
         }
@@ -260,20 +255,26 @@ namespace HRMApiApp.DAL
         //}
 
         //soft delete
-        public async Task<bool> SoftDeleteAsync(int idClient, int id)
+        public async Task<bool> SoftDeleteAsync(int idClient, int id,CancellationToken cancellationToken)
         {
-            var cts = new CancellationTokenSource();
-            CancellationToken token = cts.Token;
-            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id,CancellationToken.None);
-            //.FirstOrDefaultAsync(e => e.IdClient == 10001001 && e.Id == id);
+            //var employee = await Context.Employees.FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id, cancellationToken);
+            ////.FirstOrDefaultAsync(e => e.IdClient == 10001001 && e.Id == id);
 
-            if (employee == null)
-            {
-                return false;
-            }
-            employee.IsActive = false;
-            await _context.SaveChangesAsync(token);
-            return true;
+            //if (employee == null)
+            //{
+            //    return false;
+            //}
+            //employee.IsActive = false;
+            //await Context.SaveChangesAsync(cancellationToken);
+
+            var affectedRows = await Context.Employees
+           .Where(e => e.IdClient == idClient && e.Id == id)
+           .ExecuteUpdateAsync(update => update
+           .SetProperty(emp => emp.IsActive, false)
+           .SetProperty(emp => emp.SetDate, DateTime.Now),
+           cancellationToken);
+
+            return affectedRows > 0;
         }
 
        

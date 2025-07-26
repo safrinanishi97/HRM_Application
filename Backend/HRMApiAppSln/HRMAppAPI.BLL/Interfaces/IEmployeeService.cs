@@ -1,6 +1,5 @@
 ﻿using HRMApiApp.DTO;
 using HRMApiApp.Models;
-using HRMApiApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +11,11 @@ namespace HRMApiApp.BLL.Interfaces
     public interface IEmployeeService
     {
 
-        Task<EmployeeDTO?> GetByIdAsync(int idClient,int id);
-        Task<List<EmployeeDTO>> GetAllAsync(int idClient);
-        Task<bool> CreateAsync(EmployeeCreateDTO employeeDto);
-        Task<string> UpdateAsync(EmployeeUpdateDTO employeeDto);
-        Task<bool> DeleteAsync(int idClient, int idn);
-        Task<(byte[]? fileData, string mimeType)> GetEmployeeFileAsync(int idClient, int id, string fileType, int? documentId);
+        Task<EmployeeDTO?> GetByIdAsync(int idClient,int id, CancellationToken cancellationToken);
+        Task<List<EmployeeDTO>> GetAllAsync(int idClient, CancellationToken cancellationToken);
+        Task<bool> CreateAsync(EmployeeCreateDTO employeeDto, CancellationToken cancellationToken);
+        Task<string> UpdateAsync(EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken);
+        Task<bool> DeleteAsync(int idClient, int id, CancellationToken cancellationToken);
+        //Task<(byte[]? fileData, string mimeType)> GetEmployeeFileAsync(int idClient, int id, string fileType, int? documentId, CancellationToken cancellationToken);
     }
 }

@@ -11,62 +11,62 @@ using System.Threading.Tasks;
 
 namespace HRMApiApp.BLL
 {
-    public class CommonService(ICommonRepository _commonRepository) : ICommonService
+    public class CommonService(ICommonRepository CommonRepository) : ICommonService
     {
 
         public async Task<List<CommonViewModel>> GetAllDepartment(int idClient)
         {
-            return await _commonRepository.GetAllDepartment(idClient);
+            return await CommonRepository.GetAllDepartment(idClient);
         }
 
         public async Task<List<CommonViewModel>> GetAllDesignation(int idClient)
         {
-            return await _commonRepository.GetAllDesignation(idClient);
+            return await CommonRepository.GetAllDesignation(idClient);
         }
 
         public async Task<List<CommonViewModel>> GetAllEducationLevel(int idClient)
         {
-            return await _commonRepository.GetAllEducationLevel(idClient);
+            return await CommonRepository.GetAllEducationLevel(idClient);
         }
 
         public async Task<List<CommonViewModel>> GetAllEducationResult(int idClient)
         {
-            return await _commonRepository.GetAllEducationResult(idClient);
+            return await CommonRepository.GetAllEducationResult(idClient);
         }
 
         public async Task<List<CommonViewModel>> GetAllEmployeeType(int idClient)
         {   
-            return await _commonRepository.GetAllEmployeeType(idClient);
+            return await CommonRepository.GetAllEmployeeType(idClient);
         }
 
         public async Task<List<CommonViewModel>> GetAllGender(int idClient)
         {
-            return await _commonRepository.GetAllGender(idClient);
+            return await CommonRepository.GetAllGender(idClient);
         }
 
         public async Task<List<CommonViewModel>> GetAllJobType(int idClient)
         {
-            return await _commonRepository.GetAllJobType(idClient);
+            return await CommonRepository.GetAllJobType(idClient);
         }
 
         public async Task<List<CommonViewModel>> GetAllMaritalStatus(int idClient)
         {
-            return await _commonRepository.GetAllMaritalStatus(idClient);
+            return await CommonRepository.GetAllMaritalStatus(idClient);
         }
 
         public async Task<List<CommonViewModel>> GetAllRelationship(int idClient)
         {
-            return await _commonRepository.GetAllRelationship(idClient);
+            return await CommonRepository.GetAllRelationship(idClient);
         }
 
         public async Task<List<CommonViewModel>> GetAllReligion(int idClient)
         {
-            return await _commonRepository.GetAllReligion(idClient);
+            return await CommonRepository.GetAllReligion(idClient);
         }
 
         public async Task<List<CommonViewModel>> GetAllWeekOff(int idClient)
         {
-            return await _commonRepository.GetAllWeekOff(idClient);
+            return await CommonRepository.GetAllWeekOff(idClient);
         }
     }
 }

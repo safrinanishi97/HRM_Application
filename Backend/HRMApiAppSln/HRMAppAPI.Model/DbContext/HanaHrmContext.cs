@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using HRMApiApp.Models;
+﻿using HRMApiApp.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
 
 namespace HRMApiApp.Model;
 
-public partial class HanaHrmContext(DbContextOptions<HanaHrmContext> options) : DbContext(options)
+public partial class HanaHrmContext(DbContextOptions<HanaHrmContext> options, IConfiguration configuration) : DbContext(options)
 {
+
     public DbSet<Department> Departments { get; set; }
 
     public DbSet<Designation> Designations { get; set; }
@@ -44,8 +46,13 @@ public partial class HanaHrmContext(DbContextOptions<HanaHrmContext> options) : 
     public DbSet<WeekOff> WeekOffs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=192.168.70.89;Database=HANA-HRM;User=SA;Password=Sa@123456; TrustServerCertificate=true; MultipleActiveResultSets=True");
-
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseSqlServer(connectionString);
+        }
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Department>(entity =>

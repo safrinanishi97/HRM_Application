@@ -11,42 +11,39 @@ using System.Threading.Tasks;
 
 namespace HRMApiApp.DAL
 {
-    public class CommonRepository(HanaHrmContext _context) : ICommonRepository
+    public class CommonRepository(HanaHrmContext Context) : ICommonRepository
     {
         public async Task<List<CommonViewModel>> GetAllDepartment(int idClient)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            var dept= await _context.Departments
+         
+            var dept= await Context.Departments
                 .AsNoTracking()
                 .Where(d=>d.IdClient==idClient)
                 .Select(e => new CommonViewModel 
             {
                 Id = e.Id,
                 Text = e.DepartName
-            }).ToListAsync(token);
+            }).ToListAsync();
             return dept;
         }
       
 
         public async Task<List<CommonViewModel>> GetAllDesignation(int idClient)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            var desig= await _context.Designations
+            var desig= await Context.Designations
                 .AsNoTracking()
                 .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Text = e.DesignationName
-            }).ToListAsync(token);
+            }).ToListAsync();
             return desig;
         }
 
         public async Task<List<CommonViewModel>> GetAllEducationLevel(int idClient)
         {
-            var eduLevel= await _context.EducationLevels
+            var eduLevel= await Context.EducationLevels
                 .AsNoTracking()
                  .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
@@ -59,122 +56,106 @@ namespace HRMApiApp.DAL
 
         public async Task<List<CommonViewModel>> GetAllEducationResult(int idClient)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            var eduResult= await _context.EducationResults
+            var eduResult= await Context.EducationResults
                 .AsNoTracking()
                  .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Text = e.ResultName
-            }).ToListAsync(token);
+            }).ToListAsync();
             return eduResult;
         }
 
         public async Task<List<CommonViewModel>> GetAllEmployeeType(int idClient)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            var empType = await _context.EmployeeTypes
+            var empType = await Context.EmployeeTypes
                 .AsNoTracking()
                  .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Text = e.TypeName ?? ""
-            }).ToListAsync(token);
+            }).ToListAsync();
             return empType;
         }
 
         public async Task<List<CommonViewModel>> GetAllGender(int idClient)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            var gender = await _context.Genders
+            var gender = await Context.Genders
                 .AsNoTracking()
                  .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Text = e.GenderName ?? ""
-            }).ToListAsync(token);
+            }).ToListAsync();
             return gender;
         }
 
         public async Task<List<CommonViewModel>> GetAllJobType(int idClient)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            var jobType = await _context.JobTypes
+            var jobType = await Context.JobTypes
                 .AsNoTracking()
                  .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Text = e.JobTypeName
-            }).ToListAsync(token);
+            }).ToListAsync();
             return jobType;
         }
 
         public async Task<List<CommonViewModel>> GetAllMaritalStatus(int idClient)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            var maritalStatus = await _context.MaritalStatuses
+            var maritalStatus = await Context.MaritalStatuses
                 .AsNoTracking()
                  .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Text = e.MaritalStatusName
-            }).ToListAsync(token);
+            }).ToListAsync();
             return maritalStatus;
 
         }
 
         public async Task<List<CommonViewModel>> GetAllRelationship(int idClient)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            var relation = await _context.Relationships
+            var relation = await Context.Relationships
                 .AsNoTracking()
                  .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Text = e.RelationName
-            }).ToListAsync(token);
+            }).ToListAsync();
             return relation;
         }
 
         public async Task<List<CommonViewModel>> GetAllReligion(int idClient)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            var religion = await _context.Religions
+            var religion = await Context.Religions
                 .AsNoTracking()
                  .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Text = e.ReligionName
-            }).ToListAsync(token);
+            }).ToListAsync();
             return religion;
         }
 
         public async Task<List<CommonViewModel>> GetAllWeekOff(int idClient)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            CancellationToken token = cts.Token;
-            var weekOff =await _context.WeekOffs
+            var weekOff =await Context.WeekOffs
                 .AsNoTracking()
                  .Where(d => d.IdClient == idClient)
                 .Select(e => new CommonViewModel
             {
                 Id = e.Id,
                 Text = e.WeekOffDay ?? ""
-            }).ToListAsync(token);
+            }).ToListAsync();
             return weekOff;
         }
     }

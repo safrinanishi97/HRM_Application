@@ -3,7 +3,6 @@ using HRMApiApp.BLL.Interfaces;
 using HRMApiApp.DTO;
 using HRMApiApp.Models;
 using HRMApiApp.ViewModel;
-using HRMApiApp.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,74 +10,74 @@ namespace HRMApiApp.Controllers
 {
     [Route("api/common")]
     [ApiController]
-    public class CommonController(ICommonService _commonService) : ControllerBase
+    public class CommonController(ICommonService CommonService) : ControllerBase
     {
  
 
-        [HttpGet("department")]
+        [HttpGet("departmentdropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllDepartments([FromQuery] int idClient)
         {
-            var depertment = await _commonService.GetAllDepartment(idClient);
+            var depertment = await CommonService.GetAllDepartment(idClient);
             return Ok(depertment);
         }
-        [HttpGet("designation")]
+        [HttpGet("designationdropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllDesignations([FromQuery] int idClient)
         {
-            var designation = await _commonService.GetAllDesignation(idClient);
+            var designation = await CommonService.GetAllDesignation(idClient);
             return Ok(designation);
         }
-        [HttpGet("educationlevel")]
+        [HttpGet("educationleveldropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEducationLevels([FromQuery] int idClient)
         {
-            var educationLevel = await _commonService.GetAllEducationLevel(idClient);
+            var educationLevel = await CommonService.GetAllEducationLevel(idClient);
             return Ok(educationLevel);
         }
-        [HttpGet("educationresult")]
+        [HttpGet("educationresultdropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEducationResults([FromQuery] int idClient)
         {
-            var educationResult = await _commonService.GetAllEducationResult(idClient);
+            var educationResult = await CommonService.GetAllEducationResult(idClient);
             return Ok(educationResult);
         }
-        [HttpGet("employeetype")]
+        [HttpGet("employeetypedropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEmployeeTypes([FromQuery] int idClient)
         {
-            var employeeType =await _commonService.GetAllEmployeeType(idClient);
+            var employeeType =await CommonService.GetAllEmployeeType(idClient);
             return Ok(employeeType); 
         }
-        [HttpGet("gender")]
+        [HttpGet("genderdropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllGenders([FromQuery] int idClient)
         {
-            var gender = await _commonService.GetAllGender(idClient);
+            var gender = await CommonService.GetAllGender(idClient);
             return Ok(gender);
         }
-        [HttpGet("jobtype")]
+        [HttpGet("jobtypedropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllJobTypes([FromQuery] int idClient)
         {
-            var jobType = await _commonService.GetAllJobType(idClient);
+            var jobType = await CommonService.GetAllJobType(idClient);
             return Ok(jobType);
         }
-        [HttpGet("maritalstatus")]
+        [HttpGet("maritalstatusdropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllMaritalStatus([FromQuery] int idClient)
         {
-            var maritalStatus = await _commonService.GetAllMaritalStatus(idClient);
+            var maritalStatus = await CommonService.GetAllMaritalStatus(idClient);
             return Ok(maritalStatus);
         }
-        [HttpGet("relationship")]
+        [HttpGet("relationshipdropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllRelationship([FromQuery] int idClient)
         {
-            var relation = await _commonService.GetAllRelationship(idClient);
+            var relation = await CommonService.GetAllRelationship(idClient);
             return Ok(relation);
         }
-        [HttpGet("religion")]
+        [HttpGet("religiondropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllReligions([FromQuery] int idClient)
         {
-            var religion = await _commonService.GetAllReligion(idClient);
+            var religion = await CommonService.GetAllReligion(idClient);
             return Ok(religion);
         }
-        [HttpGet("weeksoff")]
+        [HttpGet("weeksoffdropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllWeekOffs([FromQuery] int idClient)
         {
-            var weeksOff = await _commonService.GetAllWeekOff(idClient);
+            var weeksOff = await CommonService.GetAllWeekOff(idClient);
             return Ok(weeksOff);
         }
 
