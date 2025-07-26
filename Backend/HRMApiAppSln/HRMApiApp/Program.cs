@@ -30,13 +30,12 @@ builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
+    options.AddPolicy("AllowAngularDev",
+        builder => builder.WithOrigins("http://localhost:4200")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
 });
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -50,6 +49,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 app.UseStaticFiles();
+app.UseCors("AllowAngularDev");
 app.UseAuthorization();
 
 app.MapControllers();

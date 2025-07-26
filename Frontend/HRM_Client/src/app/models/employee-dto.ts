@@ -37,7 +37,7 @@ export interface EmployeeCreateDTO {
   presentAddress?: string;
   nationalIdentificationNumber?: string;
   contactNo?: string;
-  profileImage?: File;
+  ProfileImage?: File | null;
 
   documents: EmployeeDocumentDTO[];
   educationInfos: EmployeeEducationInfoDTO[];
@@ -62,7 +62,7 @@ export interface EmployeeUpdateDTO {
   contactNo?: string;
   isActive?: boolean;
   isForeignInstitute: boolean;
-  profileImage?: File;
+  ProfileImage?: File | null;
 
   documents: EmployeeDocumentDTO[];
   educationInfos: EmployeeEducationInfoDTO[];
@@ -77,7 +77,7 @@ export interface EmployeeDocumentDTO {
   fileName: string;
   uploadDate: Date;
   uploadedFileExtention?: string;
-  upFile?: File;
+  UpFile?: File | null;
   fileBase64?: string;
 }
 
