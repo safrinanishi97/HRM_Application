@@ -28,6 +28,15 @@ builder.Services.AddScoped<IValidator<EmployeeCreateDTO>, EmployeeCreateDTOValid
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
