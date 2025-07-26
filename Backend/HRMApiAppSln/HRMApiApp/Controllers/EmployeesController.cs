@@ -32,7 +32,6 @@ namespace HRMApiApp.Controllers
             return Ok(employee);
         }
 
-      
 
         [HttpPost]
         public async Task<IActionResult> CreateEmployee([FromForm] EmployeeCreateDTO employeeDto)

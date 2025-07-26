@@ -33,7 +33,7 @@ namespace HRMApiApp.BLL
                 FatherName = employee.FatherName,
                 MotherName = employee.MotherName,
                 BirthDate = employee.BirthDate,
-                IdDepartment = employee.Id,
+                IdDepartment = employee.IdDepartment,
                 IdSection= employee.IdSection,
                 JoiningDate = employee.JoiningDate,
                 Address = employee.Address,
@@ -197,7 +197,26 @@ namespace HRMApiApp.BLL
                 IsActive = true,
                 SetDate = DateTime.Now,
 
-                EmployeeDocuments = new List<EmployeeDocument>(),
+                EmployeeDocuments = (await Task.WhenAll(
+                employeeDto.Documents.Select(async doc =>
+                {
+                    var uploadedBytes = await ConvertFileToByteArrayAsync(doc.UpFile);
+                    var extension = Path.GetExtension(doc.UpFile?.FileName);
+
+                    return new EmployeeDocument
+                    {
+                        IdClient = doc.IdClient,
+                        DocumentName = doc.DocumentName,
+                        FileName = doc.FileName,
+                        UploadDate = doc.UploadDate,
+                        UploadedFileExtention = extension,
+                        UploadedFile = uploadedBytes,
+                        SetDate = DateTime.Now
+                    };
+                })
+                )).ToList(),
+
+
                 EmployeeEducationInfos = employeeDto.EducationInfos
                 .Select(e => new EmployeeEducationInfo
                 {
@@ -231,21 +250,21 @@ namespace HRMApiApp.BLL
             };
 
    
-            foreach (var doc in employeeDto.Documents)
-            {
-                var uploadedBytes = await ConvertFileToByteArrayAsync(doc.UpFile);
-                var extension = Path.GetExtension(doc.UpFile?.FileName);
-                employee.EmployeeDocuments.Add(new EmployeeDocument
-                {
-                    IdClient = doc.IdClient,
-                    DocumentName = doc.DocumentName,
-                    FileName = doc.FileName,
-                    UploadDate = doc.UploadDate,
-                    UploadedFileExtention = extension,
-                    UploadedFile = uploadedBytes,
-                    SetDate = DateTime.Now
-                });
-            }
+            //foreach (var doc in employeeDto.Documents)
+            //{
+            //    var uploadedBytes = await ConvertFileToByteArrayAsync(doc.UpFile);
+            //    var extension = Path.GetExtension(doc.UpFile?.FileName);
+            //    employee.EmployeeDocuments.Add(new EmployeeDocument
+            //    {
+            //        IdClient = doc.IdClient,
+            //        DocumentName = doc.DocumentName,
+            //        FileName = doc.FileName,
+            //        UploadDate = doc.UploadDate,
+            //        UploadedFileExtention = extension,
+            //        UploadedFile = uploadedBytes,
+            //        SetDate = DateTime.Now
+            //    });
+            //}
 
             await _employeeRepository.CreateAsync(employee);
             return true;
