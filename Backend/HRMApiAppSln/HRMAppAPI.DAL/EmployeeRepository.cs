@@ -84,7 +84,21 @@ namespace HRMApiApp.DAL
             existingEmployee.EmployeeNameBangla = employee.EmployeeNameBangla ?? existingEmployee.EmployeeNameBangla;
             existingEmployee.FatherName = employee.FatherName ?? existingEmployee.FatherName;
             existingEmployee.MotherName = employee.MotherName ?? existingEmployee.MotherName;
-            existingEmployee.EmployeeImage = await ConvertFileToByteArrayAsync(employee.ProfileImage,cancellationToken) ?? existingEmployee.EmployeeImage;
+            //existingEmployee.EmployeeImage = await ConvertFileToByteArrayAsync(employee.ProfileImage,cancellationToken) ?? existingEmployee.EmployeeImage;
+            if (employee.ProfileImage != null && employee.ProfileImage.Length > 0)
+            {
+                try
+                {
+                    existingEmployee.EmployeeImage = await ConvertFileToByteArrayAsync(employee.ProfileImage, cancellationToken);
+                    Console.WriteLine($"Successfully updated image ({existingEmployee.EmployeeImage?.Length} bytes)");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error converting image: {ex.Message}");
+                   
+                }
+            }
+
             existingEmployee.IdDepartment = employee.IdDepartment;
             existingEmployee.IdSection =   employee.IdSection;
             existingEmployee.BirthDate = employee.BirthDate ?? existingEmployee.BirthDate;
@@ -109,7 +123,7 @@ namespace HRMApiApp.DAL
             var deletedEmployeeEducationInfoList = existingEmployee.EmployeeEducationInfos
                 .Where(eei => eei.IdClient == idClient && !employee.EducationInfos.Any(ei => ei.IdClient == eei.IdClient && ei.Id == eei.Id))
                 .ToList();
-            if (deletedEmployeeDocumentList.Any())
+            if (deletedEmployeeEducationInfoList.Any())
             {
                 Context.EmployeeEducationInfos.RemoveRange(deletedEmployeeEducationInfoList);
             }
@@ -118,7 +132,7 @@ namespace HRMApiApp.DAL
                 .Where(epc => epc.IdClient == idClient && !employee.Certifications.Any(c => c.IdClient == epc.IdClient && c.Id == epc.Id))
                 .ToList();
 
-            if (deletedEmployeeDocumentList.Any()) 
+            if (deletedCertificationList.Any()) 
             {
                 Context.EmployeeProfessionalCertifications.RemoveRange(deletedCertificationList);
             }
