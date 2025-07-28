@@ -19,9 +19,9 @@ export interface EmployeeDTO {
   idGender?: number;
   idReligion?: number;
   idDesignation?: number;
-  departmentName: string;
+  departmentName?: string;
   designation?: string;
-  sectionName: string;
+  sectionName?: string;
   gender?: string;
   documents: EmployeeDocumentDTO[];
   familyInfos: EmployeeFamilyInfoDTO[];
@@ -48,9 +48,9 @@ export interface EmployeeCreateDTO {
   idGender?: number;
   idReligion?: number;
   idDesignation?: number;
-  departmentName: string;
+  departmentNam?: string;
   designation?: string;
-  sectionName: string;
+  sectionName?: string;
   gender?: string;
   documents: EmployeeDocumentDTO[];
   familyInfos: EmployeeFamilyInfoDTO[];
@@ -80,9 +80,9 @@ export interface EmployeeUpdateDTO {
   idGender?: number;
   idReligion?: number;
   idDesignation?: number;
-  departmentName: string;
+  departmentName?: string;
   designation?: string;
-  sectionName: string;
+  sectionName?: string;
   gender?: string;
   documents: EmployeeDocumentDTO[];
   familyInfos: EmployeeFamilyInfoDTO[];

@@ -33,10 +33,10 @@ namespace HRMApiApp.BLL
                 MotherName = employee.MotherName,
                 BirthDate = employee.BirthDate,
                 IdDepartment = employee.IdDepartment,
-                DepartmentName = employee.Department?.DepartName ?? string.Empty,
-                Gender = employee.Gender?.GenderName ?? string.Empty,
-                SectionName = employee.Section?.SectionName ?? string.Empty,
-                Designation = employee.Designation?.DesignationName ?? string.Empty,
+                DepartmentName = employee.Department.DepartName ?? "",
+                Gender = employee.Gender?.GenderName ?? "",
+                SectionName = employee.Section.SectionName ?? "",
+                Designation = employee.Designation?.DesignationName ?? "",
                 IdSection = employee.IdSection,
                 JoiningDate = employee.JoiningDate,
                 Address = employee.Address,
@@ -111,7 +111,7 @@ namespace HRMApiApp.BLL
         public async Task<List<EmployeeDTO>> GetAllAsync(int idClient, CancellationToken cancellationToken)
         {
             var employees = await EmployeeRepository.GetAllAsync(idClient,cancellationToken);
-            cancellationToken.ThrowIfCancellationRequested();
+         
 
             var allEmp= employees
                 .Where(e => e.IdClient == idClient && e.IsActive==true)
@@ -125,10 +125,10 @@ namespace HRMApiApp.BLL
                 MotherName = e.MotherName,
                 BirthDate = e.BirthDate,
                 IdDepartment=e.IdDepartment,
-                DepartmentName = e.Department?.DepartName ?? string.Empty,
-                Gender = e.Gender?.GenderName ?? string.Empty,
-                SectionName = e.Section?.SectionName ?? string.Empty,
-                Designation = e.Designation?.DesignationName ?? string.Empty,
+                DepartmentName = e.Department.DepartName ?? "",
+                Gender = e.Gender?.GenderName ?? "",
+                SectionName = e.Section.SectionName ?? "",
+                Designation = e.Designation?.DesignationName ?? "",
                 IdSection =e.IdSection,
                 JoiningDate = e.JoiningDate,
                 Address = e.Address,

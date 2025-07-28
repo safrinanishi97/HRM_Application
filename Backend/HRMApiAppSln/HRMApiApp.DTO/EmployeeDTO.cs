@@ -53,9 +53,7 @@ namespace HRMApiApp.DTO
         public DateTime? BirthDate { get; set; }
         public int IdDepartment { get; set; }
         public int? IdGender { get; set; }
-
         public int? IdReligion { get; set; }
-
         public int? IdDesignation { get; set; }
         public string? DepartmentName { get; set; }
         public string? Designation { get; set; }
@@ -88,7 +86,6 @@ namespace HRMApiApp.DTO
         public string? MotherName { get; set; }
         public int IdDepartment { get; set; }
         public int? IdGender { get; set; }
-
         public int? IdReligion { get; set; }
         public string? SectionName { get; set; }
         public string? Gender { get; set; }

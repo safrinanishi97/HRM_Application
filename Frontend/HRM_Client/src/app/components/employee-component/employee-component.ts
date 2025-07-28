@@ -46,12 +46,12 @@ constructor(
     idGender: [null],
     idReligion: [null],
     contactNo: [''],
+    departmentName: [''],
     nationalIdentificationNumber: [''],
     address: [''],
     presentAddress: [''],
     isActive: [true],
     profileImage: [null],
-       // Nested Collections
     documents: this.fb.array([]),
     educationInfos: this.fb.array([]),
     familyInfos: this.fb.array([]),

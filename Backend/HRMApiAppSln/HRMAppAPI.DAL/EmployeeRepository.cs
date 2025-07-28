@@ -22,6 +22,10 @@ namespace HRMApiApp.DAL
         {
             var emp = await Context.Employees
               .AsNoTracking()
+                .Include(e=>e.Department)
+                .Include(e => e.Designation)
+                .Include(e => e.Section)
+                .Include(e => e.Gender)
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
                 .Include(e=> e.EmployeeFamilyInfos)
@@ -35,11 +39,15 @@ namespace HRMApiApp.DAL
         {
             var emp= await Context.Employees
                 .AsNoTracking()
+                .Include(e => e.Department)
+                .Include(e => e.Designation)
+                .Include(e => e.Section)
+                .Include(e => e.Gender)
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
                  .Include(e => e.EmployeeFamilyInfos)
                 .Include(e => e.EmployeeProfessionalCertifications)
-                .AsSplitQuery()
+             
                 .Where(e => e.IdClient == idClient)
                 .ToListAsync(cancellationToken);
             return emp;
