@@ -42,7 +42,8 @@ namespace HRMApiApp.BLL
                 IsActive = employee.IsActive,
                 FileBase64 = employee.EmployeeImage != null ? Convert.ToBase64String(employee.EmployeeImage) : null,
 
-                Documents = employee.EmployeeDocuments.Select(d => new EmployeeDocumentDTO
+                Documents = employee.EmployeeDocuments
+                .Select(d => new EmployeeDocumentDTO
                 {
                     Id = d.Id,
                     IdClient = d.IdClient,
@@ -54,7 +55,8 @@ namespace HRMApiApp.BLL
                    
                 }).ToList(),
 
-                EducationInfos = employee.EmployeeEducationInfos.Select(e => new EmployeeEducationInfoDTO
+                EducationInfos = employee.EmployeeEducationInfos
+                .Select(e => new EmployeeEducationInfoDTO
                 {
                     Id = e.Id,
                     IdClient = e.IdClient,
@@ -72,7 +74,23 @@ namespace HRMApiApp.BLL
                     Achievement = e.Achievement
                 }).ToList(),
 
-                Certifications = employee.EmployeeProfessionalCertifications.Select(c => new EmployeeProfessionalCertificationDTO
+
+                FamilyInfos = employee.EmployeeFamilyInfos
+                .Select(e => new EmployeeFamilyInfoDTO
+                {
+                    Id = e.Id,
+                    IdClient = e.IdClient,
+                    IdGender=e.IdGender,
+                    IdRelationship= e.IdRelationship,
+                    Name = e.Name,
+                    ContactNo = e.ContactNo,
+                    DateOfBirth = e.DateOfBirth,
+                    CurrentAddress = e.CurrentAddress,
+                    PermanentAddress = e.PermanentAddress,
+                }).ToList(),
+
+                Certifications = employee.EmployeeProfessionalCertifications
+                .Select(c => new EmployeeProfessionalCertificationDTO
                 {
                     Id = c.Id,
                     IdClient = c.IdClient,
@@ -145,7 +163,21 @@ namespace HRMApiApp.BLL
                     Achievement = ed.Achievement
                 }).ToList(),
 
-                Certifications = e.EmployeeProfessionalCertifications
+                FamilyInfos = e.EmployeeFamilyInfos
+                .Select(e => new EmployeeFamilyInfoDTO
+                {
+                    Id = e.Id,
+                    IdClient = e.IdClient,
+                    IdGender = e.IdGender,
+                    IdRelationship = e.IdRelationship,
+                    Name = e.Name,
+                    ContactNo = e.ContactNo,
+                    DateOfBirth = e.DateOfBirth,
+                    CurrentAddress = e.CurrentAddress,
+                    PermanentAddress = e.PermanentAddress,
+                }).ToList(),
+
+                 Certifications = e.EmployeeProfessionalCertifications
                 .Select(c => new EmployeeProfessionalCertificationDTO
                 {   Id = c.Id,
                     IdClient = c.IdClient,
@@ -234,6 +266,20 @@ namespace HRMApiApp.BLL
                     IsForeignInstitute = e.IsForeignInstitute,
                     Duration = e.Duration,
                     Achievement = e.Achievement,
+                    SetDate = DateTime.Now
+                }).ToList(),
+
+                EmployeeFamilyInfos = employeeDto.FamilyInfos
+                .Select(e => new EmployeeFamilyInfo
+                {
+                    IdClient = e.IdClient,
+                    IdGender = e.IdGender,
+                    IdRelationship = e.IdRelationship,
+                    Name = e.Name,
+                    ContactNo = e.ContactNo,
+                    DateOfBirth = e.DateOfBirth,
+                    CurrentAddress = e.CurrentAddress,
+                    PermanentAddress = e.PermanentAddress,
                     SetDate = DateTime.Now
                 }).ToList(),
 

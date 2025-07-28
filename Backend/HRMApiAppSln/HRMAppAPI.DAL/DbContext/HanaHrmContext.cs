@@ -146,40 +146,45 @@ public partial class HanaHrmContext(DbContextOptions<HanaHrmContext> options, IC
 
             entity.HasOne(d => d.Department).WithMany(p => p.Employees)
                 .HasForeignKey(d => new { d.IdClient, d.IdDepartment })
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Employee_Department");
 
             entity.HasOne(d => d.Designation).WithMany(p => p.Employees)
                 .HasForeignKey(d => new { d.IdClient, d.IdDesignation })
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Employee_Designation");
 
             entity.HasOne(d => d.EmployeeType).WithMany(p => p.Employees)
                 .HasForeignKey(d => new { d.IdClient, d.IdEmployeeType })
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Employee_EmployeeType");
 
             entity.HasOne(d => d.Gender).WithMany(p => p.Employees)
                 .HasForeignKey(d => new { d.IdClient, d.IdGender })
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Employee_Gender");
 
             entity.HasOne(d => d.JobType).WithMany(p => p.Employees)
                 .HasForeignKey(d => new { d.IdClient, d.IdJobType })
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Employee_JobType");
 
             entity.HasOne(d => d.MaritalStatus).WithMany(p => p.Employees)
                 .HasForeignKey(d => new { d.IdClient, d.IdMaritalStatus })
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Employee_MaritalStatus");
 
             entity.HasOne(d => d.Religion).WithMany(p => p.Employees)
                 .HasForeignKey(d => new { d.IdClient, d.IdReligion })
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Employee_Religion");
 
             entity.HasOne(d => d.Section).WithMany(p => p.Employees)
                 .HasForeignKey(d => new { d.IdClient, d.IdSection })
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Employee_Section");
 
             entity.HasOne(d => d.WeekOff).WithMany(p => p.Employees)
                 .HasForeignKey(d => new { d.IdClient, d.IdWeekOff })
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Employee_WeekOff");
         });
 
@@ -200,7 +205,6 @@ public partial class HanaHrmContext(DbContextOptions<HanaHrmContext> options, IC
 
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeDocuments)
                 .HasForeignKey(d => new { d.IdClient, d.IdEmployee })
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_EmployeeDocument_Employee");
         });
 
@@ -240,7 +244,6 @@ public partial class HanaHrmContext(DbContextOptions<HanaHrmContext> options, IC
 
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeEducationInfos)
                 .HasForeignKey(d => new { d.IdClient, d.IdEmployee })
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_EmployeeEducationInfo_Employee");
         });
 
@@ -259,6 +262,11 @@ public partial class HanaHrmContext(DbContextOptions<HanaHrmContext> options, IC
             entity.Property(e => e.CurrentAddress).HasMaxLength(500);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.PermanentAddress).HasMaxLength(500);
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeFamilyInfos)
+                .HasForeignKey(d => new { d.IdClient, d.IdEmployee })
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EmployeeFamilyInfo_Employee");
 
             entity.HasOne(d => d.Gender).WithMany(p => p.EmployeeFamilyInfos)
                 .HasForeignKey(d => new { d.IdClient, d.IdGender })
@@ -288,7 +296,6 @@ public partial class HanaHrmContext(DbContextOptions<HanaHrmContext> options, IC
 
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeProfessionalCertifications)
                 .HasForeignKey(d => new { d.IdClient, d.IdEmployee })
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_EmployeeProfessionalCertification_Employee");
         });
 
@@ -405,3 +412,4 @@ public partial class HanaHrmContext(DbContextOptions<HanaHrmContext> options, IC
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+

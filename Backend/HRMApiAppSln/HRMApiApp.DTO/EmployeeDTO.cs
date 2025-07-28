@@ -29,6 +29,7 @@ namespace HRMApiApp.DTO
         public List<EmployeeDocumentDTO> Documents { get; set; } = [];
         public List<EmployeeEducationInfoDTO> EducationInfos { get; set; } = [];
         public List<EmployeeProfessionalCertificationDTO> Certifications { get; set; } = [];
+        public List<EmployeeFamilyInfoDTO> FamilyInfos { get; set; } = [];
         public IFormFile? ProfileImage { get; set; }
         public string? FileBase64 { get; set; }
 
@@ -51,8 +52,8 @@ namespace HRMApiApp.DTO
         public string? ContactNo { get; set; }
 
         public List<EmployeeDocumentDTO> Documents { get; set; } = [];
-
         public List<EmployeeEducationInfoDTO> EducationInfos { get; set; } = [];
+        public List<EmployeeFamilyInfoDTO> FamilyInfos { get; set; } = [];
         public List<EmployeeProfessionalCertificationDTO> Certifications { get; set; } = [];
         public IFormFile? ProfileImage { get; set; }
 
@@ -81,6 +82,7 @@ namespace HRMApiApp.DTO
 
         public List<EmployeeDocumentDTO> Documents { get; set; } = [];
         public List<EmployeeEducationInfoDTO> EducationInfos { get; set; } = [];
+        public List<EmployeeFamilyInfoDTO> FamilyInfos { get; set; } = [];
         public List<EmployeeProfessionalCertificationDTO> Certifications { get; set; } = [];
         public IFormFile? ProfileImage { get; set; }
     }
@@ -96,6 +98,36 @@ namespace HRMApiApp.DTO
 
         public IFormFile? UpFile { get; set; }
         public string? FileBase64 { get; set; }
+    }
+
+
+    public class EmployeeFamilyInfoDTO
+    {
+        public int IdClient { get; set; }
+
+        public int Id { get; set; }
+
+        public int IdEmployee { get; set; }
+
+        public string Name { get; set; } = null!;
+
+        public int IdGender { get; set; }
+
+        public int IdRelationship { get; set; }
+
+        public DateTime? DateOfBirth { get; set; }
+
+        public string? ContactNo { get; set; }
+
+        public string? CurrentAddress { get; set; }
+
+        public string? PermanentAddress { get; set; }
+
+        public DateTime? SetDate { get; set; }
+
+        public string? CreatedBy { get; set; }
+
+       
     }
     public class EmployeeEducationInfoDTO
     {

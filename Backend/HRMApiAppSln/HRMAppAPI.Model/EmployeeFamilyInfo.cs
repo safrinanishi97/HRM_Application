@@ -29,6 +29,8 @@ public partial class EmployeeFamilyInfo
 
     public string? CreatedBy { get; set; }
 
+    public virtual Employee Employee { get; set; } = null!;
+
     public virtual Gender Gender { get; set; } = null!;
 
     public virtual Relationship Relationship { get; set; } = null!;

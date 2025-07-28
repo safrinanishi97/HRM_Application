@@ -24,6 +24,7 @@ namespace HRMApiApp.DAL
               .AsNoTracking()
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
+                .Include(e=> e.EmployeeFamilyInfos)
                 .Include(e => e.EmployeeProfessionalCertifications)
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id,cancellationToken);
@@ -36,6 +37,7 @@ namespace HRMApiApp.DAL
                 .AsNoTracking()
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
+                 .Include(e => e.EmployeeFamilyInfos)
                 .Include(e => e.EmployeeProfessionalCertifications)
                 .AsSplitQuery()
                 .Where(e => e.IdClient == idClient)
@@ -74,10 +76,11 @@ namespace HRMApiApp.DAL
             var existingEmployee = await Context.Employees
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
+                 .Include(e => e.EmployeeFamilyInfos)
                 .Include(e => e.EmployeeProfessionalCertifications)
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id);
-
+            var newImage = await ConvertFileToByteArrayAsync(employee.ProfileImage, cancellationToken);
             if (existingEmployee == null) return 0;
 
             existingEmployee.EmployeeName = employee.EmployeeName ?? existingEmployee.EmployeeName;
@@ -85,18 +88,9 @@ namespace HRMApiApp.DAL
             existingEmployee.FatherName = employee.FatherName ?? existingEmployee.FatherName;
             existingEmployee.MotherName = employee.MotherName ?? existingEmployee.MotherName;
             //existingEmployee.EmployeeImage = await ConvertFileToByteArrayAsync(employee.ProfileImage,cancellationToken) ?? existingEmployee.EmployeeImage;
-            if (employee.ProfileImage != null && employee.ProfileImage.Length > 0)
+            if (newImage != null)
             {
-                try
-                {
-                    existingEmployee.EmployeeImage = await ConvertFileToByteArrayAsync(employee.ProfileImage, cancellationToken);
-                    Console.WriteLine($"Successfully updated image ({existingEmployee.EmployeeImage?.Length} bytes)");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error converting image: {ex.Message}");
-                   
-                }
+                existingEmployee.EmployeeImage = newImage;
             }
 
             existingEmployee.IdDepartment = employee.IdDepartment;
@@ -128,6 +122,18 @@ namespace HRMApiApp.DAL
                 Context.EmployeeEducationInfos.RemoveRange(deletedEmployeeEducationInfoList);
             }
 
+
+            var deletedFamilyInfoList = existingEmployee.EmployeeFamilyInfos
+               .Where(efi => efi.IdClient == idClient && !employee.FamilyInfos.Any(c => c.IdClient == efi.IdClient && c.Id == efi.Id))
+               .ToList();
+
+            if (deletedFamilyInfoList.Any())
+            {
+                Context.EmployeeFamilyInfos.RemoveRange(deletedFamilyInfoList);
+            }
+
+
+
             var deletedCertificationList = existingEmployee.EmployeeProfessionalCertifications
                 .Where(epc => epc.IdClient == idClient && !employee.Certifications.Any(c => c.IdClient == epc.IdClient && c.Id == epc.Id))
                 .ToList();
@@ -143,15 +149,25 @@ namespace HRMApiApp.DAL
             foreach(var item in employee.Documents)
             {
                 var existingEntry = existingEmployee.EmployeeDocuments.FirstOrDefault(ed=>ed.IdClient == item.IdClient && ed.Id == item.Id);
-                var uploadedBytes = await ConvertFileToByteArrayAsync(item.UpFile, cancellationToken);
-                var extension = Path.GetExtension(item.UpFile?.FileName);
+                byte[]? uploadedBytes = null;
+                string? extension = null;
+
+                if (item.UpFile != null)
+                {
+                    uploadedBytes = await ConvertFileToByteArrayAsync(item.UpFile, cancellationToken);
+                    extension = Path.GetExtension(item.UpFile.FileName);
+                }
+
                 if (existingEntry != null) 
                 {
                     existingEntry.DocumentName = item.DocumentName;
                     existingEntry.FileName = item.FileName;
                     existingEntry.UploadDate = item.UploadDate;
-                    existingEntry.UploadedFileExtention = item.UploadedFileExtention;
-                    existingEntry.UploadedFile = uploadedBytes ?? existingEntry.UploadedFile;
+                    existingEntry.UploadedFileExtention = extension ?? item.UploadedFileExtention;
+                    if (uploadedBytes != null)
+                    {
+                        existingEntry.UploadedFile = uploadedBytes;
+                    }
                     existingEntry.SetDate = DateTime.Now;
                 }
                 else
@@ -212,6 +228,41 @@ namespace HRMApiApp.DAL
                     };
 
                     existingEmployee.EmployeeEducationInfos.Add(newEmployeeEducationInfo);
+                }
+            }
+
+
+            foreach (var item in employee.FamilyInfos)
+            {
+                var existingEntry = existingEmployee.EmployeeFamilyInfos.FirstOrDefault(ei => ei.IdClient == item.IdClient && ei.Id == item.Id);
+                if (existingEntry != null)
+                {
+                    existingEntry.IdGender = item.IdGender;
+                    existingEntry.IdRelationship = item.IdRelationship;
+                    existingEntry.Name = item.Name;
+                    existingEntry.DateOfBirth = item.DateOfBirth;
+                    existingEntry.ContactNo = item.ContactNo;
+                    existingEntry.CurrentAddress = item.CurrentAddress;
+                    existingEntry.PermanentAddress = item.PermanentAddress;
+                    existingEntry.SetDate = DateTime.Now;
+                }
+                else
+                {
+                    var newEmployeeFamilyInfo = new EmployeeFamilyInfo()
+                    {
+                        IdClient = item.IdClient,
+                        IdEmployee = existingEmployee.Id,
+                        IdGender = item.IdGender,
+                        IdRelationship = item.IdRelationship,
+                        Name = item.Name,
+                        DateOfBirth = item.DateOfBirth,
+                        ContactNo = item.ContactNo,
+                        CurrentAddress = item.CurrentAddress,
+                        PermanentAddress=item.PermanentAddress,
+                        SetDate = DateTime.Now
+                    };
+
+                    existingEmployee.EmployeeFamilyInfos.Add(newEmployeeFamilyInfo);
                 }
             }
 

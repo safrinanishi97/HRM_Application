@@ -65,9 +65,11 @@ public class Employee
 
     public virtual Designation? Designation { get; set; }
 
-    public virtual List<EmployeeDocument> EmployeeDocuments { get; set; } = [];
+    public virtual ICollection<EmployeeDocument> EmployeeDocuments { get; set; } = new List<EmployeeDocument>();
 
     public virtual ICollection<EmployeeEducationInfo> EmployeeEducationInfos { get; set; } = new List<EmployeeEducationInfo>();
+
+    public virtual ICollection<EmployeeFamilyInfo> EmployeeFamilyInfos { get; set; } = new List<EmployeeFamilyInfo>();
 
     public virtual ICollection<EmployeeProfessionalCertification> EmployeeProfessionalCertifications { get; set; } = new List<EmployeeProfessionalCertification>();
 
@@ -84,7 +86,4 @@ public class Employee
     public virtual Section Section { get; set; } = null!;
 
     public virtual WeekOff? WeekOff { get; set; }
-
-
-
 }
