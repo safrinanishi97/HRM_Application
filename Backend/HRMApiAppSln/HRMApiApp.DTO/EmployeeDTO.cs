@@ -21,7 +21,15 @@ namespace HRMApiApp.DTO
         public DateTime? JoiningDate { get; set; }
         public int IdDepartment { get; set; }
         public int IdSection { get; set; }
+        public int? IdDesignation { get; set; }
         public string? Address { get; set; }
+        public int? IdGender { get; set; }
+
+        public int? IdReligion { get; set; }
+        public string? SectionName { get; set; }
+        public string? Gender { get; set; }
+        public string? DepartmentName { get; set; }
+        public string? Designation { get; set; }
         public string? PresentAddress { get; set; }
         public string? NationalIdentificationNumber { get; set; }
         public string? ContactNo { get; set; }
@@ -44,6 +52,15 @@ namespace HRMApiApp.DTO
         public string? MotherName { get; set; }
         public DateTime? BirthDate { get; set; }
         public int IdDepartment { get; set; }
+        public int? IdGender { get; set; }
+
+        public int? IdReligion { get; set; }
+
+        public int? IdDesignation { get; set; }
+        public string? DepartmentName { get; set; }
+        public string? Designation { get; set; }
+        public string? SectionName { get; set; }
+        public string? Gender { get; set; }
         public int IdSection { get; set; }
         public DateTime? JoiningDate { get; set; }
         public string? Address { get; set; }
@@ -70,7 +87,15 @@ namespace HRMApiApp.DTO
         public string? FatherName { get; set; }
         public string? MotherName { get; set; }
         public int IdDepartment { get; set; }
+        public int? IdGender { get; set; }
+
+        public int? IdReligion { get; set; }
+        public string? SectionName { get; set; }
+        public string? Gender { get; set; }
         public int IdSection { get; set; }
+        public int? IdDesignation { get; set; }
+        public string? DepartmentName { get; set; }
+        public string? Designation { get; set; }
         public DateTime? BirthDate { get; set; }
         public string? Address { get; set; }
         public string? PresentAddress { get; set; }

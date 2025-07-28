@@ -16,8 +16,15 @@ export interface EmployeeDTO {
   isActive?: boolean;
   profileImage?: File;
   fileBase64?: string;
-
+  idGender?: number;
+  idReligion?: number;
+  idDesignation?: number;
+  departmentName: string;
+  designation?: string;
+  sectionName: string;
+  gender?: string;
   documents: EmployeeDocumentDTO[];
+  familyInfos: EmployeeFamilyInfoDTO[];
   educationInfos: EmployeeEducationInfoDTO[];
   certifications: EmployeeProfessionalCertificationDTO[];
 }
@@ -38,8 +45,15 @@ export interface EmployeeCreateDTO {
   nationalIdentificationNumber?: string;
   contactNo?: string;
   ProfileImage?: File | null;
-
+  idGender?: number;
+  idReligion?: number;
+  idDesignation?: number;
+  departmentName: string;
+  designation?: string;
+  sectionName: string;
+  gender?: string;
   documents: EmployeeDocumentDTO[];
+  familyInfos: EmployeeFamilyInfoDTO[];
   educationInfos: EmployeeEducationInfoDTO[];
   certifications: EmployeeProfessionalCertificationDTO[];
 }
@@ -63,8 +77,15 @@ export interface EmployeeUpdateDTO {
   isActive?: boolean;
   isForeignInstitute: boolean;
   ProfileImage?: File | null;
-
+  idGender?: number;
+  idReligion?: number;
+  idDesignation?: number;
+  departmentName: string;
+  designation?: string;
+  sectionName: string;
+  gender?: string;
   documents: EmployeeDocumentDTO[];
+  familyInfos: EmployeeFamilyInfoDTO[];
   educationInfos: EmployeeEducationInfoDTO[];
   certifications: EmployeeProfessionalCertificationDTO[];
 }
@@ -82,6 +103,20 @@ export interface EmployeeDocumentDTO {
 }
 
 
+export interface EmployeeFamilyInfoDTO {
+  idClient: number;
+  id: number;
+  idEmployee: number;
+  name: string;
+  idGender: number;
+  idRelationship: number;
+  dateOfBirth?: Date;
+  contactNo?: string;
+  currentAddress?: string;
+  permanentAddress?: string;
+  setDate?: Date;
+  createdBy?: string;
+}
 export interface EmployeeEducationInfoDTO {
   id: number;
   idClient: number;
@@ -101,6 +136,7 @@ export interface EmployeeEducationInfoDTO {
 }
 
 
+
 export interface EmployeeProfessionalCertificationDTO {
   id: number;
   idClient: number;
@@ -110,4 +146,9 @@ export interface EmployeeProfessionalCertificationDTO {
   instituteLocation: string;
   fromDate: Date;
   toDate?: Date;
+}
+
+export interface DropdownItem {
+  id: number;
+  text: string;
 }
