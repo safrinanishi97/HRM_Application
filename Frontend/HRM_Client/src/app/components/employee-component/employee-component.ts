@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { EmployeeDTO } from '../../models/employee-dto';
+import { EmployeeCreateDTO, EmployeeDTO, EmployeeUpdateDTO } from '../../models/employee-dto';
 import { EmployeeService } from '../../services/employee-service';
-import { SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DropdownService } from '../../services/dropdown-service';
 
 @Component({
@@ -28,8 +28,9 @@ export class EmployeeComponent implements OnInit {
 
 constructor(
     private employeeService: EmployeeService,
-      private dropdownService: DropdownService,
+    private dropdownService: DropdownService,
     private fb: FormBuilder,
+    private sanitizer: DomSanitizer
   ){
     this.employeeForm = this.fb.group({
     id: [0],
@@ -65,6 +66,12 @@ constructor(
     this.loadEmployees();
   }
 
+   loadEmployees(): void {
+    this.employeeService.getAllEmployees(this.idClient).subscribe(data => {
+      this.employees = data;
+    });
+  }
+
  loadDropdownData(): void {
 
     this.dropdownService.getDepartments().subscribe({
@@ -93,19 +100,23 @@ constructor(
     });
   }
 
-   loadEmployees(): void {
-    this.employeeService.getAllEmployees(this.idClient).subscribe(data => {
-      this.employees = data;
-    });
-  }
+
 
   selectEmployee(employee: EmployeeDTO): void {
     this.isEditMode = true;
     this.selectedEmployee = employee;
     
-    // Convert base64 image to URL
-      if (employee.fileBase64) {
-      this.profileImageUrl = this.employeeService.getImageUrl(employee.fileBase64);
+    // // Convert base64 image to URL
+    //   if (employee.fileBase64) {
+    //   this.profileImageUrl = this.employeeService.getImageUrl(employee.fileBase64);
+    // } else {
+    //   this.profileImageUrl = null;
+    // }
+
+    if (employee.fileBase64) {
+      this.profileImageUrl = this.sanitizer.bypassSecurityTrustUrl(
+        `data:image/jpeg;base64,${employee.fileBase64}`
+      );
     } else {
       this.profileImageUrl = null;
     }
@@ -130,10 +141,8 @@ constructor(
       profileImage: null
     });
 
-    // Clear all form arrays
     this.clearFormArrays();
 
-    // Add documents
     employee.documents.forEach(doc => {
       const docGroup = this.fb.group({
         id: [doc.id],
@@ -149,7 +158,6 @@ constructor(
       this.documents.push(docGroup);
     });
 
-    // Add education infos
     employee.educationInfos.forEach(edu => {
       const eduGroup = this.fb.group({
         id: [edu.id],
@@ -171,24 +179,22 @@ constructor(
       this.educationInfos.push(eduGroup);
     });
 
-    // Add family infos
     employee.familyInfos.forEach(fam => {
       const famGroup = this.fb.group({
-        Id: [fam.id],
-        IdClient: [fam.idClient],
-        IdEmployee: [fam.idEmployee],
-        Name: [fam.name, Validators.required],
-        IdGender: [fam.idGender, Validators.required],
-        IdRelationship: [fam.idRelationship, Validators.required],
-        DateOfBirth: [fam.dateOfBirth],
-        ContactNo: [fam.contactNo],
-        CurrentAddress: [fam.currentAddress],
-        PermanentAddress: [fam.permanentAddress]
+        id: [fam.id],
+        idClient: [fam.idClient],
+        idEmployee: [fam.idEmployee],
+        name: [fam.name, Validators.required],
+        idGender: [fam.idGender, Validators.required],
+        idRelationship: [fam.idRelationship, Validators.required],
+        dateOfBirth: [fam.dateOfBirth],
+        contactNo: [fam.contactNo],
+        currentAddress: [fam.currentAddress],
+        permanentAddress: [fam.permanentAddress]
       });
       this.familyInfos.push(famGroup);
     });
 
-    // Add certifications
     employee.certifications.forEach(cert => {
       const certGroup = this.fb.group({
         id: [cert.id],
@@ -220,19 +226,197 @@ clearFormArrays(): void {
   }
 
   get documents(): FormArray {
-    return this.employeeForm.get('Documents') as FormArray;
+    return this.employeeForm.get('documents') as FormArray;
   }
 
   get educationInfos(): FormArray {
-    return this.employeeForm.get('EducationInfos') as FormArray;
+    return this.employeeForm.get('educationInfos') as FormArray;
   }
 
   get familyInfos(): FormArray {
-    return this.employeeForm.get('FamilyInfos') as FormArray;
+    return this.employeeForm.get('familyInfos') as FormArray;
   }
 
   get certifications(): FormArray {
-    return this.employeeForm.get('Certifications') as FormArray;
+    return this.employeeForm.get('certifications') as FormArray;
   }
-  
+ addDocument(): void {
+    const docGroup = this.fb.group({
+      id: [0],
+      idClient: [this.idClient],
+      idEmployee: [0],
+      documentName: ['', Validators.required],
+      fileName: ['', Validators.required],
+      uploadDate: [new Date(), Validators.required],
+      uploadedFileExtention: [''],
+      upFile: [null],
+      fileBase64: ['']
+    });
+    this.documents.push(docGroup);
+  }
+
+  addEducationInfo(): void {
+    const eduGroup = this.fb.group({
+      id: [0],
+      idClient: [this.idClient],
+      idEmployee: [0],
+      idEducationLevel: [0, Validators.required],
+      idEducationExamination: [0, Validators.required],
+      idEducationResult: [0, Validators.required],
+      cgpa: [0],
+      examScale: [0],
+      marks: [0],
+      major: ['', Validators.required],
+      passingYear: [0, Validators.required],
+      instituteName: ['', Validators.required],
+      isForeignInstitute: [false],
+      duration: [0],
+      achievement: ['']
+    });
+    this.educationInfos.push(eduGroup);
+  }
+
+  addFamilyInfo(): void {
+    const famGroup = this.fb.group({
+      id: [0],
+      idClient: [this.idClient],
+      idEmployee: [0],
+      name: ['', Validators.required],
+      idGender: [0, Validators.required],
+      idRelationship: [0, Validators.required],
+      dateOfBirth: [null],
+      contactNo: [''],
+      currentAddress: [''],
+      permanentAddress: ['']
+    });
+    this.familyInfos.push(famGroup);
+  }
+
+  addCertification(): void {
+    const certGroup = this.fb.group({
+      id: [0],
+      idClient: [this.idClient],
+      idEmployee: [0],
+      certificationTitle: ['', Validators.required],
+      certificationInstitute: ['', Validators.required],
+      instituteLocation: ['', Validators.required],
+      fromDate: [new Date(), Validators.required],
+      toDate: [null]
+    });
+    this.certifications.push(certGroup);
+  }
+
+  removeDocument(index: number): void {
+    this.documents.removeAt(index);
+  }
+
+  removeEducationInfo(index: number): void {
+    this.educationInfos.removeAt(index);
+  }
+
+  removeFamilyInfo(index: number): void {
+    this.familyInfos.removeAt(index);
+  }
+
+  removeCertification(index: number): void {
+    this.certifications.removeAt(index);
+  }
+ onProfileImageChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.employeeForm.patchValue({ profileImage: file });
+      this.employeeForm.get('profileImage')?.updateValueAndValidity();
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.profileImageUrl = this.sanitizer.bypassSecurityTrustUrl(
+          reader.result as string
+        );
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onDocumentFileChange(event: any, index: number): void {
+    const file = event.target.files[0];
+    if (file) {
+      const docGroup = this.documents.at(index);
+      docGroup.patchValue({ upFile: file });
+      docGroup.get('upFile')?.updateValueAndValidity();
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        docGroup.patchValue({ fileBase64: reader.result?.toString().split(',')[1] });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+
+   createEmployee(): void {
+    if (this.employeeForm.invalid) return;
+
+    const formData = this.employeeForm.value as EmployeeCreateDTO;
+    this.employeeService.createEmployee(formData).subscribe({
+      next: () => {
+        this.loadEmployees();
+        this.resetForm();
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  updateEmployee(): void {
+    if (this.employeeForm.invalid) return;
+
+    const formData = this.employeeForm.value as EmployeeUpdateDTO;
+    this.employeeService.updateEmployee(formData).subscribe({
+      next: () => {
+        this.loadEmployees();
+        this.resetForm();
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  deleteEmployee(): void {
+    if (!this.selectedEmployee) return;
+
+    if (confirm('Are you sure to delete this employee?')) {
+      this.employeeService.deleteEmployee(
+        this.selectedEmployee.idClient, 
+        this.selectedEmployee.id
+      ).subscribe({
+        next: () => {
+          this.loadEmployees();
+        this.resetForm();
+        },
+        error: (err) => console.error(err)
+      });
+    }
+  }
+ resetForm(): void {
+    this.employeeForm.reset({
+      id: 0,
+      idClient: this.idClient,
+      isActive: true
+    });
+    this.clearFormArrays();
+    this.addDocument();
+    this.addEducationInfo();
+    this.addFamilyInfo();
+    this.addCertification();
+    this.selectedEmployee = null;
+    this.isEditMode = false;
+    this.profileImageUrl = null;
+  }
+
+  getDocumentPreviewUrl(document: any): SafeUrl | null {
+    if (document.FileBase64) {
+      return this.sanitizer.bypassSecurityTrustUrl(
+        `data:image/jpeg;base64,${document.FileBase64}`
+      );
+    }
+    return null;
+  }
 }
