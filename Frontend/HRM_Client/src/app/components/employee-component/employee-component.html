@@ -25,7 +25,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="mb-0">{{isEditMode ? 'Edit Employee' : 'Create New Employee'}}</h5>
           <div>
-            <button class="btn btn-outline-primary me-2" [disabled]="isEditMode" (click)="createEmployee()">
+            <!-- <button class="btn btn-outline-primary me-2" [disabled]="isEditMode" (click)="createEmployee()">
               Create
             </button>
             <button class="btn btn-outline-warning me-2" [disabled]="!isEditMode" (click)="updateEmployee()">
@@ -36,7 +36,7 @@
             </button>
             <button class="btn btn-outline-secondary" (click)="resetForm()">
               Reset
-            </button>
+            </button> -->
           </div>
         </div>
         
@@ -58,11 +58,11 @@
                 </div>
                 <div class="col">
                   <label class="form-label">Mother's Name</label>
-                  <input type="text" class="form-control" formControlName="employeeNameBangla">
+                  <input type="text" class="form-control" formControlName="motherName">
                 </div>
                  <div class="col">
                   <label class="form-label">Date Of Birth</label>
-                  <input type="text" class="form-control" formControlName="employeeName">
+                  <input type="date" class="form-control" formControlName="birthDate">
                 </div>
              </div>
 
@@ -70,7 +70,7 @@
             <div class="row mb-3">  
               <div class="col">
                   <label class="form-label">Joining Date</label>
-                  <input type="text" class="form-control" formControlName="employeeName">
+                  <input type="date" class="form-control" formControlName="joiningDate">
                 </div>
                   <div class="col">
                   <label class="form-label">Department</label>
@@ -83,10 +83,10 @@
                 </div>
                 <div class="col">
                   <label class="form-label">Designation</label>
-                  <select class="form-select" formControlName="idSection">
+                  <select class="form-select" formControlName="idDesignation">
                     <option value="0">Select Designation</option>
-                    <option *ngFor="let sec of sections" [value]="sec.id">
-                      {{sec.name}}
+                    <option *ngFor="let des of designations" [value]="des.id">
+                      {{des.name}}
                     </option>
                   </select>
                 </div>
@@ -135,45 +135,62 @@
 
                   <div class="col">
                   <label class="form-label">NID No.</label>
-                  <input type="text" class="form-control" formControlName="employeeNameBangla">
+                  <input type="text" class="form-control" formControlName="nationalIdentificationNumber">
                 </div>
                 <div class="col">
                   <label class="form-label">Contact No</label>
-                  <input type="text" class="form-control" formControlName="fatherName">
+                  <input type="text" class="form-control" formControlName="contactNo">
                 </div>
                <div class="col">
                   <label class="form-label">Marital Status</label>
-                  <input type="text" class="form-control" formControlName="employeeNameBangla">
+                  <select class="form-select" formControlName="idSection">
+                    <option value="0">Select Marital Status</option>
+                    <option *ngFor="let sec of sections" [value]="sec.id">
+                      {{sec.name}}
+                    </option>
+                  </select>
                 </div>
+
                   
                
              </div>
               
 
             <div class="row mb-3"> 
-               <div class="col">
+                <div class="col">
                   <label class="form-label">Religion</label>
-                  <input type="text" class="form-control" formControlName="fatherName">
+                  <select class="form-select" formControlName="idSection">
+                    <option value="0">Select Religion</option>
+                    <option *ngFor="let sec of sections" [value]="sec.id">
+                      {{sec.name}}
+                    </option>
+                  </select>
                 </div>
+
 
                 <div class="col">
                   <label class="form-label">Permanent Address</label>
-                  <input type="text" class="form-control" formControlName="fatherName">
+                  <input type="text" class="form-control" formControlName="address">
                 </div>
 
                 <div class="col">
                   <label class="form-label">Present Address</label>
-                  <input type="text" class="form-control" formControlName="fatherName">
+                  <input type="text" class="form-control" formControlName="presentAddress">
                 </div>
 
 
                  <div class="col">
-                  <label class="form-label">Weeks Off</label>
-                  <input type="text" class="form-control" formControlName="employeeNameBangla">
-                </div> 
+                  <label class="form-label">Weeks Off Day</label>
+                  <select class="form-select" formControlName="idSection">
+                    <option value="0">Select Weeks Off Day</option>
+                    <option *ngFor="let sec of sections" [value]="sec.id">
+                      {{sec.name}}
+                    </option>
+                  </select>
+                </div>
                 <div class="col">
                   <label class="form-label">Created By</label>
-                  <input type="text" class="form-control" formControlName="fatherName">
+                  <input type="text" class="form-control" formControlName="employeeName">
                 </div>
                
              </div>
@@ -240,170 +257,730 @@
               </div>
 
               </div>
-                          
-           <!-- Main form content above (keep your existing form fields here) -->
 
-<div class="row mt-4">
-  <!-- First row with two tables -->
-  <div class="col-md-6 mb-3">
-    <!-- Documents Section as table -->
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h6 class="mb-0">Documents</h6>
-        <button type="button" class="btn btn-sm btn-outline-success" (click)="addDocument()">
-          <i class="bi bi-plus"></i> Add
-        </button>
-      </div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-sm table-hover mb-0">
-            <thead>
-              <tr>
-                <th>Document Name</th>
-                <th>File</th>
-                <th>Date</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="Documents">
-              <tr *ngFor="let doc of documents.controls; let i = index" [formGroupName]="i">
-                <!-- <td>{{ doc.get('DocumentName').value }}</td>
-                <td>
-                  <a *ngIf="doc.get('FileBase64')?.value" [href]="getDocumentPreviewUrl(doc.value)" target="_blank">
-                    View
-                  </a>
-                </td>
-                <td>{{ doc.get('UploadDate').value | date }}</td> -->
-                <td>
-                  <button type="button" class="btn btn-sm btn-danger" (click)="removeDocument(i)">
-                    <i class="bi bi-trash">Remove</i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="col-md-6 mb-3">
-    <!-- Family Information Section as table -->
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h6 class="mb-0">Family Information</h6>
-        <button type="button" class="btn btn-sm btn-outline-success" (click)="addFamilyInfo()">
-          <i class="bi bi-plus"></i> Add
-        </button>
-      </div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-sm table-hover mb-0">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Relationship</th>
-                <th>Contact</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="FamilyInfos">
-              <tr *ngFor="let fam of familyInfos.controls; let i = index" [formGroupName]="i">
-                <!-- <td>{{ fam.get('Name').value }}</td>
-                <td>{{ getRelationshipName(fam.get('IdRelationship').value) }}</td>
-                <td>{{ fam.get('ContactNo').value }}</td> -->
-                <td>
-                  <button type="button" class="btn btn-sm btn-danger" (click)="removeFamilyInfo(i)">
-                    <i class="bi bi-trash">Remove</i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+             <div class="row mt-4">
+                <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0">Family Information</h6>
+                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addFamilyInfo()">
+                        <i class="bi bi-plus"></i> Add
+                      </button>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Relationship</th>
+                              <th>Contact</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="familyInfos">
+                           <tr *ngFor="let fam of familyInfos.controls; let i = index" [formGroupName]="i">
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="name">
+                            </td>
+                            <td>
+                              <select class="form-select form-select-sm" formControlName="idRelationship">
+                
+                              </select>
+                            </td>
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="contactNo">
+                            </td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-danger" (click)="removeFamilyInfo(i)">
+                                <i class="bi bi-trash">Remove</i>
+                              </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0">Education Information</h6>
+                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addEducationInfo()">
+                        <i class="bi bi-plus"></i> Add
+                      </button>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                          <thead>
+                            <tr>
+                              <th>Level</th>
+                              <th>Institute</th>
+                              <th>Year</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="educationInfos">
+                            <tr *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i">
+                              <td>
+                                <select class="form-select form-select-sm" formControlName="idEducationLevel">
+                   
+                                </select>
+                              </td>
+                              <td>
+                                <input type="text" class="form-control form-control-sm" formControlName="instituteName">
+                              </td>
+                              <td>
+                                <input type="number" class="form-control form-control-sm" formControlName="passingYear">
+                              </td>
+                              <td>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="removeEducationInfo(i)">
+                                  <i class="bi bi-trash">Remove</i>
+                                </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+           <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0">Professional Certifications</h6>
+                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addCertification()">
+                        <i class="bi bi-plus"></i> Add
+                      </button>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                          <thead>
+                            <tr>
+                              <th>Title</th>
+                              <th>Institute</th>
+                              <th>Duration</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="certifications">
+                            <tr *ngFor="let cert of certifications.controls; let i = index" [formGroupName]="i">
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="certificationTitle">
+                            </td>
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="certificationInstitute">
+                            </td>
+                            <td>
+                              {{ (cert.get('fromDate')?.value | date) || '' }} - 
+                              {{ (cert.get('toDate')?.value | date) || '' }}
+                            </td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-danger" (click)="removeCertification(i)">
+                                <i class="bi bi-trash">Remove</i>
+                              </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+             <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0">Documents</h6>
+                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addDocument()">
+                        <i class="bi bi-plus"></i> Add
+                      </button>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                          <thead>
+                            <tr>
+                              <th>Document Name</th>
+                              <th>File</th>
+                              <th>Date</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="documents">
+                          <tr *ngFor="let doc of documents.controls; let i = index" [formGroupName]="i">
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="documentName">
+                            </td>
+                            <td>
+                              <input type="file" class="form-control form-control-sm" (change)="onDocumentFileChange($event, i)">
+                              <!-- <a *ngIf="doc.get('fileBase64')?.value" [href]="getDocumentPreviewUrl(doc.value)" target="_blank">
+                                View
+                              </a> -->
+                            </td>
+                            <!-- <td>{{ doc.get('uploadDate').value | date || ''  }}</td> -->
+                            <td>
+                              <button type="button" class="btn btn-sm btn-danger" (click)="removeDocument(i)">
+                                <i class="bi bi-trash">Remove</i>
+                              </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-<div class="row">
-  <!-- Second row with two tables -->
-  <div class="col-md-6 mb-3">
-    <!-- Education Information Section as table -->
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h6 class="mb-0">Education Information</h6>
-        <button type="button" class="btn btn-sm btn-outline-success" (click)="addEducationInfo()">
-          <i class="bi bi-plus"></i> Add
-        </button>
-      </div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-sm table-hover mb-0">
-            <thead>
-              <tr>
-                <th>Level</th>
-                <th>Institute</th>
-                <th>Year</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="EducationInfos">
-              <tr *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i">
-                <!-- <td>{{ getEducationLevelName(edu.get('IdEducationLevel').value) }}</td>
-                <td>{{ edu.get('InstituteName').value }}</td>
-                <td>{{ edu.get('PassingYear').value }}</td> -->
-                <td>
-                  <button type="button" class="btn btn-sm btn-danger" (click)="removeEducationInfo(i)">
-                    <i class="bi bi-trash">Remove</i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+            </div>
+           <!-- <div class="row mt-4">
+                <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0">Documents</h6>
+                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addDocument()">
+                        <i class="bi bi-plus"></i> Add
+                      </button>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                          <thead>
+                            <tr>
+                              <th>Document Name</th>
+                              <th>File</th>
+                              <th>Date</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="documents">
+                          <tr *ngFor="let doc of documents.controls; let i = index" [formGroupName]="i">
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="documentName">
+                            </td>
+                            <td>
+                              <input type="file" class="form-control form-control-sm" (change)="onDocumentFileChange($event, i)">
+                              <a *ngIf="doc.get('fileBase64')?.value" [href]="getDocumentPreviewUrl(doc.value)" target="_blank">
+                                View
+                              </a>
+                            </td>
+                            <td>{{ doc.get('uploadDate').value | date }}</td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-danger" (click)="removeDocument(i)">
+                                <i class="bi bi-trash">Remove</i>
+                              </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-  <div class="col-md-6 mb-3">
-    <!-- Professional Certifications Section as table -->
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h6 class="mb-0">Professional Certifications</h6>
-        <button type="button" class="btn btn-sm btn-outline-success" (click)="addCertification()">
-          <i class="bi bi-plus"></i> Add
-        </button>
-      </div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-sm table-hover mb-0">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Institute</th>
-                <th>Duration</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="certifications">
-              <tr *ngFor="let cert of certifications.controls; let i = index" [formGroupName]="i">
-                <!-- <td>{{ cert.get('certificationTitle').value }}</td>
-                <td>{{ cert.get('certificationInstitute').value }}</td>
-                <td>{{ cert.get('fromDate').value | date }} - {{ cert.get('toDate').value | date }}</td> -->
-                <td>
-                  <button type="button" class="btn btn-sm btn-danger" (click)="removeCertification(i)">
-                    <i class="bi bi-trash">Remove</i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+                <div class="col-md-6 mb-3">
+           
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0">Family Information</h6>
+                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addFamilyInfo()">
+                        <i class="bi bi-plus"></i> Add
+                      </button>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Relationship</th>
+                              <th>Contact</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="familyInfos">
+                           <tr *ngFor="let fam of familyInfos.controls; let i = index" [formGroupName]="i">
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="name">
+                            </td>
+                            <td>
+                              <select class="form-select form-select-sm" formControlName="idRelationship">
+                
+                              </select>
+                            </td>
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="contactNo">
+                            </td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-danger" (click)="removeFamilyInfo(i)">
+                                <i class="bi bi-trash">Remove</i>
+                              </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0">Education Information</h6>
+                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addEducationInfo()">
+                        <i class="bi bi-plus"></i> Add
+                      </button>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                          <thead>
+                            <tr>
+                              <th>Level</th>
+                              <th>Institute</th>
+                              <th>Year</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="educationInfos">
+                            <tr *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i">
+                              <td>
+                                <select class="form-select form-select-sm" formControlName="idEducationLevel">
+                   
+                                </select>
+                              </td>
+                              <td>
+                                <input type="text" class="form-control form-control-sm" formControlName="instituteName">
+                              </td>
+                              <td>
+                                <input type="number" class="form-control form-control-sm" formControlName="passingYear">
+                              </td>
+                              <td>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="removeEducationInfo(i)">
+                                  <i class="bi bi-trash">Remove</i>
+                                </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+          
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0">Professional Certifications</h6>
+                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addCertification()">
+                        <i class="bi bi-plus"></i> Add
+                      </button>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                          <thead>
+                            <tr>
+                              <th>Title</th>
+                              <th>Institute</th>
+                              <th>Duration</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="certifications">
+                            <tr *ngFor="let cert of certifications.controls; let i = index" [formGroupName]="i">
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="certificationTitle">
+                            </td>
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="certificationInstitute">
+                            </td>
+                            <td>
+                              {{ cert.get('fromDate').value | date }} - {{ cert.get('toDate').value | date }}
+                            </td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-danger" (click)="removeCertification(i)">
+                                <i class="bi bi-trash">Remove</i>
+                              </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>         -->
+<!-- 
+            <div class="card mb-3">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Documents</h6>
+                <button type="button" class="btn btn-sm btn-success" (click)="addDocument()">
+                  <i class="bi bi-plus"></i> Add Document
+                </button>
+              </div>
+              <div class="card-body">
+                <div formArrayName="Documents">
+                  <div *ngFor="let doc of documents.controls; let i = index" [formGroupName]="i" class="mb-3 border p-2">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">Document Name</label>
+                          <input type="text" class="form-control" formControlName="DocumentName">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">File Name</label>
+                          <input type="text" class="form-control" formControlName="FileName">
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">Upload Date</label>
+                          <input type="date" class="form-control" formControlName="UploadDate">
+                        </div>
+                      </div>
+                      <div class="col-md-1 d-flex align-items-end">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="removeDocument(i)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label class="form-label">Document File</label>
+                          <input type="file" class="form-control" (change)="onDocumentFileChange($event, i)">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div *ngIf="doc.get('FileBase64')?.value" class="mt-2">
+                          <a [href]="getDocumentPreviewUrl(doc.value)" target="_blank" class="btn btn-sm btn-info">
+                            View Document
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
+            <div class="card mb-3">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Family Information</h6>
+                <button type="button" class="btn btn-sm btn-success" (click)="addFamilyInfo()">
+                  <i class="bi bi-plus"></i> Add Family Member
+                </button>
+              </div>
+              <div class="card-body">
+                <div formArrayName="FamilyInfos">
+                  <div *ngFor="let fam of familyInfos.controls; let i = index" [formGroupName]="i" class="mb-3 border p-2">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">Name</label>
+                          <input type="text" class="form-control" formControlName="Name">
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="mb-2">
+                          <label class="form-label">Gender</label>
+                          <select class="form-select" formControlName="IdGender">
+                            <option value="0">Select Gender</option>
+     
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="mb-2">
+                          <label class="form-label">Relationship</label>
+                          <select class="form-select" formControlName="IdRelationship">
+                            <option value="0">Select Relationship</option>
+             
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">Date of Birth</label>
+                          <input type="date" class="form-control" formControlName="DateOfBirth">
+                        </div>
+                      </div>
+                      <div class="col-md-1 d-flex align-items-end">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="removeFamilyInfo(i)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">Contact No</label>
+                          <input type="text" class="form-control" formControlName="ContactNo">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">Current Address</label>
+                          <input type="text" class="form-control" formControlName="CurrentAddress">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">Permanent Address</label>
+                          <input type="text" class="form-control" formControlName="PermanentAddress">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card mb-3">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Education Information</h6>
+                <button type="button" class="btn btn-sm btn-success" (click)="addEducationInfo()">
+                  <i class="bi bi-plus"></i> Add Education
+                </button>
+              </div>
+              <div class="card-body">
+                <div formArrayName="EducationInfos">
+                  <div *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i" class="mb-3 border p-2">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">Education Level</label>
+                          <select class="form-select" formControlName="IdEducationLevel">
+                            <option value="0">Select Level</option>
+              
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">Examination</label>
+                          <select class="form-select" formControlName="IdEducationExamination">
+                            <option value="0">Select Examination</option>
+                
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="mb-2">
+                          <label class="form-label">Result</label>
+                          <select class="form-select" formControlName="IdEducationResult">
+                            <option value="0">Select Result</option>
+       
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="mb-2">
+                          <label class="form-label">Passing Year</label>
+                          <input type="number" class="form-control" formControlName="PassingYear">
+                        </div>
+                      </div>
+                      <div class="col-md-1 d-flex align-items-end">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="removeEducationInfo(i)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">Institute Name</label>
+                          <input type="text" class="form-control" formControlName="InstituteName">
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">Major/Group</label>
+                          <input type="text" class="form-control" formControlName="Major">
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="mb-2">
+                          <label class="form-label">CGPA</label>
+                          <input type="number" step="0.01" class="form-control" formControlName="Cgpa">
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="mb-2">
+                          <label class="form-label">Marks</label>
+                          <input type="number" step="0.01" class="form-control" formControlName="Marks">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" formControlName="IsForeignInstitute">
+                            Foreign Institute
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">Duration (Years)</label>
+                          <input type="number" step="0.1" class="form-control" formControlName="Duration">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label class="form-label">Achievement</label>
+                          <input type="text" class="form-control" formControlName="Achievement">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+             <div class="card mb-3">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Family Information</h6>
+                <button type="button" class="btn btn-sm btn-success" (click)="addFamilyInfo()">
+                  <i class="bi bi-plus"></i> Add Family Member
+                </button>
+              </div>
+              <div class="card-body">
+                <div formArrayName="FamilyInfos">
+                  <div *ngFor="let fam of familyInfos.controls; let i = index" [formGroupName]="i" class="mb-3 border p-2">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">Name</label>
+                          <input type="text" class="form-control" formControlName="Name">
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="mb-2">
+                          <label class="form-label">Gender</label>
+                          <select class="form-select" formControlName="IdGender">
+                            <option value="0">Select Gender</option>
+    
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="mb-2">
+                          <label class="form-label">Relationship</label>
+                          <select class="form-select" formControlName="IdRelationship">
+                            <option value="0">Select Relationship</option>
+          
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">Date of Birth</label>
+                          <input type="date" class="form-control" formControlName="DateOfBirth">
+                        </div>
+                      </div>
+                      <div class="col-md-1 d-flex align-items-end">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="removeFamilyInfo(i)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">Contact No</label>
+                          <input type="text" class="form-control" formControlName="ContactNo">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">Current Address</label>
+                          <input type="text" class="form-control" formControlName="CurrentAddress">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">Permanent Address</label>
+                          <input type="text" class="form-control" formControlName="PermanentAddress">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card mb-3">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Professional Certifications</h6>
+                <button type="button" class="btn btn-sm btn-success" (click)="addCertification()">
+                  <i class="bi bi-plus"></i> Add Certification
+                </button>
+              </div>
+              <div class="card-body">
+                <div formArrayName="certifications">
+                  <div *ngFor="let cert of certifications.controls; let i = index" [formGroupName]="i" class="mb-3 border p-2">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">Certification Title*</label>
+                          <input type="text" class="form-control" formControlName="certificationTitle" required>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label class="form-label">Institute*</label>
+                          <input type="text" class="form-control" formControlName="certificationInstitute" required>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">Location*</label>
+                          <input type="text" class="form-control" formControlName="instituteLocation" required>
+                        </div>
+                      </div>
+                      <div class="col-md-1 d-flex align-items-end">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="removeCertification(i)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">From Date*</label>
+                          <input type="date" class="form-control" formControlName="fromDate" required>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-2">
+                          <label class="form-label">To Date</label>
+                          <input type="date" class="form-control" formControlName="toDate">
+                        </div>
+                      </div>
+                    
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div> -->
                   
 
           </form>
