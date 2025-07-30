@@ -27,7 +27,7 @@ namespace HRMApiApp.DTO
         public string? Designation { get; set; }
         public string? Address { get; set; }
         public int? IdGender { get; set; }
-        public string? Gender { get; set; }
+        public string? GenderName { get; set; }
         public int? IdReligion { get; set; }
         public string? ReligionName { get; set; }
         public int? IdReportingManager { get; set; }
@@ -75,7 +75,7 @@ namespace HRMApiApp.DTO
         public string? Designation { get; set; }
         public string? Address { get; set; }
         public int? IdGender { get; set; }
-        public string? Gender { get; set; }
+        public string? GenderName { get; set; }
         public int? IdReligion { get; set; }
         public string? ReligionName { get; set; }
         public int? IdReportingManager { get; set; }
@@ -123,7 +123,7 @@ namespace HRMApiApp.DTO
         public string? Designation { get; set; }
         public string? Address { get; set; }
         public int? IdGender { get; set; }
-        public string? Gender { get; set; }
+        public string? GenderName { get; set; }
         public int? IdReligion { get; set; }
         public string? ReligionName { get; set; }
         public int? IdReportingManager { get; set; }
@@ -162,6 +162,10 @@ namespace HRMApiApp.DTO
 
         public IFormFile? UpFile { get; set; }
         public string? FileBase64 { get; set; }
+
+        public DateTime? SetDate { get; set; }
+
+        public string? CreatedBy { get; set; }
     }
 
 
@@ -213,6 +217,8 @@ namespace HRMApiApp.DTO
         public bool IsForeignInstitute { get; set; }
         public decimal? Duration { get; set; }
         public string? Achievement { get; set; }
+        public DateTime? SetDate { get; set; }
+        public string? CreatedBy { get; set; }
     }
     public class EmployeeProfessionalCertificationDTO
     {
@@ -224,5 +230,7 @@ namespace HRMApiApp.DTO
         public string InstituteLocation { get; set; } = null!;
         public DateTime FromDate { get; set; }
         public DateTime? ToDate { get; set; }
+        public DateTime? SetDate { get; set; }
+        public string? CreatedBy { get; set; }
     }
 }

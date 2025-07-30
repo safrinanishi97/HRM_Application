@@ -21,8 +21,8 @@ namespace HRMApiApp.DAL
         public async Task<Employee?> GetByIdAsync(int idClient, int id, CancellationToken cancellationToken)
         {
             var emp = await Context.Employees
-              .AsNoTracking()
-                .Include(e=>e.Department)
+                .AsNoTracking()
+                .Include(e => e.Department)
                 .Include(e => e.Designation)
                 .Include(e => e.Section)
                 .Include(e => e.Gender)
@@ -33,7 +33,15 @@ namespace HRMApiApp.DAL
                 .Include(e => e.MaritalStatus)
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
-                .Include(e=> e.EmployeeFamilyInfos)
+                    .ThenInclude(eei => eei.EducationLevel)
+                .Include(e => e.EmployeeEducationInfos)
+                    .ThenInclude(eei => eei.EducationExamination)
+                .Include(e => e.EmployeeEducationInfos)
+                    .ThenInclude(eei => eei.EducationResult)
+                .Include(e => e.EmployeeFamilyInfos)
+                    .ThenInclude(efi => efi.Gender)
+                .Include(e => e.EmployeeFamilyInfos)
+                    .ThenInclude(efi => efi.Relationship)
                 .Include(e => e.EmployeeProfessionalCertifications)
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id,cancellationToken);
@@ -54,10 +62,17 @@ namespace HRMApiApp.DAL
                 .Include(e => e.WeekOff)
                 .Include(e => e.MaritalStatus)
                 .Include(e => e.EmployeeDocuments)
-                .Include(e => e.EmployeeEducationInfos).ThenInclude(e=>e.EducationExamination)
-                 .Include(e => e.EmployeeFamilyInfos)
+                .Include(e => e.EmployeeEducationInfos)
+                    .ThenInclude(eei => eei.EducationLevel)
+                .Include(e => e.EmployeeEducationInfos)
+                    .ThenInclude(eei => eei.EducationExamination)
+                .Include(e => e.EmployeeEducationInfos)
+                    .ThenInclude(eei => eei.EducationResult)
+                .Include(e => e.EmployeeFamilyInfos)
+                    .ThenInclude(efi => efi.Gender)
+                .Include(e => e.EmployeeFamilyInfos)
+                    .ThenInclude(efi => efi.Relationship)
                 .Include(e => e.EmployeeProfessionalCertifications)
-             
                 .Where(e => e.IdClient == idClient)
                 .ToListAsync(cancellationToken);
             return emp;
@@ -94,7 +109,7 @@ namespace HRMApiApp.DAL
             var existingEmployee = await Context.Employees
                 .Include(e => e.EmployeeDocuments)
                 .Include(e => e.EmployeeEducationInfos)
-                 .Include(e => e.EmployeeFamilyInfos)
+                .Include(e => e.EmployeeFamilyInfos)
                 .Include(e => e.EmployeeProfessionalCertifications)
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(e => e.IdClient == idClient && e.Id == id);
@@ -110,7 +125,12 @@ namespace HRMApiApp.DAL
             {
                 existingEmployee.EmployeeImage = newImage;
             }
-
+            existingEmployee.IdDesignation = employee.IdDesignation ?? existingEmployee.IdDesignation;
+            existingEmployee.IdReportingManager = employee.Id;
+            existingEmployee.IdJobType = employee.IdJobType ?? existingEmployee.IdJobType;
+            existingEmployee.IdEmployeeType = employee.IdEmployeeType ?? existingEmployee.IdEmployeeType;
+            existingEmployee.IdWeekOff = employee.IdWeekOff ?? existingEmployee.IdWeekOff;
+            existingEmployee.IdMaritalStatus = employee.IdMaritalStatus ?? existingEmployee.IdMaritalStatus;
             existingEmployee.IdDepartment = employee.IdDepartment;
             existingEmployee.IdSection =   employee.IdSection;
             existingEmployee.BirthDate = employee.BirthDate ?? existingEmployee.BirthDate;

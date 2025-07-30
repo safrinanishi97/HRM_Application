@@ -20,6 +20,7 @@ namespace HRMApiApp.DAL.Interfaces
         Task<List<CommonViewModel>> GetAllMaritalStatus(int idClient);
         Task<List<CommonViewModel>> GetAllRelationship(int idClient);
         Task<List<CommonViewModel>> GetAllReligion(int idClient);
+        Task<List<CommonViewModel>> GetAllSection(int idClient);
         Task<List<CommonViewModel>> GetAllWeekOff(int idClient);
 
     }

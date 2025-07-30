@@ -64,6 +64,11 @@ namespace HRMApiApp.BLL
             return await CommonRepository.GetAllReligion(idClient);
         }
 
+        public async Task<List<CommonViewModel>> GetAllSection(int idClient)
+        {
+            return await CommonRepository.GetAllSection(idClient);
+        }
+
         public async Task<List<CommonViewModel>> GetAllWeekOff(int idClient)
         {
             return await CommonRepository.GetAllWeekOff(idClient);

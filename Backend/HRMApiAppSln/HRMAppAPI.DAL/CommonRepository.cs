@@ -146,6 +146,18 @@ namespace HRMApiApp.DAL
             return religion;
         }
 
+        public async Task<List<CommonViewModel>> GetAllSection(int idClient)
+        {
+            var section = await Context.Sections
+                .AsNoTracking()
+                .Where(d=>d.IdClient == idClient)
+                .Select(e=> new CommonViewModel
+                { Id = e.Id,
+                Text = e.SectionName ?? ""
+                }).ToListAsync();
+            return section;
+        }
+
         public async Task<List<CommonViewModel>> GetAllWeekOff(int idClient)
         {
             var weekOff =await Context.WeekOffs

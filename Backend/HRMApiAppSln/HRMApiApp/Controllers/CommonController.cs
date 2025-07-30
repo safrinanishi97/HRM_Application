@@ -74,6 +74,12 @@ namespace HRMApiApp.Controllers
             var religion = await CommonService.GetAllReligion(idClient);
             return Ok(religion);
         }
+        [HttpGet("sectiondropdown")]
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllSections([FromQuery] int idClient)
+        {
+            var section = await CommonService.GetAllSection(idClient);
+            return Ok(section);
+        }
         [HttpGet("weeksoffdropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllWeekOffs([FromQuery] int idClient)
         {
