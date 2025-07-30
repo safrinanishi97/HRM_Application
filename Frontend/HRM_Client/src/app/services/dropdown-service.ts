@@ -17,7 +17,9 @@ getDepartments(idClient: number): Observable<any[]> {
 getDesignations(idClient: number): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/designationdropdown?idClient=${idClient}`);
 }
-
+getEducationExaminations(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/educationExaminationdropdown?idClient=${idClient}`);
+}
 getEducationLevels(idClient: number): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/educationleveldropdown?idClient=${idClient}`);
 }

@@ -193,53 +193,72 @@
              </div>
               
 
-              <div class="row mb-3"> 
-                
-                  <div class="col">
-                  <label for="HasOvertime">Active?</label>
-                  <div class="d-flex">
-                    <div class="form-check me-3">
-                      <input class="form-check-input" type="radio" id="flexRadioDefault1">
-                      <label class="form-check-label" for="flexRadioDefault1">Yes</label>
-                    
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio"  id="flexRadioDefault2">
-                      <label class="form-check-label" for="flexRadioDefault2">No</label>
-                    </div>
-                  </div>  
-                </div>
-
-                  <div class="col">
-                <label for="HasOvertime">Has Overtime?</label>
+          <div class="row mb-3"> 
+                <div class="col">
+                <label>Active?</label>
                 <div class="d-flex">
                   <div class="form-check me-3">
-                    <input class="form-check-input" type="radio" id="flexRadioDefault1">
-                    <label class="form-check-label" for="flexRadioDefault1">Yes</label>
-                  
+                    <input class="form-check-input" 
+                          type="radio" 
+                          id="isActiveYes"
+                          [value]="true"
+                          formControlName="isActive">
+                    <label class="form-check-label" for="isActiveYes">Yes</label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio"  id="flexRadioDefault2">
-                    <label class="form-check-label" for="flexRadioDefault2">No</label>
+                    <input class="form-check-input" 
+                          type="radio" 
+                          id="isActiveNo"
+                          [value]="false"
+                          formControlName="isActive">
+                    <label class="form-check-label" for="isActiveNo">No</label>
                   </div>
-                </div>
-              
+                </div>  
               </div>
-                <div class="col">
-                <label for="HasOvertime">Has Overtime Bonus?</label>
+
+              <div class="col">
+                <label>Has Overtime?</label>
                 <div class="d-flex">
-            <div class="form-check me-3">
-              <input class="form-check-input" type="radio" id="flexRadioDefault1">
-              <label class="form-check-label" for="flexRadioDefault1">Yes</label>
-             
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio"  id="flexRadioDefault2">
-              <label class="form-check-label" for="flexRadioDefault2">No</label>
-            </div>
-            </div>
-         
-           </div>
+                  <div class="form-check me-3">
+                    <input class="form-check-input" 
+                          type="radio" 
+                          id="hasOvertimeYes"
+                          [value]="true"
+                          formControlName="hasOvertime">
+                    <label class="form-check-label" for="hasOvertimeYes">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" 
+                          type="radio" 
+                          id="hasOvertimeNo"
+                          [value]="false"
+                          formControlName="hasOvertime">
+                    <label class="form-check-label" for="hasOvertimeNo">No</label>
+                  </div>
+                </div>  
+              </div>
+
+              <div class="col">
+                <label>Has Attendance Bonus?</label>
+                <div class="d-flex">
+                  <div class="form-check me-3">
+                    <input class="form-check-input" 
+                          type="radio" 
+                          id="hasAttendenceBonusYes"
+                          [value]="true"
+                          formControlName="hasAttendenceBonus">
+                    <label class="form-check-label" for="hasAttendenceBonusYes">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" 
+                          type="radio" 
+                          id="hasAttendenceBonusNo"
+                          [value]="false"
+                          formControlName="hasAttendenceBonus">
+                    <label class="form-check-label" for="hasAttendenceBonusNo">No</label>
+                  </div>
+                </div>  
+              </div>
 
               <div class="col">
                 <div class="text-center">
@@ -256,7 +275,7 @@
 
 
              <div class="row mt-4">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                   <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                       <h6 class="mb-0">Family Information</h6>
@@ -270,6 +289,7 @@
                           <thead>
                             <tr>
                               <th>Name</th>
+                              <th>Gender</th>
                               <th>Relationship</th>
                               <th>Contact</th>
                               <th>Action</th>
@@ -280,9 +300,20 @@
                             <td>
                               <input type="text" class="form-control form-control-sm" formControlName="name">
                             </td>
+                             <td>
+                              <select class="form-select form-select-sm" formControlName="idGender">
+                                <option value="0">Select Gender</option>
+                                <option *ngFor="let gen of genders" [value]="gen.id">
+                                  {{gen.text}}
+                                </option>               
+                              </select>
+                            </td>
                             <td>
                               <select class="form-select form-select-sm" formControlName="idRelationship">
-                
+                                <option value="0">Select Relationship</option>
+                                <option *ngFor="let rel of relationship" [value]="rel.id">
+                                  {{rel.text}}
+                                </option>               
                               </select>
                             </td>
                             <td>
@@ -300,64 +331,7 @@
                     </div>
                   </div>
                 </div>
-               <div class="col-md-6 mb-3">
-                  <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                      <h6 class="mb-0">Education Information</h6>
-                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addEducationInfo()">
-                        <i class="bi bi-plus"></i> Add
-                      </button>
-                    </div>
-                    <div class="card-body p-0">
-                      <div class="table-responsive">
-                        <table class="table table-sm table-hover mb-0">
-                          <thead>
-                            <tr>
-                              <th>Level</th>
-                              <th>Institute</th>
-                              <th>Major</th>
-                              <th>CGPA</th>
-                              <th>Exam Scale</th>
-                              <th>Year</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody formArrayName="educationInfos">
-                            <tr *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i">
-                              <td>
-                                <select class="form-select form-select-sm" formControlName="idEducationLevel">                   
-                                </select>
-                              </td>
-                              <td>
-                                <input type="text" class="form-control form-control-sm" formControlName="instituteName">
-                              </td>
-                              <td>
-                               <input type="text" class="form-control form-control-sm" formControlName="major">
-                              </td>
-                               <td>
-                                <input type="number" class="form-control form-control-sm" formControlName="cgpa">
-                              </td>
-                              <td>
-                                <input type="number" class="form-control form-control-sm" formControlName="examScale">
-                              </td>
-                              <td>
-                                <input type="number" class="form-control form-control-sm" formControlName="passingYear">
-                              </td>
-                              <td>
-                                <button type="button" class="btn btn-sm btn-danger" (click)="removeEducationInfo(i)">
-                                  <i class="bi bi-trash">Remove</i>
-                                </button>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-           <div class="row">
-                <div class="col-md-6 mb-3">
+               <div class="col-md-4 mb-3">          
                   <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                       <h6 class="mb-0">Professional Certifications</h6>
@@ -410,9 +384,9 @@
                         </table>
                       </div>
                     </div>
-                  </div>
+                  </div>              
                 </div>
-             <div class="col-md-6 mb-3">
+                 <div class="col-md-4 mb-3">
                   <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                       <h6 class="mb-0">Documents</h6>
@@ -451,15 +425,7 @@
                                   class="form-control form-control-sm" 
                                   formControlName="uploadDate">
                             </td>
-                          <!-- <td>
-                            <input type="date" 
-                                  class="form-control form-control-sm" 
-                                  formControlName="uploadDate"
-                                  [value]="doc.get('uploadDate')?.value | date:'yyyy-MM-dd'" 
-                                  [valueAsDate]="doc.get('uploadDate')?.value"
-                                  (input)="doc.get('uploadDate')?.setValue($event.target.valueAsDate)"
-                                  [title]="(doc.get('uploadDate')?.value | date) ?? 'N/A'">                    
-                          </td> -->
+                    
                           
                             <td>
                               <button type="button" class="btn btn-sm btn-danger" (click)="removeDocument(i)">
@@ -472,373 +438,101 @@
                       </div>
                     </div>
                   </div>
-                </div>
-
             </div>
        
-<!-- 
-            <div class="card mb-3">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="mb-0">Documents</h6>
-                <button type="button" class="btn btn-sm btn-success" (click)="addDocument()">
-                  <i class="bi bi-plus"></i> Add Document
-                </button>
-              </div>
-              <div class="card-body">
-                <div formArrayName="Documents">
-                  <div *ngFor="let doc of documents.controls; let i = index" [formGroupName]="i" class="mb-3 border p-2">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">Document Name</label>
-                          <input type="text" class="form-control" formControlName="DocumentName">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">File Name</label>
-                          <input type="text" class="form-control" formControlName="FileName">
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">Upload Date</label>
-                          <input type="date" class="form-control" formControlName="UploadDate">
-                        </div>
-                      </div>
-                      <div class="col-md-1 d-flex align-items-end">
-                        <button type="button" class="btn btn-sm btn-danger" (click)="removeDocument(i)">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
+             <div class="row">
+                 <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0">Education Information</h6>
+                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addEducationInfo()">
+                        <i class="bi bi-plus"></i> Add
+                      </button>
                     </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="mb-2">
-                          <label class="form-label">Document File</label>
-                          <input type="file" class="form-control" (change)="onDocumentFileChange($event, i)">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div *ngIf="doc.get('FileBase64')?.value" class="mt-2">
-                          <a [href]="getDocumentPreviewUrl(doc.value)" target="_blank" class="btn btn-sm btn-info">
-                            View Document
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-
-
-            <div class="card mb-3">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="mb-0">Family Information</h6>
-                <button type="button" class="btn btn-sm btn-success" (click)="addFamilyInfo()">
-                  <i class="bi bi-plus"></i> Add Family Member
-                </button>
-              </div>
-              <div class="card-body">
-                <div formArrayName="FamilyInfos">
-                  <div *ngFor="let fam of familyInfos.controls; let i = index" [formGroupName]="i" class="mb-3 border p-2">
-                    <div class="row">
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">Name</label>
-                          <input type="text" class="form-control" formControlName="Name">
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="mb-2">
-                          <label class="form-label">Gender</label>
-                          <select class="form-select" formControlName="IdGender">
-                            <option value="0">Select Gender</option>
-     
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="mb-2">
-                          <label class="form-label">Relationship</label>
-                          <select class="form-select" formControlName="IdRelationship">
-                            <option value="0">Select Relationship</option>
-             
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">Date of Birth</label>
-                          <input type="date" class="form-control" formControlName="DateOfBirth">
-                        </div>
-                      </div>
-                      <div class="col-md-1 d-flex align-items-end">
-                        <button type="button" class="btn btn-sm btn-danger" (click)="removeFamilyInfo(i)">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">Contact No</label>
-                          <input type="text" class="form-control" formControlName="ContactNo">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">Current Address</label>
-                          <input type="text" class="form-control" formControlName="CurrentAddress">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">Permanent Address</label>
-                          <input type="text" class="form-control" formControlName="PermanentAddress">
-                        </div>
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                          <thead>
+                            <tr>
+                              <th>Examination</th>
+                              <th>Level</th>
+                              <th>Results</th>
+                              <th>Institute</th>
+                               <th>Foreign Institute?</th>
+                              <th>Major</th>
+                              <th>CGPA</th>
+                              <th>Exam Scale</th>
+                              <th>Marks</th>
+                              <th>Passing Year</th>
+                              <th>Duration</th>
+                              <th>Achievement</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="educationInfos">
+                            <tr *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i">
+                              <td>
+                                <select class="form-select form-select-sm" formControlName="idEducationExamination">    
+                                  <option value="0">Select Examination</option>
+                                  <option *ngFor="let exam of educationExaminations" [value]="exam.id">
+                                    {{exam.text}}
+                                  </option>               
+                                </select>
+                              </td>
+                              <td>
+                                <select class="form-select form-select-sm" formControlName="idEducationLevel">    
+                                  <option value="0">Select Level</option>
+                                  <option *ngFor="let level of educationLevels" [value]="level.id">
+                                    {{level.text}}
+                                  </option>               
+                                </select>
+                              </td>
+                               <td>
+                                <select class="form-select form-select-sm" formControlName="idEducationResult">    
+                                  <option value="0">Select Result</option>
+                                  <option *ngFor="let result of educationResults" [value]="result.id">
+                                    {{result.text}}
+                                  </option>               
+                                </select>
+                              </td>
+                              <td>
+                                <input type="text" class="form-control form-control-sm" formControlName="instituteName">
+                              </td>
+                              <td>IsForegnInstitute</td>
+                              <td>
+                               <input type="text" class="form-control form-control-sm" formControlName="major">
+                              </td>
+                               <td>
+                                <input type="number" class="form-control form-control-sm" formControlName="cgpa">
+                              </td>
+                               <td>
+                                <input type="number" class="form-control form-control-sm" formControlName="examScale">
+                              </td>
+                                <td>
+                                <input type="number" class="form-control form-control-sm" formControlName="marks">
+                              </td>
+                             
+                              <td>
+                                <input type="number" class="form-control form-control-sm" formControlName="passingYear">
+                              </td>
+                              <td>
+                                <input type="number" class="form-control form-control-sm" formControlName="duration">
+                              </td>
+                               <td>
+                                <input type="text" class="form-control form-control-sm" formControlName="achievement">
+                              </td>
+                              <td>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="removeEducationInfo(i)">
+                                  <i class="bi bi-trash">Remove</i>
+                                </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div class="card mb-3">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="mb-0">Education Information</h6>
-                <button type="button" class="btn btn-sm btn-success" (click)="addEducationInfo()">
-                  <i class="bi bi-plus"></i> Add Education
-                </button>
-              </div>
-              <div class="card-body">
-                <div formArrayName="EducationInfos">
-                  <div *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i" class="mb-3 border p-2">
-                    <div class="row">
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">Education Level</label>
-                          <select class="form-select" formControlName="IdEducationLevel">
-                            <option value="0">Select Level</option>
-              
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">Examination</label>
-                          <select class="form-select" formControlName="IdEducationExamination">
-                            <option value="0">Select Examination</option>
-                
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="mb-2">
-                          <label class="form-label">Result</label>
-                          <select class="form-select" formControlName="IdEducationResult">
-                            <option value="0">Select Result</option>
-       
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="mb-2">
-                          <label class="form-label">Passing Year</label>
-                          <input type="number" class="form-control" formControlName="PassingYear">
-                        </div>
-                      </div>
-                      <div class="col-md-1 d-flex align-items-end">
-                        <button type="button" class="btn btn-sm btn-danger" (click)="removeEducationInfo(i)">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">Institute Name</label>
-                          <input type="text" class="form-control" formControlName="InstituteName">
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">Major/Group</label>
-                          <input type="text" class="form-control" formControlName="Major">
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="mb-2">
-                          <label class="form-label">CGPA</label>
-                          <input type="number" step="0.01" class="form-control" formControlName="Cgpa">
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="mb-2">
-                          <label class="form-label">Marks</label>
-                          <input type="number" step="0.01" class="form-control" formControlName="Marks">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input" formControlName="IsForeignInstitute">
-                            Foreign Institute
-                          </label>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">Duration (Years)</label>
-                          <input type="number" step="0.1" class="form-control" formControlName="Duration">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="mb-2">
-                          <label class="form-label">Achievement</label>
-                          <input type="text" class="form-control" formControlName="Achievement">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-             <div class="card mb-3">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="mb-0">Family Information</h6>
-                <button type="button" class="btn btn-sm btn-success" (click)="addFamilyInfo()">
-                  <i class="bi bi-plus"></i> Add Family Member
-                </button>
-              </div>
-              <div class="card-body">
-                <div formArrayName="FamilyInfos">
-                  <div *ngFor="let fam of familyInfos.controls; let i = index" [formGroupName]="i" class="mb-3 border p-2">
-                    <div class="row">
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">Name</label>
-                          <input type="text" class="form-control" formControlName="Name">
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="mb-2">
-                          <label class="form-label">Gender</label>
-                          <select class="form-select" formControlName="IdGender">
-                            <option value="0">Select Gender</option>
-    
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="mb-2">
-                          <label class="form-label">Relationship</label>
-                          <select class="form-select" formControlName="IdRelationship">
-                            <option value="0">Select Relationship</option>
-          
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">Date of Birth</label>
-                          <input type="date" class="form-control" formControlName="DateOfBirth">
-                        </div>
-                      </div>
-                      <div class="col-md-1 d-flex align-items-end">
-                        <button type="button" class="btn btn-sm btn-danger" (click)="removeFamilyInfo(i)">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">Contact No</label>
-                          <input type="text" class="form-control" formControlName="ContactNo">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">Current Address</label>
-                          <input type="text" class="form-control" formControlName="CurrentAddress">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">Permanent Address</label>
-                          <input type="text" class="form-control" formControlName="PermanentAddress">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card mb-3">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="mb-0">Professional Certifications</h6>
-                <button type="button" class="btn btn-sm btn-success" (click)="addCertification()">
-                  <i class="bi bi-plus"></i> Add Certification
-                </button>
-              </div>
-              <div class="card-body">
-                <div formArrayName="certifications">
-                  <div *ngFor="let cert of certifications.controls; let i = index" [formGroupName]="i" class="mb-3 border p-2">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">Certification Title*</label>
-                          <input type="text" class="form-control" formControlName="certificationTitle" required>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="mb-2">
-                          <label class="form-label">Institute*</label>
-                          <input type="text" class="form-control" formControlName="certificationInstitute" required>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">Location*</label>
-                          <input type="text" class="form-control" formControlName="instituteLocation" required>
-                        </div>
-                      </div>
-                      <div class="col-md-1 d-flex align-items-end">
-                        <button type="button" class="btn btn-sm btn-danger" (click)="removeCertification(i)">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div class="row">
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">From Date*</label>
-                          <input type="date" class="form-control" formControlName="fromDate" required>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-2">
-                          <label class="form-label">To Date</label>
-                          <input type="date" class="form-control" formControlName="toDate">
-                        </div>
-                      </div>
-                    
-                    </div>
-                    
-                  </div>
-                </div>
-              </div>
-            </div> -->
-                  
-
+             </div>
           </form>
         </div>
       </div>

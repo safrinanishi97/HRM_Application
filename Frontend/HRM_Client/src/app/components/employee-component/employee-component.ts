@@ -23,6 +23,7 @@ export class EmployeeComponent implements OnInit {
 
   departments: any[] = [];
   designations: any[] = [];
+  educationExaminations: any[] = [];
   educationLevels: any[] = [];
   educationResults: any[] = [];
   employeeTypes: any[] = [];
@@ -120,6 +121,10 @@ constructor(
     this.dropdownService.getDesignations(idClient).subscribe({
       next: (data) => this.designations = data,
       error: (err) => console.error('Failed to load sections', err)
+    });
+    this.dropdownService.getEducationExaminations(idClient).subscribe({
+      next: (data) => this.educationExaminations = data,
+      error: (err) => console.error('Failed to load designations', err)
     });
 
     this.dropdownService.getEducationLevels(idClient).subscribe({

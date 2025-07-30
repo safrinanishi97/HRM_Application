@@ -12,6 +12,7 @@ namespace HRMApiApp.BLL.Interfaces
         Task<List<CommonViewModel>> GetAllDepartment(int idClient);
         Task<List<CommonViewModel>> GetAllDesignation(int idClient);
         Task<List<CommonViewModel>> GetAllEducationLevel(int idClient);
+        Task<List<CommonViewModel>> GetAllEducationExamination(int idClient);
         Task<List<CommonViewModel>> GetAllEducationResult(int idClient);
         Task<List<CommonViewModel>> GetAllEmployeeType(int idClient);
         Task<List<CommonViewModel>> GetAllGender(int idClient);

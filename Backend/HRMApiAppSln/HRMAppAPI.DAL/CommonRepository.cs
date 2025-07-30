@@ -41,6 +41,19 @@ namespace HRMApiApp.DAL
             return desig;
         }
 
+        public async Task<List<CommonViewModel>> GetAllEducationExamination(int idClient)
+        {
+            var eduExam = await Context.EducationExaminations
+                .AsNoTracking()
+                 .Where(d => d.IdClient == idClient)
+                .Select(e => new CommonViewModel
+                {
+                    Id = e.Id,
+                    Text = e.ExamName
+                }).ToListAsync();
+            return eduExam;
+        }
+
         public async Task<List<CommonViewModel>> GetAllEducationLevel(int idClient)
         {
             var eduLevel= await Context.EducationLevels

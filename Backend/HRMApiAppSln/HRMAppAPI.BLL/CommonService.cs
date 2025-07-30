@@ -24,6 +24,11 @@ namespace HRMApiApp.BLL
             return await CommonRepository.GetAllDesignation(idClient);
         }
 
+        public async Task<List<CommonViewModel>> GetAllEducationExamination(int idClient)
+        {
+            return await CommonRepository.GetAllEducationExamination(idClient);
+        }
+
         public async Task<List<CommonViewModel>> GetAllEducationLevel(int idClient)
         {
             return await CommonRepository.GetAllEducationLevel(idClient);

@@ -32,6 +32,12 @@ namespace HRMApiApp.Controllers
             var educationLevel = await CommonService.GetAllEducationLevel(idClient);
             return Ok(educationLevel);
         }
+        [HttpGet("educationExaminationdropdown")]
+        public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEducationExaminations([FromQuery] int idClient)
+        {
+            var educationExamination = await CommonService.GetAllEducationExamination(idClient);
+            return Ok(educationExamination);
+        }
         [HttpGet("educationresultdropdown")]
         public async Task<ActionResult<IEnumerable<CommonViewModel>>> GetAllEducationResults([FromQuery] int idClient)
         {
