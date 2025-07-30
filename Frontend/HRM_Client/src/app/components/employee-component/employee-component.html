@@ -72,21 +72,21 @@
                   <label class="form-label">Joining Date</label>
                   <input type="date" class="form-control" formControlName="joiningDate">
                 </div>
-                  <div class="col">
+                 <div class="col">
                   <label class="form-label">Department</label>
                   <select class="form-select" formControlName="idDepartment">
                     <option value="0">Select Department</option>
                     <option *ngFor="let dept of departments" [value]="dept.id">
-                      {{dept.name}}
+                      {{dept.text}}
                     </option>
                   </select>
                 </div>
-                <div class="col">
+                  <div class="col">
                   <label class="form-label">Designation</label>
-                  <select class="form-select" formControlName="idDesignation">
+                  <select class="form-select" formControlName="idDepartment">
                     <option value="0">Select Designation</option>
                     <option *ngFor="let des of designations" [value]="des.id">
-                      {{des.name}}
+                      {{des.text}}
                     </option>
                   </select>
                 </div>
@@ -95,40 +95,40 @@
                   <select class="form-select" formControlName="idSection">
                     <option value="0">Select Section</option>
                     <option *ngFor="let sec of sections" [value]="sec.id">
-                      {{sec.name}}
+                      {{sec.text}}
                     </option>
                   </select>
                 </div>
-                  <div class="col">
+
+                 <div class="col">
                   <label class="form-label">Gender</label>
-                  <select class="form-select" formControlName="idSection">
+                  <select class="form-select" formControlName="idGender">
                     <option value="0">Select Gender</option>
-                    <option *ngFor="let sec of sections" [value]="sec.id">
-                      {{sec.name}}
+                    <option *ngFor="let gen of genders" [value]="gen.id">
+                      {{gen.text}}
                     </option>
                   </select>
                 </div>
-               
-            
-             </div>
+
+            </div>
               
 
              <div class="row mb-3"> 
                <div class="col">
                   <label class="form-label">Job Type</label>
-                  <select class="form-select" formControlName="idSection">
-                    <option value="0">Select Job Type</option>
-                    <option *ngFor="let sec of sections" [value]="sec.id">
-                      {{sec.name}}
+                  <select class="form-select" formControlName="idJobType">
+                    <option value="0" selected>Select Job Type</option>
+                    <option *ngFor="let job of jobTypes" [value]="job.id">
+                      {{job.text}}
                     </option>
                   </select>
                 </div>
                  <div class="col">
                   <label class="form-label">Employee Type</label>
-                  <select class="form-select" formControlName="idSection">
-                    <option value="0">Select Employee Type</option>
-                    <option *ngFor="let sec of sections" [value]="sec.id">
-                      {{sec.name}}
+                  <select class="form-select" formControlName="idEmployeeType">
+                    <option value="0" selected>Select Employee Type</option>
+                    <option *ngFor="let empType of employeeTypes" [value]="empType.id">
+                      {{empType.text}}
                     </option>
                   </select>
                 </div>
@@ -143,26 +143,23 @@
                 </div>
                <div class="col">
                   <label class="form-label">Marital Status</label>
-                  <select class="form-select" formControlName="idSection">
+                  <select class="form-select" formControlName="idMaritalStatus">
                     <option value="0">Select Marital Status</option>
-                    <option *ngFor="let sec of sections" [value]="sec.id">
-                      {{sec.name}}
+                    <option *ngFor="let mari of maritalStatus" [value]="mari.id">
+                      {{mari.text}}
                     </option>
                   </select>
-                </div>
-
-                  
-               
+                </div>    
              </div>
               
 
             <div class="row mb-3"> 
                 <div class="col">
                   <label class="form-label">Religion</label>
-                  <select class="form-select" formControlName="idSection">
+                  <select class="form-select" formControlName="idReligion">
                     <option value="0">Select Religion</option>
-                    <option *ngFor="let sec of sections" [value]="sec.id">
-                      {{sec.name}}
+                    <option *ngFor="let rel of religions" [value]="rel.id">
+                      {{rel.text}}
                     </option>
                   </select>
                 </div>
@@ -181,10 +178,10 @@
 
                  <div class="col">
                   <label class="form-label">Weeks Off Day</label>
-                  <select class="form-select" formControlName="idSection">
+                  <select class="form-select" formControlName="idWeekOff">
                     <option value="0">Select Weeks Off Day</option>
-                    <option *ngFor="let sec of sections" [value]="sec.id">
-                      {{sec.name}}
+                    <option *ngFor="let week of weekOffs" [value]="week.id">
+                      {{week.text}}
                     </option>
                   </select>
                 </div>
@@ -210,8 +207,7 @@
                       <input class="form-check-input" type="radio"  id="flexRadioDefault2">
                       <label class="form-check-label" for="flexRadioDefault2">No</label>
                     </div>
-                  </div>
-                
+                  </div>  
                 </div>
 
                   <div class="col">
@@ -230,7 +226,7 @@
               
               </div>
                 <div class="col">
-                <label for="HasOvertime">Has Overtime?</label>
+                <label for="HasOvertime">Has Overtime Bonus?</label>
                 <div class="d-flex">
             <div class="form-check me-3">
               <input class="form-check-input" type="radio" id="flexRadioDefault1">

@@ -8,29 +8,45 @@ export interface EmployeeDTO {
   birthDate?: Date;
   joiningDate?: Date;
   idDepartment: number;
+  departmentName?: string;
   idSection: number;
+  sectionName?: string;
+  idDesignation?: number;
+  designation?: string;
   address?: string;
+  idGender?: number;
+  genderName?: string;
+  idReligion?: number;
+  religionName?: string;
+  idReportingManager?: number;
+  reportingManager?: string;
+  idJobType?: number;
+  jobTypeName?: string;
+  idEmployeeType?: number;
+  typeName?: string;
   presentAddress?: string;
   nationalIdentificationNumber?: string;
   contactNo?: string;
   isActive?: boolean;
-  profileImage?: File;
-  fileBase64?: string;
-  idGender?: number;
-  idReligion?: number;
-  idDesignation?: number;
-  departmentName?: string;
-  designation?: string;
-  sectionName?: string;
-  gender?: string;
+  hasOvertime?: boolean;
+  hasAttendenceBonus?: boolean;
+  idWeekOff?: number;
+  weekOffDay?: string;
+  idMaritalStatus?: number;
+  maritalStatusName?: string;
+  setDate?: Date;
+  createdBy?: string;
   documents: EmployeeDocumentDTO[];
-  familyInfos: EmployeeFamilyInfoDTO[];
   educationInfos: EmployeeEducationInfoDTO[];
   certifications: EmployeeProfessionalCertificationDTO[];
+  familyInfos: EmployeeFamilyInfoDTO[];
+  profileImage?: File;
+  fileBase64?: string;
 }
 
 
 export interface EmployeeCreateDTO {
+  id: number;
   idClient: number;
   employeeName?: string;
   employeeNameBangla?: string;
@@ -39,77 +55,111 @@ export interface EmployeeCreateDTO {
   birthDate?: Date;
   joiningDate?: Date;
   idDepartment: number;
+  departmentName?: string;
   idSection: number;
+  sectionName?: string;
+  idDesignation?: number;
+  designation?: string;
   address?: string;
+  idGender?: number;
+  genderName?: string;
+  idReligion?: number;
+  religionName?: string;
+  idReportingManager?: number;
+  reportingManager?: string;
+  idJobType?: number;
+  jobTypeName?: string;
+  idEmployeeType?: number;
+  typeName?: string;
   presentAddress?: string;
   nationalIdentificationNumber?: string;
   contactNo?: string;
-  ProfileImage?: File | null;
-  idGender?: number;
-  idReligion?: number;
-  idDesignation?: number;
-  departmentNam?: string;
-  designation?: string;
-  sectionName?: string;
-  gender?: string;
+  isActive?: boolean;
+  hasOvertime?: boolean;
+  hasAttendenceBonus?: boolean;
+  idWeekOff?: number;
+  weekOffDay?: string;
+  idMaritalStatus?: number;
+  maritalStatusName?: string;
+  setDate?: Date;
+  createdBy?: string;
   documents: EmployeeDocumentDTO[];
-  familyInfos: EmployeeFamilyInfoDTO[];
   educationInfos: EmployeeEducationInfoDTO[];
   certifications: EmployeeProfessionalCertificationDTO[];
+  familyInfos: EmployeeFamilyInfoDTO[];
+  profileImage?: File;
 }
 
 
 export interface EmployeeUpdateDTO {
-  id: number;
+   id: number;
   idClient: number;
   employeeName?: string;
   employeeNameBangla?: string;
   fatherName?: string;
   motherName?: string;
   birthDate?: Date;
-  joiningDate: Date;
+  joiningDate?: Date;
   idDepartment: number;
+  departmentName?: string;
   idSection: number;
+  sectionName?: string;
+  idDesignation?: number;
+  designation?: string;
   address?: string;
+  idGender?: number;
+  genderName?: string;
+  idReligion?: number;
+  religionName?: string;
+  idReportingManager?: number;
+  reportingManager?: string;
+  idJobType?: number;
+  jobTypeName?: string;
+  idEmployeeType?: number;
+  typeName?: string;
   presentAddress?: string;
   nationalIdentificationNumber?: string;
   contactNo?: string;
   isActive?: boolean;
-  isForeignInstitute: boolean;
-  ProfileImage?: File | null;
-  idGender?: number;
-  idReligion?: number;
-  idDesignation?: number;
-  departmentName?: string;
-  designation?: string;
-  sectionName?: string;
-  gender?: string;
+  hasOvertime?: boolean;
+  hasAttendenceBonus?: boolean;
+  idWeekOff?: number;
+  weekOffDay?: string;
+  idMaritalStatus?: number;
+  maritalStatusName?: string;
+  setDate?: Date;
+  createdBy?: string;
   documents: EmployeeDocumentDTO[];
-  familyInfos: EmployeeFamilyInfoDTO[];
   educationInfos: EmployeeEducationInfoDTO[];
   certifications: EmployeeProfessionalCertificationDTO[];
+  familyInfos: EmployeeFamilyInfoDTO[];
+  profileImage?: File;
 }
 
 export interface EmployeeDocumentDTO {
-  id: number;
+   id: number;
   idClient: number;
   idEmployee: number;
   documentName: string;
   fileName: string;
   uploadDate: Date;
   uploadedFileExtention?: string;
-  UpFile?: File | null;
+  upFile?: File;
   fileBase64?: string;
+  setDate?: Date;
+  createdBy?: string;
 }
 
 
 export interface EmployeeFamilyInfoDTO {
-  idClient: number;
   id: number;
+  idClient: number;
   idEmployee: number;
   name: string;
   idGender: number;
+  genderName?: string;
   idRelationship: number;
+  relationName?: string;
   dateOfBirth?: Date;
   contactNo?: string;
   currentAddress?: string;
@@ -122,8 +172,11 @@ export interface EmployeeEducationInfoDTO {
   idClient: number;
   idEmployee: number;
   idEducationLevel: number;
+  educationLevelName?: string;
   idEducationExamination: number;
+  examName?: string;
   idEducationResult: number;
+  resultName?: string;
   cgpa?: number;
   examScale?: number;
   marks?: number;
@@ -133,6 +186,8 @@ export interface EmployeeEducationInfoDTO {
   isForeignInstitute: boolean;
   duration?: number;
   achievement?: string;
+  setDate?: Date;
+  createdBy?: string;
 }
 
 
@@ -146,6 +201,8 @@ export interface EmployeeProfessionalCertificationDTO {
   instituteLocation: string;
   fromDate: Date;
   toDate?: Date;
+  setDate?: Date;
+  createdBy?: string;
 }
 
 export interface DropdownItem {

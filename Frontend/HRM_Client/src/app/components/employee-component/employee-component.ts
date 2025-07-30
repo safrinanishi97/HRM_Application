@@ -20,61 +20,86 @@ export class EmployeeComponent implements OnInit {
   isEditMode = false;
   idClient = 10001001; 
   profileImageUrl: SafeUrl | null = null;
+
   departments: any[] = [];
-  sections: any[] = [];
   designations: any[] = [];
+  educationLevels: any[] = [];
+  educationResults: any[] = [];
+  employeeTypes: any[] = [];
   genders: any[] = [];
+  jobTypes: any[] = [];
+  maritalStatus: any[] = [];
+  relationship: any[] = [];
   religions: any[] = [];
-   private formatDate(date: Date | string): string {
-    const d = new Date(date);
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
-    const year = d.getFullYear();
+  sections: any[] = [];
+  weekOffs: any[] = [];
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    return [year, month, day].join('-');
-  }
+  private formatDate(date: Date | string): string {
+  const d = new Date(date);
+  let month = '' + (d.getMonth() + 1);
+  let day = '' + d.getDate();
+  const year = d.getFullYear();
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+  return [year, month, day].join('-');
+}
 constructor(
-  
     private employeeService: EmployeeService,
     private dropdownService: DropdownService,
     private fb: FormBuilder,
     private sanitizer: DomSanitizer
   ){
-    this.employeeForm = this.fb.group({
-    id: [0],
-    idClient: [this.idClient],
-    employeeName: ['', Validators.required],
-    employeeNameBangla: [''],
-    fatherName: [''],
-    motherName: [''],
-    birthDate: [null],
-    joiningDate: [null],
-    idDepartment: [0, Validators.required],
-    idSection: [0, Validators.required],
-    idDesignation: [null],
-    idGender: [null],
-    idReligion: [null],
-    contactNo: [''],
-    departmentName: [''],
-    nationalIdentificationNumber: [''],
-    address: [''],
-    presentAddress: [''],
-    isActive: [true],
-    profileImage: [null],
-    documents: this.fb.array([]),
-    educationInfos: this.fb.array([]),
-    familyInfos: this.fb.array([]),
-    certifications: this.fb.array([])
-    });
+  this.employeeForm = this.fb.group({
+  id: [0],
+  idClient: [this.idClient],
+  employeeName: ['', Validators.required],
+  employeeNameBangla: [''],
+  fatherName: [''],
+  motherName: [''],
+  birthDate: [null],
+  joiningDate: [null],
+  idDepartment: [0, Validators.required],
+  departmentName: [''],
+  idSection: [0, Validators.required],
+  sectionName: [''],
+  idDesignation: [null],
+  designation: [''],
+  address: [''],
+  idGender: [null],
+  genderName: [''],
+  idReligion: [null],
+  religionName: [''],
+  idReportingManager: [null],
+  reportingManager: [''],
+  idJobType: [null],
+  jobTypeName: [''],
+  idEmployeeType: [null],
+  typeName: [''],
+  presentAddress: [''],
+  nationalIdentificationNumber: [''],
+  contactNo: [''],
+  isActive: [true],
+  hasOvertime: [false],
+  hasAttendenceBonus: [false],
+  idWeekOff: [null],
+  weekOffDay: [''],
+  idMaritalStatus: [null],
+  maritalStatusName: [''],
+  setDate: [null],
+  createdBy: [''],
+  profileImage: [null],
+  fileBase64: [''],
+  documents: this.fb.array([]),
+  educationInfos: this.fb.array([]),
+  familyInfos: this.fb.array([]),
+  certifications: this.fb.array([])
+  });
     
   }
 
 
   ngOnInit(): void {
-    // this.loadDropdownData();
+    this.loadDropdownData();
     this.loadEmployees();
   }
 
@@ -84,34 +109,67 @@ constructor(
     });
   }
 
-//  loadDropdownData(): void {
-
-//     this.dropdownService.getDepartments().subscribe({
-//       next: (data) => this.departments = data,
-//       error: (err) => console.error('Failed to load departments', err)
+ loadDropdownData(): void {
+    const idClient = 10001001;
+    this.dropdownService.getDepartments(idClient).subscribe({
+      next: (data) => this.departments = data,
+      error: (err) => console.error('Failed to load departments', err)
       
-//     });
+    });
 
-//     this.dropdownService.getSections().subscribe({
-//       next: (data) => this.sections = data,
-//       error: (err) => console.error('Failed to load sections', err)
-//     });
+    this.dropdownService.getDesignations(idClient).subscribe({
+      next: (data) => this.designations = data,
+      error: (err) => console.error('Failed to load sections', err)
+    });
 
-//     this.dropdownService.getDesignations().subscribe({
-//       next: (data) => this.designations = data,
-//       error: (err) => console.error('Failed to load designations', err)
-//     });
+    this.dropdownService.getEducationLevels(idClient).subscribe({
+      next: (data) => this.educationLevels = data,
+      error: (err) => console.error('Failed to load designations', err)
+    });
 
-//     this.dropdownService.getGenders().subscribe({
-//       next: (data) => this.genders = data,
-//       error: (err) => console.error('Failed to load genders', err)
-//     });
+    this.dropdownService.getEducationResults(idClient).subscribe({
+      next: (data) => this.educationResults = data,
+      error: (err) => console.error('Failed to load genders', err)
+    });
 
-//     this.dropdownService.getReligions().subscribe({
-//       next: (data) => this.religions = data,
-//       error: (err) => console.error('Failed to load religions', err)
-//     });
-//   }
+    this.dropdownService.getEmployeeTypes(idClient).subscribe({
+      next: (data) => this.employeeTypes = data,
+      error: (err) => console.error('Failed to load religions', err)
+    });
+    
+    this.dropdownService.getGenders(idClient).subscribe({
+      next: (data) => this.genders = data,
+      error: (err) => console.error('Failed to load religions', err)
+    });
+    
+    this.dropdownService.getJobTypes(idClient).subscribe({
+      next: (data) => this.jobTypes = data,
+      error: (err) => console.error('Failed to load religions', err)
+    });
+    
+    this.dropdownService.getMaritalStatus(idClient).subscribe({
+      next: (data) => this.maritalStatus = data,
+      error: (err) => console.error('Failed to load religions', err)
+    });
+    
+    this.dropdownService.getRelationship(idClient).subscribe({
+      next: (data) => this.relationship = data,
+      error: (err) => console.error('Failed to load religions', err)
+    });
+    
+    this.dropdownService.getReligions(idClient).subscribe({
+      next: (data) => this.religions = data,
+      error: (err) => console.error('Failed to load religions', err)
+    });
+      this.dropdownService.getSections(idClient).subscribe({
+      next: (data) => this.sections = data,
+      error: (err) => console.error('Failed to load religions', err)
+    });
+      this.dropdownService.getWeekOffs(idClient).subscribe({
+      next: (data) => this.weekOffs = data,
+      error: (err) => console.error('Failed to load religions', err)
+    });
+  }
 
 
 
@@ -143,39 +201,58 @@ selectEmployee(employeeId: number): void {
         idDesignation: employee.idDesignation,
         idGender: employee.idGender,
         idReligion: employee.idReligion,
+        idReportingManager: employee.idReportingManager,
+        reportingManager: employee.reportingManager,
+        idJobType: employee.idJobType,
+        jobTypeName: employee.jobTypeName,
+        idEmployeeType: employee.idEmployeeType,
+        typeName: employee.typeName,
         address: employee.address,
         presentAddress: employee.presentAddress,
         nationalIdentificationNumber: employee.nationalIdentificationNumber,
         contactNo: employee.contactNo,
         isActive: employee.isActive,
+        hasOvertime: employee.hasOvertime,
+        hasAttendenceBonus: employee.hasAttendenceBonus,
+        idWeekOff: employee.idWeekOff,
+        weekOffDay: employee.weekOffDay,
+        idMaritalStatus: employee.idMaritalStatus,
+        maritalStatusName: employee.maritalStatusName,
+        setDate: employee.setDate,
+        createdBy: employee.createdBy,
         profileImage: null
       });
       
       this.clearFormArrays();
 
-    employee.documents.forEach(doc => {
-      const docGroup = this.fb.group({
-        id: [doc.id],
-        idClient: [doc.idClient],
-        idEmployee: [doc.idEmployee],
-        documentName: [doc.documentName, Validators.required],
-        fileName: [doc.fileName, Validators.required],
-        uploadDate: [doc.uploadDate ? this.formatDate(doc.uploadDate) : null, Validators.required] ,
-        uploadedFileExtention: [doc.uploadedFileExtention],
-        upFile: [null],
-        fileBase64: [doc.fileBase64]
+      employee.documents.forEach(doc => {
+        const docGroup = this.fb.group({
+          id: [doc.id],
+          idClient: [doc.idClient],
+          idEmployee: [doc.idEmployee],
+          documentName: [doc.documentName, Validators.required],
+          fileName: [doc.fileName, Validators.required],
+          uploadDate: [doc.uploadDate ? this.formatDate(doc.uploadDate) : null, Validators.required],
+          uploadedFileExtention: [doc.uploadedFileExtention],
+          upFile: [null],
+          fileBase64: [doc.fileBase64],
+          setDate: [doc.setDate ? this.formatDate(doc.setDate) : null],
+          createdBy: [doc.createdBy]
+        });
+        this.documents.push(docGroup);
       });
-      this.documents.push(docGroup);
-    });
 
-    employee.educationInfos.forEach(edu => {
+     employee.educationInfos.forEach(edu => {
       const eduGroup = this.fb.group({
         id: [edu.id],
         idClient: [edu.idClient],
         idEmployee: [edu.idEmployee],
         idEducationLevel: [edu.idEducationLevel, Validators.required],
+        educationLevelName: [edu.educationLevelName],
         idEducationExamination: [edu.idEducationExamination, Validators.required],
+        examName: [edu.examName],
         idEducationResult: [edu.idEducationResult, Validators.required],
+        resultName: [edu.resultName],
         cgpa: [edu.cgpa],
         examScale: [edu.examScale],
         marks: [edu.marks],
@@ -184,7 +261,9 @@ selectEmployee(employeeId: number): void {
         instituteName: [edu.instituteName, Validators.required],
         isForeignInstitute: [edu.isForeignInstitute],
         duration: [edu.duration],
-        achievement: [edu.achievement]
+        achievement: [edu.achievement],
+        setDate: [edu.setDate ? this.formatDate(edu.setDate) : null],
+        createdBy: [edu.createdBy]
       });
       this.educationInfos.push(eduGroup);
     });
@@ -196,28 +275,34 @@ selectEmployee(employeeId: number): void {
         idEmployee: [fam.idEmployee],
         name: [fam.name, Validators.required],
         idGender: [fam.idGender, Validators.required],
+        genderName: [fam.genderName],
         idRelationship: [fam.idRelationship, Validators.required],
-        dateOfBirth: [fam.dateOfBirth],
+        relationName: [fam.relationName],
+        dateOfBirth: [fam.dateOfBirth ? this.formatDate(fam.dateOfBirth) : null],
         contactNo: [fam.contactNo],
         currentAddress: [fam.currentAddress],
-        permanentAddress: [fam.permanentAddress]
+        permanentAddress: [fam.permanentAddress],
+        setDate: [fam.setDate ? this.formatDate(fam.setDate) : null],
+        createdBy: [fam.createdBy]
       });
       this.familyInfos.push(famGroup);
     });
 
-    employee.certifications.forEach(cert => {
-      const certGroup = this.fb.group({
-        id: [cert.id],
-        idClient: [cert.idClient],
-        idEmployee: [cert.idEmployee],
-        certificationTitle: [cert.certificationTitle, Validators.required],
-        certificationInstitute: [cert.certificationInstitute, Validators.required],
-        instituteLocation: [cert.instituteLocation, Validators.required],
-        fromDate: [cert.fromDate ? this.formatDate(cert.fromDate) : null, Validators.required],
-        toDate: [cert.toDate ? this.formatDate(cert.toDate) : null]
-      });
-      this.certifications.push(certGroup);
-    });
+   employee.certifications.forEach(cert => {
+  const certGroup = this.fb.group({
+    id: [cert.id],
+    idClient: [cert.idClient],
+    idEmployee: [cert.idEmployee],
+    certificationTitle: [cert.certificationTitle, Validators.required],
+    certificationInstitute: [cert.certificationInstitute, Validators.required],
+    instituteLocation: [cert.instituteLocation, Validators.required],
+    fromDate: [cert.fromDate ? this.formatDate(cert.fromDate) : null, Validators.required],
+    toDate: [cert.toDate ? this.formatDate(cert.toDate) : null],
+    setDate: [cert.setDate ? this.formatDate(cert.setDate) : null],
+    createdBy: [cert.createdBy]
+  });
+  this.certifications.push(certGroup);
+});
     },
     error: (err) => {
       console.error('Failed to load employee', err);

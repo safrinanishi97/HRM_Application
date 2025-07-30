@@ -10,22 +10,22 @@ export class DropdownService {
  private apiUrl = 'https://localhost:44343/api/common';
      constructor(private http: HttpClient) {}
 
-getDepartments(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/departmentdropdown`);
+getDepartments(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/departmentdropdown?idClient=${idClient}`);
 }
 
-getDesignations(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/designationdropdown`);
+getDesignations(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/designationdropdown?idClient=${idClient}`);
 }
 
-getEducationLevels(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/educationleveldropdown`);
+getEducationLevels(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/educationleveldropdown?idClient=${idClient}`);
 }
-getEducationResults(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/educationresultdropdown`);
+getEducationResults(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/educationresultdropdown?idClient=${idClient}`);
 }
-getEmployeeTypes(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/employeetypedropdown`);
+getEmployeeTypes(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/employeetypedropdown?idClient=${idClient}`);
 }
 
 getGenders(idClient: number): Observable<any[]> {
@@ -33,24 +33,26 @@ getGenders(idClient: number): Observable<any[]> {
 }
 
 getJobTypes(idClient: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/designationdropdown?idClient=${idClient}`);
+  return this.http.get<any[]>(`${this.apiUrl}/jobtypedropdown?idClient=${idClient}`);
 }
 
+getMaritalStatus(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/maritalstatusdropdown?idClient=${idClient}`);
+}
+getRelationship(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/relationshipdropdown?idClient=${idClient}`);
+}
 
-// getMaritalStatus(): Observable<any[]> {
-//   return this.http.get<any[]>(`${this.apiUrl}/departments`);
-// }
-// getMaritalStatus(): Observable<any[]> {
-//   return this.http.get<any[]>(`${this.apiUrl}/departments`);
-// }
+getReligions(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/religiondropdown?idClient=${idClient}`);
+}
 
-// getMaritalStatus(): Observable<any[]> {
-//   return this.http.get<any[]>(`${this.apiUrl}/departments`);
-// }
+getSections(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/sectiondropdown?idClient=${idClient}`);
+}
 
-// getMaritalStatus(): Observable<any[]> {
-//   return this.http.get<any[]>(`${this.apiUrl}/departments`);
-// }
-
+getWeekOffs(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/weeksoffdropdown?idClient=${idClient}`);
+}
 
 }
