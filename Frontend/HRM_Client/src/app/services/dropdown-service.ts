@@ -14,23 +14,43 @@ getDepartments(): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/departmentdropdown`);
 }
 
-getSections(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/departments`);
-}
-
 getDesignations(): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/designationdropdown`);
 }
 
-getGenders(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/genderdropdown`);
+getEducationLevels(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/educationleveldropdown`);
+}
+getEducationResults(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/educationresultdropdown`);
+}
+getEmployeeTypes(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/employeetypedropdown`);
 }
 
-getReligions(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/religiondropdown`);
+getGenders(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/genderdropdown?idClient=${idClient}`);
+}
+
+getJobTypes(idClient: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/designationdropdown?idClient=${idClient}`);
 }
 
 
+// getMaritalStatus(): Observable<any[]> {
+//   return this.http.get<any[]>(`${this.apiUrl}/departments`);
+// }
+// getMaritalStatus(): Observable<any[]> {
+//   return this.http.get<any[]>(`${this.apiUrl}/departments`);
+// }
+
+// getMaritalStatus(): Observable<any[]> {
+//   return this.http.get<any[]>(`${this.apiUrl}/departments`);
+// }
+
+// getMaritalStatus(): Observable<any[]> {
+//   return this.http.get<any[]>(`${this.apiUrl}/departments`);
+// }
 
 
 }

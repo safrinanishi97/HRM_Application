@@ -25,8 +25,19 @@ export class EmployeeComponent implements OnInit {
   designations: any[] = [];
   genders: any[] = [];
   religions: any[] = [];
+   private formatDate(date: Date | string): string {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
 
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
 constructor(
+  
     private employeeService: EmployeeService,
     private dropdownService: DropdownService,
     private fb: FormBuilder,
@@ -58,11 +69,12 @@ constructor(
     familyInfos: this.fb.array([]),
     certifications: this.fb.array([])
     });
+    
   }
 
 
   ngOnInit(): void {
-    this.loadDropdownData();
+    // this.loadDropdownData();
     this.loadEmployees();
   }
 
@@ -72,76 +84,74 @@ constructor(
     });
   }
 
- loadDropdownData(): void {
+//  loadDropdownData(): void {
 
-    this.dropdownService.getDepartments().subscribe({
-      next: (data) => this.departments = data,
-      error: (err) => console.error('Failed to load departments', err)
+//     this.dropdownService.getDepartments().subscribe({
+//       next: (data) => this.departments = data,
+//       error: (err) => console.error('Failed to load departments', err)
       
-    });
+//     });
 
-    this.dropdownService.getSections().subscribe({
-      next: (data) => this.sections = data,
-      error: (err) => console.error('Failed to load sections', err)
-    });
+//     this.dropdownService.getSections().subscribe({
+//       next: (data) => this.sections = data,
+//       error: (err) => console.error('Failed to load sections', err)
+//     });
 
-    this.dropdownService.getDesignations().subscribe({
-      next: (data) => this.designations = data,
-      error: (err) => console.error('Failed to load designations', err)
-    });
+//     this.dropdownService.getDesignations().subscribe({
+//       next: (data) => this.designations = data,
+//       error: (err) => console.error('Failed to load designations', err)
+//     });
 
-    this.dropdownService.getGenders().subscribe({
-      next: (data) => this.genders = data,
-      error: (err) => console.error('Failed to load genders', err)
-    });
+//     this.dropdownService.getGenders().subscribe({
+//       next: (data) => this.genders = data,
+//       error: (err) => console.error('Failed to load genders', err)
+//     });
 
-    this.dropdownService.getReligions().subscribe({
-      next: (data) => this.religions = data,
-      error: (err) => console.error('Failed to load religions', err)
-    });
-  }
+//     this.dropdownService.getReligions().subscribe({
+//       next: (data) => this.religions = data,
+//       error: (err) => console.error('Failed to load religions', err)
+//     });
+//   }
 
 
-  selectEmployee(employee: EmployeeDTO): void {
-    this.isEditMode = true;
-    this.selectedEmployee = employee;
-    
-    // // Convert base64 image to URL
-    //   if (employee.fileBase64) {
-    //   this.profileImageUrl = this.employeeService.getImageUrl(employee.fileBase64);
-    // } else {
-    //   this.profileImageUrl = null;
-    // }
 
-    if (employee.fileBase64) {
-      this.profileImageUrl = this.sanitizer.bypassSecurityTrustUrl(
-        `data:image/jpeg;base64,${employee.fileBase64}`
-      );
-    } else {
-      this.profileImageUrl = null;
-    }
+selectEmployee(employeeId: number): void {
+  this.employeeService.getEmployeeById(this.idClient, employeeId).subscribe({
+    next: (employee) => {
+      this.isEditMode = true;
+      this.selectedEmployee = employee;
 
-    this.employeeForm.patchValue({
-      id: employee.id,
-      idClient: employee.idClient,
-      employeeName: employee.employeeName,
-      employeeNameBangla: employee.employeeNameBangla,
-      fatherName: employee.fatherName,
-      motherName: employee.motherName,
-      birthDate: employee.birthDate ,
-      joiningDate: employee.joiningDate,
-      idDepartment: employee.idDepartment,
-      idSection: employee.idSection,
-      address: employee.address,
-      presentAddress: employee.presentAddress,
-      nationalIdentificationNumber: employee.nationalIdentificationNumber,
-      contactNo: employee.contactNo,
-      isActive: employee.isActive,
-      profileImage: null
-    });
-    
+      if (employee.fileBase64) {
+        this.profileImageUrl = this.sanitizer.bypassSecurityTrustUrl(
+          `data:image/jpeg;base64,${employee.fileBase64}`
+        );
+      } else {
+        this.profileImageUrl = null;
+      }
 
-    this.clearFormArrays();
+      this.employeeForm.patchValue({
+        id: employee.id,
+        idClient: employee.idClient,
+        employeeName: employee.employeeName,
+        employeeNameBangla: employee.employeeNameBangla,
+        fatherName: employee.fatherName,
+        motherName: employee.motherName,
+        birthDate: employee.birthDate ? this.formatDate(employee.birthDate) : null,
+        joiningDate: employee.joiningDate ? this.formatDate(employee.joiningDate) : null,
+        idDepartment: employee.idDepartment,
+        idSection: employee.idSection,
+        idDesignation: employee.idDesignation,
+        idGender: employee.idGender,
+        idReligion: employee.idReligion,
+        address: employee.address,
+        presentAddress: employee.presentAddress,
+        nationalIdentificationNumber: employee.nationalIdentificationNumber,
+        contactNo: employee.contactNo,
+        isActive: employee.isActive,
+        profileImage: null
+      });
+      
+      this.clearFormArrays();
 
     employee.documents.forEach(doc => {
       const docGroup = this.fb.group({
@@ -150,7 +160,7 @@ constructor(
         idEmployee: [doc.idEmployee],
         documentName: [doc.documentName, Validators.required],
         fileName: [doc.fileName, Validators.required],
-        uploadDate: [doc.uploadDate, Validators.required],
+        uploadDate: [doc.uploadDate ? this.formatDate(doc.uploadDate) : null, Validators.required] ,
         uploadedFileExtention: [doc.uploadedFileExtention],
         upFile: [null],
         fileBase64: [doc.fileBase64]
@@ -203,12 +213,17 @@ constructor(
         certificationTitle: [cert.certificationTitle, Validators.required],
         certificationInstitute: [cert.certificationInstitute, Validators.required],
         instituteLocation: [cert.instituteLocation, Validators.required],
-        fromDate: [cert.fromDate, Validators.required],
-        toDate: [cert.toDate]
+        fromDate: [cert.fromDate ? this.formatDate(cert.fromDate) : null, Validators.required],
+        toDate: [cert.toDate ? this.formatDate(cert.toDate) : null]
       });
       this.certifications.push(certGroup);
     });
-  }
+    },
+    error: (err) => {
+      console.error('Failed to load employee', err);
+    }
+  });
+}
 
 clearFormArrays(): void {
     while (this.documents.length !== 0) {
@@ -353,4 +368,12 @@ clearFormArrays(): void {
     }
   }
 
+  getDocumentPreviewUrl(document: any): SafeUrl | null {
+    if (document.FileBase64) {
+      return this.sanitizer.bypassSecurityTrustUrl(
+        `data:image/jpeg;base64,${document.FileBase64}`
+      );
+    }
+    return null;
+  }
 }

@@ -17,7 +17,9 @@ export class EmployeeService {
  getAllEmployees(idClient: number): Observable<EmployeeDTO[]> {
     return this.http.get<EmployeeDTO[]>(`${this.apiUrl}/?idClient=${idClient}`);
   }
-
+getEmployeeById(idClient: number, id: number): Observable<EmployeeDTO> {
+  return this.http.get<EmployeeDTO>(`${this.apiUrl}/getbyid?idClient=${idClient}&id=${id}`);
+}
 
     deleteEmployee(idClient: number, id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${idClient}/${id}`);

@@ -10,7 +10,7 @@
         <div *ngFor="let emp of employees" 
              class="list-group-item list-group-item-action border rounded mb-1"
              [class.active]="selectedEmployee?.id === emp.id"
-             (click)="selectEmployee(emp)">
+             (click)="selectEmployee(emp.id)">
           <div class="d-flex w-100 justify-content-between">
             <h6 class="mb-1">{{ emp.id }} - {{ emp.employeeName }}</h6>
           </div>
@@ -319,6 +319,9 @@
                             <tr>
                               <th>Level</th>
                               <th>Institute</th>
+                              <th>Major</th>
+                              <th>CGPA</th>
+                              <th>Exam Scale</th>
                               <th>Year</th>
                               <th>Action</th>
                             </tr>
@@ -326,12 +329,20 @@
                           <tbody formArrayName="educationInfos">
                             <tr *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i">
                               <td>
-                                <select class="form-select form-select-sm" formControlName="idEducationLevel">
-                   
+                                <select class="form-select form-select-sm" formControlName="idEducationLevel">                   
                                 </select>
                               </td>
                               <td>
                                 <input type="text" class="form-control form-control-sm" formControlName="instituteName">
+                              </td>
+                              <td>
+                               <input type="text" class="form-control form-control-sm" formControlName="major">
+                              </td>
+                               <td>
+                                <input type="number" class="form-control form-control-sm" formControlName="cgpa">
+                              </td>
+                              <td>
+                                <input type="number" class="form-control form-control-sm" formControlName="examScale">
                               </td>
                               <td>
                                 <input type="number" class="form-control form-control-sm" formControlName="passingYear">
@@ -365,7 +376,8 @@
                             <tr>
                               <th>Title</th>
                               <th>Institute</th>
-                              <th>Duration</th>
+                              <th>FromDate</th>
+                              <th>ToDate</th>
                               <th>Action</th>
                             </tr>
                           </thead>
@@ -378,8 +390,19 @@
                               <input type="text" class="form-control form-control-sm" formControlName="certificationInstitute">
                             </td>
                             <td>
-                              {{ (cert.get('fromDate')?.value | date) || '' }} - 
-                              {{ (cert.get('toDate')?.value | date) || '' }}
+                            <input type="date" 
+                                  class="form-control form-control-sm" 
+                                  formControlName="fromDate"
+                                  [class.is-invalid]="!cert.get('fromDate')?.value">
+                            <small *ngIf="!cert.get('fromDate')?.value" class="text-muted">Not specified</small>
+                                 
+                            </td>
+                            <td>
+                             <input type="date" 
+                                    class="form-control form-control-sm" 
+                                    formControlName="toDate"
+                                    [class.is-invalid]="!cert.get('toDate')?.value">
+                              <small *ngIf="!cert.get('toDate')?.value" class="text-muted">Not specified</small>
                             </td>
                             <td>
                               <button type="button" class="btn btn-sm btn-danger" (click)="removeCertification(i)">
@@ -407,6 +430,7 @@
                           <thead>
                             <tr>
                               <th>Document Name</th>
+                              <th>File Name</th>
                               <th>File</th>
                               <th>Date</th>
                               <th>Action</th>
@@ -417,13 +441,30 @@
                             <td>
                               <input type="text" class="form-control form-control-sm" formControlName="documentName">
                             </td>
+                             <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="fileName">
+                            </td>
                             <td>
                               <input type="file" class="form-control form-control-sm" (change)="onDocumentFileChange($event, i)">
-                              <!-- <a *ngIf="doc.get('fileBase64')?.value" [href]="getDocumentPreviewUrl(doc.value)" target="_blank">
+                              <a *ngIf="doc.get('fileBase64')?.value" [href]="getDocumentPreviewUrl(doc.value)" target="_blank">
                                 View
-                              </a> -->
+                              </a>
                             </td>
-                            <!-- <td>{{ doc.get('uploadDate').value | date || ''  }}</td> -->
+                            <td>
+                                <input type="date" 
+                                  class="form-control form-control-sm" 
+                                  formControlName="uploadDate">
+                            </td>
+                          <!-- <td>
+                            <input type="date" 
+                                  class="form-control form-control-sm" 
+                                  formControlName="uploadDate"
+                                  [value]="doc.get('uploadDate')?.value | date:'yyyy-MM-dd'" 
+                                  [valueAsDate]="doc.get('uploadDate')?.value"
+                                  (input)="doc.get('uploadDate')?.setValue($event.target.valueAsDate)"
+                                  [title]="(doc.get('uploadDate')?.value | date) ?? 'N/A'">                    
+                          </td> -->
+                          
                             <td>
                               <button type="button" class="btn btn-sm btn-danger" (click)="removeDocument(i)">
                                 <i class="bi bi-trash">Remove</i>
@@ -438,188 +479,7 @@
                 </div>
 
             </div>
-           <!-- <div class="row mt-4">
-                <div class="col-md-6 mb-3">
-                  <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                      <h6 class="mb-0">Documents</h6>
-                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addDocument()">
-                        <i class="bi bi-plus"></i> Add
-                      </button>
-                    </div>
-                    <div class="card-body p-0">
-                      <div class="table-responsive">
-                        <table class="table table-sm table-hover mb-0">
-                          <thead>
-                            <tr>
-                              <th>Document Name</th>
-                              <th>File</th>
-                              <th>Date</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody formArrayName="documents">
-                          <tr *ngFor="let doc of documents.controls; let i = index" [formGroupName]="i">
-                            <td>
-                              <input type="text" class="form-control form-control-sm" formControlName="documentName">
-                            </td>
-                            <td>
-                              <input type="file" class="form-control form-control-sm" (change)="onDocumentFileChange($event, i)">
-                              <a *ngIf="doc.get('fileBase64')?.value" [href]="getDocumentPreviewUrl(doc.value)" target="_blank">
-                                View
-                              </a>
-                            </td>
-                            <td>{{ doc.get('uploadDate').value | date }}</td>
-                            <td>
-                              <button type="button" class="btn btn-sm btn-danger" (click)="removeDocument(i)">
-                                <i class="bi bi-trash">Remove</i>
-                              </button>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6 mb-3">
-           
-                  <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                      <h6 class="mb-0">Family Information</h6>
-                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addFamilyInfo()">
-                        <i class="bi bi-plus"></i> Add
-                      </button>
-                    </div>
-                    <div class="card-body p-0">
-                      <div class="table-responsive">
-                        <table class="table table-sm table-hover mb-0">
-                          <thead>
-                            <tr>
-                              <th>Name</th>
-                              <th>Relationship</th>
-                              <th>Contact</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody formArrayName="familyInfos">
-                           <tr *ngFor="let fam of familyInfos.controls; let i = index" [formGroupName]="i">
-                            <td>
-                              <input type="text" class="form-control form-control-sm" formControlName="name">
-                            </td>
-                            <td>
-                              <select class="form-select form-select-sm" formControlName="idRelationship">
-                
-                              </select>
-                            </td>
-                            <td>
-                              <input type="text" class="form-control form-control-sm" formControlName="contactNo">
-                            </td>
-                            <td>
-                              <button type="button" class="btn btn-sm btn-danger" (click)="removeFamilyInfo(i)">
-                                <i class="bi bi-trash">Remove</i>
-                              </button>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                      <h6 class="mb-0">Education Information</h6>
-                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addEducationInfo()">
-                        <i class="bi bi-plus"></i> Add
-                      </button>
-                    </div>
-                    <div class="card-body p-0">
-                      <div class="table-responsive">
-                        <table class="table table-sm table-hover mb-0">
-                          <thead>
-                            <tr>
-                              <th>Level</th>
-                              <th>Institute</th>
-                              <th>Year</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody formArrayName="educationInfos">
-                            <tr *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i">
-                              <td>
-                                <select class="form-select form-select-sm" formControlName="idEducationLevel">
-                   
-                                </select>
-                              </td>
-                              <td>
-                                <input type="text" class="form-control form-control-sm" formControlName="instituteName">
-                              </td>
-                              <td>
-                                <input type="number" class="form-control form-control-sm" formControlName="passingYear">
-                              </td>
-                              <td>
-                                <button type="button" class="btn btn-sm btn-danger" (click)="removeEducationInfo(i)">
-                                  <i class="bi bi-trash">Remove</i>
-                                </button>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6 mb-3">
-          
-                  <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                      <h6 class="mb-0">Professional Certifications</h6>
-                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addCertification()">
-                        <i class="bi bi-plus"></i> Add
-                      </button>
-                    </div>
-                    <div class="card-body p-0">
-                      <div class="table-responsive">
-                        <table class="table table-sm table-hover mb-0">
-                          <thead>
-                            <tr>
-                              <th>Title</th>
-                              <th>Institute</th>
-                              <th>Duration</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody formArrayName="certifications">
-                            <tr *ngFor="let cert of certifications.controls; let i = index" [formGroupName]="i">
-                            <td>
-                              <input type="text" class="form-control form-control-sm" formControlName="certificationTitle">
-                            </td>
-                            <td>
-                              <input type="text" class="form-control form-control-sm" formControlName="certificationInstitute">
-                            </td>
-                            <td>
-                              {{ cert.get('fromDate').value | date }} - {{ cert.get('toDate').value | date }}
-                            </td>
-                            <td>
-                              <button type="button" class="btn btn-sm btn-danger" (click)="removeCertification(i)">
-                                <i class="bi bi-trash">Remove</i>
-                              </button>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>         -->
+       
 <!-- 
             <div class="card mb-3">
               <div class="card-header d-flex justify-content-between align-items-center">
