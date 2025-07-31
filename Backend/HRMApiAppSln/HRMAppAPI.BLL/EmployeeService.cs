@@ -298,7 +298,6 @@ namespace HRMApiApp.BLL
                 NationalIdentificationNumber = employeeDto.NationalIdentificationNumber,
                 ContactNo = employeeDto.ContactNo,
                 IsActive = true,
-               
                 HasOvertime = employeeDto.HasOvertime ?? false,
                 HasAttendenceBonus = employeeDto.HasAttendenceBonus ?? false,
                 SetDate = DateTime.Now,

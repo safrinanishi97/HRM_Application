@@ -13,7 +13,7 @@ namespace HRMApiApp.Controllers
 
     [Route("api/employee")]
     [ApiController]
-    public class EmployeesController(IEmployeeService EmployeeService, IValidator<EmployeeCreateDTO> Validator) : ControllerBase
+    public class EmployeesController(IEmployeeService EmployeeService) : ControllerBase
     {    
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployees([FromQuery] int idClient,CancellationToken cancellationToken)
@@ -36,13 +36,6 @@ namespace HRMApiApp.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateEmployee([FromForm] EmployeeCreateDTO employeeDto, CancellationToken cancellationToken)
         {
-            var validationResult = await Validator.ValidateAsync(employeeDto);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors
-                    .Select(e => e.ErrorMessage));
-            }
           
             var success = await EmployeeService.CreateAsync(employeeDto, cancellationToken);
 

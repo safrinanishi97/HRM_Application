@@ -5,6 +5,7 @@ import { EmployeeCreateDTO, EmployeeDTO, EmployeeUpdateDTO } from '../../models/
 import { EmployeeService } from '../../services/employee-service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DropdownService } from '../../services/dropdown-service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-employee-component',
@@ -48,6 +49,7 @@ constructor(
     private employeeService: EmployeeService,
     private dropdownService: DropdownService,
     private fb: FormBuilder,
+    private toastr: ToastrService,
     private sanitizer: DomSanitizer
   ){
   this.employeeForm = this.fb.group({
@@ -70,7 +72,7 @@ constructor(
   genderName: [''],
   idReligion: [null],
   religionName: [''],
-  idReportingManager: [null],
+  idReportingManager: [0],
   reportingManager: [''],
   idJobType: [null],
   jobTypeName: [''],
@@ -86,7 +88,7 @@ constructor(
   weekOffDay: [''],
   idMaritalStatus: [null],
   maritalStatusName: [''],
-  setDate: [null],
+  setDate: [this.formatDate(new Date())] ,
   createdBy: [''],
   profileImage: [null],
   fileBase64: [''],
@@ -111,66 +113,66 @@ constructor(
   }
 
  loadDropdownData(): void {
-    const idClient = 10001001;
-    this.dropdownService.getDepartments(idClient).subscribe({
+    // const idClient = 10001001;
+    this.dropdownService.getDepartments(this.idClient).subscribe({
       next: (data) => this.departments = data,
       error: (err) => console.error('Failed to load departments', err)
       
     });
 
-    this.dropdownService.getDesignations(idClient).subscribe({
+    this.dropdownService.getDesignations(this.idClient).subscribe({
       next: (data) => this.designations = data,
       error: (err) => console.error('Failed to load sections', err)
     });
-    this.dropdownService.getEducationExaminations(idClient).subscribe({
+    this.dropdownService.getEducationExaminations(this.idClient).subscribe({
       next: (data) => this.educationExaminations = data,
       error: (err) => console.error('Failed to load designations', err)
     });
 
-    this.dropdownService.getEducationLevels(idClient).subscribe({
+    this.dropdownService.getEducationLevels(this.idClient).subscribe({
       next: (data) => this.educationLevels = data,
       error: (err) => console.error('Failed to load designations', err)
     });
 
-    this.dropdownService.getEducationResults(idClient).subscribe({
+    this.dropdownService.getEducationResults(this.idClient).subscribe({
       next: (data) => this.educationResults = data,
       error: (err) => console.error('Failed to load genders', err)
     });
 
-    this.dropdownService.getEmployeeTypes(idClient).subscribe({
+    this.dropdownService.getEmployeeTypes(this.idClient).subscribe({
       next: (data) => this.employeeTypes = data,
       error: (err) => console.error('Failed to load religions', err)
     });
     
-    this.dropdownService.getGenders(idClient).subscribe({
+    this.dropdownService.getGenders(this.idClient).subscribe({
       next: (data) => this.genders = data,
       error: (err) => console.error('Failed to load religions', err)
     });
     
-    this.dropdownService.getJobTypes(idClient).subscribe({
+    this.dropdownService.getJobTypes(this.idClient).subscribe({
       next: (data) => this.jobTypes = data,
       error: (err) => console.error('Failed to load religions', err)
     });
     
-    this.dropdownService.getMaritalStatus(idClient).subscribe({
+    this.dropdownService.getMaritalStatus(this.idClient).subscribe({
       next: (data) => this.maritalStatus = data,
       error: (err) => console.error('Failed to load religions', err)
     });
     
-    this.dropdownService.getRelationship(idClient).subscribe({
+    this.dropdownService.getRelationship(this.idClient).subscribe({
       next: (data) => this.relationship = data,
       error: (err) => console.error('Failed to load religions', err)
     });
     
-    this.dropdownService.getReligions(idClient).subscribe({
+    this.dropdownService.getReligions(this.idClient).subscribe({
       next: (data) => this.religions = data,
       error: (err) => console.error('Failed to load religions', err)
     });
-      this.dropdownService.getSections(idClient).subscribe({
+      this.dropdownService.getSections(this.idClient).subscribe({
       next: (data) => this.sections = data,
       error: (err) => console.error('Failed to load religions', err)
     });
-      this.dropdownService.getWeekOffs(idClient).subscribe({
+      this.dropdownService.getWeekOffs(this.idClient).subscribe({
       next: (data) => this.weekOffs = data,
       error: (err) => console.error('Failed to load religions', err)
     });
@@ -466,4 +468,95 @@ clearFormArrays(): void {
     }
     return null;
   }
+
+createEmployee(): void {
+  if (this.employeeForm.invalid) {
+    this.markFormGroupTouched(this.employeeForm);
+    console.log('Form errors:', this.employeeForm.errors);
+    console.log('Form value:', this.employeeForm.value);
+    console.log('Create button clicked');
+    return;
+  }
+
+  const formData = this.employeeForm.value as EmployeeCreateDTO;
+
+  this.employeeService.createEmployee(formData).subscribe({
+    next: () => {
+      this.toastr.success('Employee created successfully!', 'Success');
+      this.loadEmployees();
+      this.resetForm();
+    },
+    error: (err) => {
+      console.error('Full error:', err);
+      if (err.error && err.error.errors) {
+        this.toastr.error('Failed to create employee. Check validation errors.', 'Error');
+        console.error('Validation errors:', err.error.errors);
+      } else {
+        this.toastr.error('Something went wrong while creating employee.', 'Error');
+      }
+    }
+  });
+}
+// Helper method to mark all fields as touched
+private markFormGroupTouched(formGroup: FormGroup) {
+  Object.values(formGroup.controls).forEach(control => {
+    control.markAsTouched();
+
+    if (control instanceof FormGroup) {
+      this.markFormGroupTouched(control);
+    } else if (control instanceof FormArray) {
+      control.controls.forEach(arrayControl => {
+        if (arrayControl instanceof FormGroup) {
+          this.markFormGroupTouched(arrayControl);
+        }
+      });
+    }
+  });
+}
+
+  updateEmployee(): void {
+    if (this.employeeForm.invalid) return;
+
+    const formData = this.employeeForm.value as EmployeeUpdateDTO;
+    this.employeeService.updateEmployee(formData).subscribe({
+      next: () => {
+        this.loadEmployees();
+        this.resetForm();
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  deleteEmployee(): void {
+    if (!this.selectedEmployee) return;
+
+    if (confirm('Are you sure to delete this employee?')) {
+      this.employeeService.deleteEmployee(
+        this.selectedEmployee.idClient, 
+        this.selectedEmployee.id
+      ).subscribe({
+        next: () => {
+          this.loadEmployees();
+        this.resetForm();
+        },
+        error: (err) => console.error(err)
+      });
+    }
+  }
+ resetForm(): void {
+    this.employeeForm.reset({
+      id: 0,
+      idClient: this.idClient,
+      isActive: true
+    });
+    this.clearFormArrays();
+    this.addDocument();
+    this.addEducationInfo();
+    this.addFamilyInfo();
+    this.addCertification();
+    this.selectedEmployee = null;
+    this.isEditMode = false;
+    this.profileImageUrl = null;
+  }
+
 }

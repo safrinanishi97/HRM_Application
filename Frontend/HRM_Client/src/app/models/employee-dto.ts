@@ -83,7 +83,7 @@ export interface EmployeeCreateDTO {
   maritalStatusName?: string;
   setDate?: Date;
   createdBy?: string;
-  documents: EmployeeDocumentDTO[];
+ documents: EmployeeDocumentDTO[];
   educationInfos: EmployeeEducationInfoDTO[];
   certifications: EmployeeProfessionalCertificationDTO[];
   familyInfos: EmployeeFamilyInfoDTO[];

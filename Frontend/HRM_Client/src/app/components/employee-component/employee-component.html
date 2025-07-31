@@ -1,6 +1,6 @@
 <div class="container-fluid h-100">
   <div class="row h-100">
-    <!-- Employee List (Left Side - 25%) -->
+  
    <div class="col-md-2 p-0 border-end" style="height: 100vh; overflow-y: auto;">
       <div class="list-group">
         <div class="list-group-item bg-secondary text-white border rounded py-4" 
@@ -19,15 +19,17 @@
       </div>
     </div>
 
-    <!-- Employee Form (Right Side - 75%) -->
+
     <div class="col-md-10 p-3" style="height: 100vh; overflow-y: auto;">
       <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="mb-0">{{isEditMode ? 'Edit Employee' : 'Create New Employee'}}</h5>
           <div>
-            <!-- <button class="btn btn-outline-primary me-2" [disabled]="isEditMode" (click)="createEmployee()">
-              Create
-            </button>
+           <button type="submit" class="btn btn-outline-primary me-2" 
+                  [disabled]="isEditMode || !employeeForm.valid" 
+                  (click)="createEmployee()">
+                   Create
+          </button>
             <button class="btn btn-outline-warning me-2" [disabled]="!isEditMode" (click)="updateEmployee()">
               Update
             </button>
@@ -36,7 +38,7 @@
             </button>
             <button class="btn btn-outline-secondary" (click)="resetForm()">
               Reset
-            </button> -->
+            </button>
           </div>
         </div>
         
@@ -83,7 +85,7 @@
                 </div>
                   <div class="col">
                   <label class="form-label">Designation</label>
-                  <select class="form-select" formControlName="idDepartment">
+                  <select class="form-select" formControlName="idDesignation">
                     <option value="0">Select Designation</option>
                     <option *ngFor="let des of designations" [value]="des.id">
                       {{des.text}}

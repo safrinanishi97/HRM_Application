@@ -1,4 +1,3 @@
-using FluentValidation;
 using HRMApiApp.BLL;
 using HRMApiApp.BLL.Interfaces;
 using HRMApiApp.DAL;
@@ -23,7 +22,6 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 builder.Services.AddScoped<ICommonRepository, CommonRepository>();
 builder.Services.AddScoped<ICommonService, CommonService>();
-builder.Services.AddScoped<IValidator<EmployeeCreateDTO>, EmployeeCreateDTOValidator>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
