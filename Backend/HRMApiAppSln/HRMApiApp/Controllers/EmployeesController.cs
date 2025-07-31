@@ -48,22 +48,37 @@ namespace HRMApiApp.Controllers
             else
                 return BadRequest("Failed to create employee");
         }
-
+    
         [HttpPut]
         public async Task<IActionResult> UpdateEmployee([FromForm] EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var result = await EmployeeService.UpdateAsync(employeeDto, cancellationToken);
-
-            return Ok(new
+            try
             {
-                success = result == "Success",
-                message = result
-            });
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message = "Validation failed",
+                        errors = ModelState.Values.SelectMany(v => v.Errors)
+                    });
+                }
+
+                var result = await EmployeeService.UpdateAsync(employeeDto, cancellationToken);
+                return Ok(new { success = true, message = "Employee updated successfully" });
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace,
+                    innerException = ex.InnerException?.Message
+                });
+            }
         }
-
-
         [HttpDelete("{idClient}/{id}")]
         public async Task<IActionResult> DeleteEmployee([FromRoute] int idClient, [FromRoute] int id, CancellationToken cancellationToken)
         {

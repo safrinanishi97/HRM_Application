@@ -39,6 +39,7 @@
             <button class="btn btn-outline-secondary" (click)="resetForm()">
               Reset
             </button>
+  
           </div>
         </div>
         
@@ -264,7 +265,7 @@
 
               <div class="col">
                 <div class="text-center">
-                  <img [src]="profileImageUrl || 'assets/default-profile.png'" 
+                  <img [src]="profileImageUrl" 
                         class="img-thumbnail mb-2" 
                         style="width: 120px; height: 120px; object-fit: cover;">
                   <input type="file" class="form-control" 
@@ -348,6 +349,7 @@
                             <tr>
                               <th>Title</th>
                               <th>Institute</th>
+                              <th>Location</th>
                               <th>FromDate</th>
                               <th>ToDate</th>
                               <th>Action</th>
@@ -360,6 +362,9 @@
                             </td>
                             <td>
                               <input type="text" class="form-control form-control-sm" formControlName="certificationInstitute">
+                            </td>
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="instituteLocation">
                             </td>
                             <td>
                             <input type="date" 
@@ -442,7 +447,7 @@
                   </div>
             </div>
        
-             <div class="row">
+              <div class="row">
                  <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                       <h6 class="mb-0">Education Information</h6>
@@ -472,37 +477,83 @@
                           </thead>
                           <tbody formArrayName="educationInfos">
                             <tr *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i">
-                              <td>
-                                <select class="form-select form-select-sm" formControlName="idEducationExamination">    
-                                  <option value="0">Select Examination</option>
-                                  <option *ngFor="let exam of educationExaminations" [value]="exam.id">
-                                    {{exam.text}}
-                                  </option>               
-                                </select>
-                              </td>
-                              <td>
-                                <select class="form-select form-select-sm" formControlName="idEducationLevel">    
-                                  <option value="0">Select Level</option>
-                                  <option *ngFor="let level of educationLevels" [value]="level.id">
-                                    {{level.text}}
-                                  </option>               
-                                </select>
-                              </td>
-                               <td>
-                                <select class="form-select form-select-sm" formControlName="idEducationResult">    
-                                  <option value="0">Select Result</option>
-                                  <option *ngFor="let result of educationResults" [value]="result.id">
-                                    {{result.text}}
-                                  </option>               
-                                </select>
-                              </td>
-                              <td>
-                                <input type="text" class="form-control form-control-sm" formControlName="instituteName">
-                              </td>
-                              <td>IsForegnInstitute</td>
-                              <td>
-                               <input type="text" class="form-control form-control-sm" formControlName="major">
-                              </td>
+                             <td>
+  <select class="form-select form-select-sm" formControlName="idEducationExamination" [class.is-invalid]="educationInfos.controls[i].get('idEducationExamination')?.invalid && (educationInfos.controls[i].get('idEducationExamination')?.dirty || educationInfos.controls[i].get('idEducationExamination')?.touched)">
+    <option value="0">Select Examination</option>
+    <option *ngFor="let exam of educationExaminations" [value]="exam.id">
+      {{exam.text}}
+    </option>               
+  </select>
+  <small *ngIf="educationInfos.controls[i].get('idEducationExamination')?.invalid && (educationInfos.controls[i].get('idEducationExamination')?.dirty || educationInfos.controls[i].get('idEducationExamination')?.touched)" class="text-danger">
+    Examination is required
+  </small>
+</td>
+                          <td>
+  <select class="form-select form-select-sm" formControlName="idEducationLevel" [class.is-invalid]="educationInfos.controls[i].get('idEducationLevel')?.invalid && (educationInfos.controls[i].get('idEducationLevel')?.dirty || educationInfos.controls[i].get('idEducationLevel')?.touched)">
+    <option value="0">Select Level</option>
+    <option *ngFor="let level of educationLevels" [value]="level.id">
+      {{level.text}}
+    </option>               
+  </select>
+  <small *ngIf="educationInfos.controls[i].get('idEducationLevel')?.invalid && (educationInfos.controls[i].get('idEducationLevel')?.dirty || educationInfos.controls[i].get('idEducationLevel')?.touched)" class="text-danger">
+    Level is required
+  </small>
+</td>
+                         <td>
+  <select class="form-select form-select-sm" formControlName="idEducationResult" [class.is-invalid]="educationInfos.controls[i].get('idEducationResult')?.invalid && (educationInfos.controls[i].get('idEducationResult')?.dirty || educationInfos.controls[i].get('idEducationResult')?.touched)">
+    <option value="0">Select Result</option>
+    <option *ngFor="let result of educationResults" [value]="result.id">
+      {{result.text}}
+    </option>               
+  </select>
+  <small *ngIf="educationInfos.controls[i].get('idEducationResult')?.invalid && (educationInfos.controls[i].get('idEducationResult')?.dirty || educationInfos.controls[i].get('idEducationResult')?.touched)" class="text-danger">
+    Result is required
+  </small>
+</td>
+                            <td>
+  <input 
+    type="text" 
+    class="form-control form-control-sm" 
+    formControlName="instituteName"
+    [class.is-invalid]="educationInfos.controls[i].get('instituteName')?.invalid && 
+                      (educationInfos.controls[i].get('instituteName')?.dirty || 
+                       educationInfos.controls[i].get('instituteName')?.touched)"
+  >
+
+  <small 
+    *ngIf="educationInfos.controls[i].get('instituteName')?.invalid && 
+          (educationInfos.controls[i].get('instituteName')?.dirty || 
+           educationInfos.controls[i].get('instituteName')?.touched)" 
+    class="text-danger"
+  >
+    Institute name is required
+  </small>
+</td>
+                            <td>
+                              <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" 
+                                      formControlName="isForeignInstitute"
+                                      id="foreignInstitute{{i}}"
+                                      [class.is-invalid]="educationInfos.controls[i].get('isForeignInstitute')?.invalid && 
+                                                        (educationInfos.controls[i].get('isForeignInstitute')?.dirty || 
+                                                        educationInfos.controls[i].get('isForeignInstitute')?.touched)">
+                                <label class="form-check-label" for="foreignInstitute{{i}}">
+                                  Foreign?
+                                </label>
+                              </div>
+                              <small *ngIf="educationInfos.controls[i].get('isForeignInstitute')?.invalid && 
+                                          (educationInfos.controls[i].get('isForeignInstitute')?.dirty || 
+                                            educationInfos.controls[i].get('isForeignInstitute')?.touched)" 
+                                      class="text-danger">
+                                This field is required
+                              </small>
+                            </td>
+                             <td>
+  <input type="text" class="form-control form-control-sm" formControlName="major" [class.is-invalid]="educationInfos.controls[i].get('major')?.invalid && (educationInfos.controls[i].get('major')?.dirty || educationInfos.controls[i].get('major')?.touched)">
+  <small *ngIf="educationInfos.controls[i].get('major')?.invalid && (educationInfos.controls[i].get('major')?.dirty || educationInfos.controls[i].get('major')?.touched)" class="text-danger">
+    Major is required
+  </small>
+</td>
                                <td>
                                 <input type="number" class="form-control form-control-sm" formControlName="cgpa">
                               </td>
@@ -513,9 +564,12 @@
                                 <input type="number" class="form-control form-control-sm" formControlName="marks">
                               </td>
                              
-                              <td>
-                                <input type="number" class="form-control form-control-sm" formControlName="passingYear">
-                              </td>
+                           <td>
+  <input type="number" class="form-control form-control-sm" formControlName="passingYear" [class.is-invalid]="educationInfos.controls[i].get('passingYear')?.invalid && (educationInfos.controls[i].get('passingYear')?.dirty || educationInfos.controls[i].get('passingYear')?.touched)">
+  <small *ngIf="educationInfos.controls[i].get('passingYear')?.invalid && (educationInfos.controls[i].get('passingYear')?.dirty || educationInfos.controls[i].get('passingYear')?.touched)" class="text-danger">
+    Passing Year is required
+  </small>
+</td>
                               <td>
                                 <input type="number" class="form-control form-control-sm" formControlName="duration">
                               </td>

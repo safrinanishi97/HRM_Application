@@ -128,7 +128,7 @@ namespace HRMApiApp.DAL
             existingEmployee.IdDesignation = employee.IdDesignation ?? existingEmployee.IdDesignation;
             existingEmployee.IdReligion = employee.IdReligion ?? existingEmployee.IdReligion;
             existingEmployee.IdGender = employee.IdGender ?? existingEmployee.IdGender;
-            existingEmployee.IdReportingManager = employee.Id;
+            existingEmployee.IdReportingManager = employee.IdReportingManager ?? existingEmployee.IdReportingManager;
             existingEmployee.IdJobType = employee.IdJobType ?? existingEmployee.IdJobType;
             existingEmployee.IdEmployeeType = employee.IdEmployeeType ?? existingEmployee.IdEmployeeType;
             existingEmployee.IdWeekOff = employee.IdWeekOff ?? existingEmployee.IdWeekOff;

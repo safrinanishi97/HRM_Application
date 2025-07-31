@@ -17,18 +17,13 @@ export class EmployeeService {
  getAllEmployees(idClient: number): Observable<EmployeeDTO[]> {
     return this.http.get<EmployeeDTO[]>(`${this.apiUrl}/?idClient=${idClient}`);
   }
-getEmployeeById(idClient: number, id: number): Observable<EmployeeDTO> {
-  return this.http.get<EmployeeDTO>(`${this.apiUrl}/getbyid?idClient=${idClient}&id=${id}`);
-}
+  getEmployeeById(idClient: number, id: number): Observable<EmployeeDTO> {
+    return this.http.get<EmployeeDTO>(`${this.apiUrl}/getbyid?idClient=${idClient}&id=${id}`);
+  }
 
     deleteEmployee(idClient: number, id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${idClient}/${id}`);
   }
-
-  //   getImageUrl(base64: string): SafeUrl {
-  //   return this.sanitizer.bypassSecurityTrustUrl(`data:image/jpeg;base64,${base64}`);
-  // }
-
 
 createEmployee(employee: EmployeeCreateDTO): Observable<any> {
     const formData = this.createFormData(employee);
@@ -40,31 +35,72 @@ createEmployee(employee: EmployeeCreateDTO): Observable<any> {
     return this.http.put(this.apiUrl, formData);
   }
 
-  private createFormData(data: any): FormData {
-    const formData = new FormData();
-    Object.keys(data).forEach(key => {
-      if (Array.isArray(data[key])) {
-        data[key].forEach((item: any, index: number) => {
-          Object.keys(item).forEach(itemKey => {
-            if (itemKey === 'UpFile' && item[itemKey]) {
-              formData.append(`${key}[${index}].${itemKey}`, item[itemKey]);
-            } else {
-              formData.append(`${key}[${index}].${itemKey}`, item[itemKey]);
-            }
-          });
-        });
-      } else if (key === 'ProfileImage' && data[key]) {
-        formData.append(key, data[key]);
-      } else {
-        formData.append(key, data[key]);
-      }
-    });
-    return formData;
+private createFormData(data: any, isUpdate: boolean = false): FormData {
+  const formData = new FormData();
+
+  Object.keys(data).forEach(key => {
+    const value = data[key];
+
+    if (key === 'profileImage' || Array.isArray(value)) {
+      return;
+    }
+    if (value instanceof Date) {
+      formData.append(key, value.toISOString());
+    }
+    else if (value !== null && value !== undefined) {
+      formData.append(key, value);
+    }
+  });
+
+  if (data.profileImage instanceof File) {
+    formData.append('profileImage', data.profileImage);
   }
 
+  if (isUpdate) {
+    this.appendArrayForUpdate(formData, 'documents', data.documents);
+    this.appendArrayForUpdate(formData, 'educationInfos', data.educationInfos);
+    this.appendArrayForUpdate(formData, 'certifications', data.certifications);
+    this.appendArrayForUpdate(formData, 'familyInfos', data.familyInfos);
+  } else {
+    this.appendArrayIfNotEmpty(formData, 'documents', data.documents);
+    this.appendArrayIfNotEmpty(formData, 'educationInfos', data.educationInfos);
+    this.appendArrayIfNotEmpty(formData, 'certifications', data.certifications);
+    this.appendArrayIfNotEmpty(formData, 'familyInfos', data.familyInfos);
+  }
 
+  return formData;
+}
 
+private appendArrayIfNotEmpty(formData: FormData, arrayName: string, array: any[] | null | undefined) {
+  if (!array || array.length === 0) {
+    return;
+  }
+  this.appendArrayItems(formData, arrayName, array);
+}
 
+private appendArrayForUpdate(formData: FormData, arrayName: string, array: any[] | null | undefined) {
 
+  const items = array || [];
+  this.appendArrayItems(formData, arrayName, items);
+}
 
+private appendArrayItems(formData: FormData, arrayName: string, array: any[]) {
+  array.forEach((item, index) => {
+    if (item && typeof item === 'object') {
+      Object.keys(item).forEach(key => {
+        const value = item[key];
+
+        if (key === 'upFile' && value instanceof File) {
+          formData.append(`${arrayName}[${index}].upFile`, value);
+        }
+        else if (value instanceof Date) {
+          formData.append(`${arrayName}[${index}].${key}`, value.toISOString());
+        }
+        else if (value !== null && value !== undefined) {
+          formData.append(`${arrayName}[${index}].${key}`, value);
+        }
+      });
+    }
+  });
+}
 }

@@ -5,7 +5,6 @@ import { EmployeeCreateDTO, EmployeeDTO, EmployeeUpdateDTO } from '../../models/
 import { EmployeeService } from '../../services/employee-service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DropdownService } from '../../services/dropdown-service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-employee-component',
@@ -49,7 +48,6 @@ constructor(
     private employeeService: EmployeeService,
     private dropdownService: DropdownService,
     private fb: FormBuilder,
-    private toastr: ToastrService,
     private sanitizer: DomSanitizer
   ){
   this.employeeForm = this.fb.group({
@@ -396,7 +394,7 @@ clearFormArrays(): void {
       major: ['', Validators.required],
       passingYear: [0, Validators.required],
       instituteName: ['', Validators.required],
-      isForeignInstitute: [false],
+      isForeignInstitute: [false, Validators.required],
       duration: [0],
       achievement: ['']
     });
@@ -449,7 +447,11 @@ clearFormArrays(): void {
     const file = event.target.files[0];
     if (file) {
       const docGroup = this.documents.at(index);
-      docGroup.patchValue({ upFile: file });
+      docGroup.patchValue({ 
+        upFile: file,
+        fileName: file.name,
+        uploadedFileExtention: file.name.split('.').pop()
+      });
       docGroup.get('upFile')?.updateValueAndValidity();
       
       const reader = new FileReader();
@@ -468,36 +470,42 @@ clearFormArrays(): void {
     }
     return null;
   }
-
 createEmployee(): void {
   if (this.employeeForm.invalid) {
     this.markFormGroupTouched(this.employeeForm);
-    console.log('Form errors:', this.employeeForm.errors);
-    console.log('Form value:', this.employeeForm.value);
-    console.log('Create button clicked');
     return;
   }
 
   const formData = this.employeeForm.value as EmployeeCreateDTO;
 
+  // Filter out empty rows
+  formData.educationInfos = formData.educationInfos.filter(e =>
+    e.idEducationLevel && e.idEducationExamination && e.idEducationResult && e.major && e.passingYear && e.instituteName
+  );
+
+  formData.certifications = formData.certifications.filter(c =>
+    c.certificationTitle && c.certificationInstitute && c.instituteLocation && c.fromDate
+  );
+
+  formData.familyInfos = formData.familyInfos.filter(f =>
+    f.name && f.idGender && f.idRelationship
+  );
+
+  formData.documents = formData.documents.filter(d =>
+    d.documentName && d.fileName && d.uploadDate
+  );
+
   this.employeeService.createEmployee(formData).subscribe({
     next: () => {
-      this.toastr.success('Employee created successfully!', 'Success');
       this.loadEmployees();
       this.resetForm();
     },
     error: (err) => {
       console.error('Full error:', err);
-      if (err.error && err.error.errors) {
-        this.toastr.error('Failed to create employee. Check validation errors.', 'Error');
-        console.error('Validation errors:', err.error.errors);
-      } else {
-        this.toastr.error('Something went wrong while creating employee.', 'Error');
-      }
     }
   });
 }
-// Helper method to mark all fields as touched
+
 private markFormGroupTouched(formGroup: FormGroup) {
   Object.values(formGroup.controls).forEach(control => {
     control.markAsTouched();
@@ -543,20 +551,17 @@ private markFormGroupTouched(formGroup: FormGroup) {
       });
     }
   }
- resetForm(): void {
-    this.employeeForm.reset({
-      id: 0,
-      idClient: this.idClient,
-      isActive: true
-    });
-    this.clearFormArrays();
-    this.addDocument();
-    this.addEducationInfo();
-    this.addFamilyInfo();
-    this.addCertification();
-    this.selectedEmployee = null;
-    this.isEditMode = false;
-    this.profileImageUrl = null;
-  }
+resetForm(): void {
+  this.employeeForm.reset({
+    id: 0,
+    idClient: this.idClient,
+    isActive: true
+  });
+  this.clearFormArrays();
+
+  this.selectedEmployee = null;
+  this.isEditMode = false;
+  this.profileImageUrl = null;
+}
 
 }
