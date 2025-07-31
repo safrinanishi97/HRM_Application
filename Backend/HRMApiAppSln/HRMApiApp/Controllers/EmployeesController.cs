@@ -52,21 +52,17 @@ namespace HRMApiApp.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateEmployee([FromForm] EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = await EmployeeService.UpdateAsync(employeeDto, cancellationToken);
 
-            return result switch
+            return Ok(new
             {
-                "Success" => Ok("Employee updated successfully"),
-                "Employee not found" => NotFound("Employee not found"),
-                var error when error.StartsWith("Error:") => StatusCode(500, error),
-                _ => StatusCode(500, "Unexpected error")
-            };
+                success = result == "Success",
+                message = result
+            });
         }
+
 
         [HttpDelete("{idClient}/{id}")]
         public async Task<IActionResult> DeleteEmployee([FromRoute] int idClient, [FromRoute] int id, CancellationToken cancellationToken)

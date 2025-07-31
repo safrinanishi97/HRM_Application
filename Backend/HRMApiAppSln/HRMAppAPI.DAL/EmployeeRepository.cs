@@ -126,6 +126,8 @@ namespace HRMApiApp.DAL
                 existingEmployee.EmployeeImage = newImage;
             }
             existingEmployee.IdDesignation = employee.IdDesignation ?? existingEmployee.IdDesignation;
+            existingEmployee.IdReligion = employee.IdReligion ?? existingEmployee.IdReligion;
+            existingEmployee.IdGender = employee.IdGender ?? existingEmployee.IdGender;
             existingEmployee.IdReportingManager = employee.Id;
             existingEmployee.IdJobType = employee.IdJobType ?? existingEmployee.IdJobType;
             existingEmployee.IdEmployeeType = employee.IdEmployeeType ?? existingEmployee.IdEmployeeType;
@@ -134,6 +136,7 @@ namespace HRMApiApp.DAL
             existingEmployee.IdDepartment = employee.IdDepartment;
             existingEmployee.IdSection =   employee.IdSection;
             existingEmployee.BirthDate = employee.BirthDate ?? existingEmployee.BirthDate;
+            existingEmployee.JoiningDate = employee.JoiningDate ?? existingEmployee.JoiningDate;
             existingEmployee.Address = employee.Address ?? existingEmployee.Address;
             existingEmployee.PresentAddress =   employee.PresentAddress ?? existingEmployee.PresentAddress;
             existingEmployee.NationalIdentificationNumber = employee.NationalIdentificationNumber ?? existingEmployee.NationalIdentificationNumber;
@@ -236,6 +239,7 @@ namespace HRMApiApp.DAL
                     existingEntry.IdEducationExamination = item.IdEducationExamination;
                     existingEntry.IdEducationResult = item.IdEducationResult;
                     existingEntry.Cgpa = item.Cgpa;
+                    existingEntry.ExamScale = item.ExamScale;
                     existingEntry.Marks = item.Marks;
                     existingEntry.PassingYear = item.PassingYear;
                     existingEntry.InstituteName = item.InstituteName;
@@ -255,6 +259,7 @@ namespace HRMApiApp.DAL
                         IdEducationExamination = item.IdEducationExamination,
                         IdEducationResult = item.IdEducationResult,
                         Cgpa = item.Cgpa,
+                        ExamScale = item.ExamScale,
                         Marks = item.Marks,
                         PassingYear = item.PassingYear,
                         InstituteName = item.InstituteName,
