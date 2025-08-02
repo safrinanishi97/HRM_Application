@@ -35,6 +35,8 @@ export class EmployeeComponent implements OnInit {
   sections: any[] = [];
   weekOffs: any[] = [];
 
+  isCreating = false;
+  isEditing = false;
   private formatDate(date: Date | string): string {
   const d = new Date(date);
   let month = '' + (d.getMonth() + 1);
@@ -50,6 +52,7 @@ constructor(
     private fb: FormBuilder,
     private sanitizer: DomSanitizer
   ){
+ 
   this.employeeForm = this.fb.group({
   id: [0],
   idClient: [this.idClient],
@@ -100,6 +103,7 @@ constructor(
 
 
   ngOnInit(): void {
+      this.employeeForm.disable(); 
     this.loadDropdownData();
     this.loadEmployees();
   }
@@ -227,7 +231,8 @@ selectEmployee(employeeId: number): void {
         createdBy: employee.createdBy,
         profileImage: null
       });
-      
+      this.employeeForm.disable();
+      this.isEditMode = true;
       this.clearFormArrays();
 
       employee.documents.forEach(doc => {
@@ -374,6 +379,7 @@ clearFormArrays(): void {
       currentAddress: [''],
       permanentAddress: ['']
     });
+        console.log('Adding family info group:', famGroup.value);
     this.familyInfos.push(famGroup);
   }
     removeFamilyInfo(index: number): void {
@@ -470,35 +476,53 @@ clearFormArrays(): void {
     }
     return null;
   }
+
+
+  startCreateMode(): void {
+  this.employeeForm.reset({
+    id: 0,
+    idClient: this.idClient,
+    isActive: true
+  });
+
+  this.clearFormArrays(); 
+  this.employeeForm.enable(); 
+  this.isCreating = true; 
+  this.isEditMode = false;
+  this.isEditing = false;
+  this.profileImageUrl = null;
+
+  console.log('Starting create mode', this.employeeForm);
+}
 createEmployee(): void {
   if (this.employeeForm.invalid) {
-    this.markFormGroupTouched(this.employeeForm);
+    //this.markFormGroupTouched(this.employeeForm);
     return;
   }
 
-  const formData = this.employeeForm.value as EmployeeCreateDTO;
+  const formData = this.employeeForm.getRawValue() as EmployeeCreateDTO;
 
-  // Filter out empty rows
-  formData.educationInfos = formData.educationInfos.filter(e =>
-    e.idEducationLevel && e.idEducationExamination && e.idEducationResult && e.major && e.passingYear && e.instituteName
-  );
+  // formData.educationInfos = formData.educationInfos.filter(e =>
+  //   e.idEducationLevel && e.idEducationExamination && e.idEducationResult && e.major && e.passingYear && e.instituteName
+  // );
 
-  formData.certifications = formData.certifications.filter(c =>
-    c.certificationTitle && c.certificationInstitute && c.instituteLocation && c.fromDate
-  );
+  // formData.certifications = formData.certifications.filter(c =>
+  //   c.certificationTitle && c.certificationInstitute && c.instituteLocation && c.fromDate
+  // );
 
-  formData.familyInfos = formData.familyInfos.filter(f =>
-    f.name && f.idGender && f.idRelationship
-  );
+  // formData.familyInfos = formData.familyInfos.filter(f =>
+  //   f.name && f.idGender && f.idRelationship
+  // );
 
-  formData.documents = formData.documents.filter(d =>
-    d.documentName && d.fileName && d.uploadDate
-  );
+  // formData.documents = formData.documents.filter(d =>
+  //   d.documentName && d.fileName && d.uploadDate
+  // );
 
   this.employeeService.createEmployee(formData).subscribe({
     next: () => {
       this.loadEmployees();
       this.resetForm();
+      this.isCreating = false;
     },
     error: (err) => {
       console.error('Full error:', err);
@@ -506,26 +530,26 @@ createEmployee(): void {
   });
 }
 
-private markFormGroupTouched(formGroup: FormGroup) {
-  Object.values(formGroup.controls).forEach(control => {
-    control.markAsTouched();
+// private markFormGroupTouched(formGroup: FormGroup) {
+//   Object.values(formGroup.controls).forEach(control => {
+//     control.markAsTouched();
 
-    if (control instanceof FormGroup) {
-      this.markFormGroupTouched(control);
-    } else if (control instanceof FormArray) {
-      control.controls.forEach(arrayControl => {
-        if (arrayControl instanceof FormGroup) {
-          this.markFormGroupTouched(arrayControl);
-        }
-      });
-    }
-  });
-}
+//     if (control instanceof FormGroup) {
+//       this.markFormGroupTouched(control);
+//     } else if (control instanceof FormArray) {
+//       control.controls.forEach(arrayControl => {
+//         if (arrayControl instanceof FormGroup) {
+//           this.markFormGroupTouched(arrayControl);
+//         }
+//       });
+//     }
+//   });
+// }
 
   updateEmployee(): void {
     if (this.employeeForm.invalid) return;
-
     const formData = this.employeeForm.value as EmployeeUpdateDTO;
+    console.log('Form Data:', formData);
     this.employeeService.updateEmployee(formData).subscribe({
       next: () => {
         this.loadEmployees();
@@ -534,6 +558,10 @@ private markFormGroupTouched(formGroup: FormGroup) {
       error: (err) => console.error(err)
     });
   }
+  enableFormEditing(): void {
+  this.employeeForm.enable();
+   this.isEditing = true; 
+}
 
   deleteEmployee(): void {
     if (!this.selectedEmployee) return;
@@ -557,10 +585,13 @@ resetForm(): void {
     idClient: this.idClient,
     isActive: true
   });
+  this.employeeForm.disable();
   this.clearFormArrays();
 
   this.selectedEmployee = null;
   this.isEditMode = false;
+  this.isEditing = false;
+  this.isCreating = false;
   this.profileImageUrl = null;
 }
 

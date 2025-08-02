@@ -31,7 +31,7 @@ createEmployee(employee: EmployeeCreateDTO): Observable<any> {
   }
 
   updateEmployee(employee: EmployeeUpdateDTO): Observable<any> {
-    const formData = this.createFormData(employee);
+    const formData = this.createFormData(employee, true);
     return this.http.put(this.apiUrl, formData);
   }
 

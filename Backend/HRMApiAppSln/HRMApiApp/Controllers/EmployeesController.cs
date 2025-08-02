@@ -51,7 +51,7 @@ namespace HRMApiApp.Controllers
     
         [HttpPut]
         public async Task<IActionResult> UpdateEmployee([FromForm] EmployeeUpdateDTO employeeDto, CancellationToken cancellationToken)
-        {
+         {
             try
             {
                 if (!ModelState.IsValid)
