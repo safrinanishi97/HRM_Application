@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { EmployeeCreateDTO, EmployeeDTO, EmployeeUpdateDTO } from '../../models/employee-dto';
 import { EmployeeService } from '../../services/employee-service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DropdownService } from '../../services/dropdown-service';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-employee-component',
@@ -50,7 +52,8 @@ constructor(
     private employeeService: EmployeeService,
     private dropdownService: DropdownService,
     private fb: FormBuilder,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private toastr: ToastrService
   ){
  
   this.employeeForm = this.fb.group({
@@ -103,7 +106,7 @@ constructor(
 
 
   ngOnInit(): void {
-      this.employeeForm.disable(); 
+    this.employeeForm.disable(); 
     this.loadDropdownData();
     this.loadEmployees();
   }
@@ -180,8 +183,12 @@ constructor(
     });
   }
 
-
-
+  showSuccess() {
+    this.toastr.success('This is a success message!', 'Success!');
+  }
+showError() {
+    this.toastr.error('Something went wrong!', 'Error!');
+  }
 selectEmployee(employeeId: number): void {
   this.employeeService.getEmployeeById(this.idClient, employeeId).subscribe({
     next: (employee) => {
@@ -319,6 +326,7 @@ selectEmployee(employeeId: number): void {
     }
   });
 }
+
 
 clearFormArrays(): void {
     while (this.documents.length !== 0) {
@@ -495,6 +503,8 @@ clearFormArrays(): void {
 
   console.log('Starting create mode', this.employeeForm);
 }
+
+ 
 createEmployee(): void {
   if (this.employeeForm.invalid) {
     //this.markFormGroupTouched(this.employeeForm);
@@ -524,9 +534,11 @@ createEmployee(): void {
       this.loadEmployees();
       this.resetForm();
       this.isCreating = false;
+      this.toastr.success('Employee created successfully!', 'Success');
     },
     error: (err) => {
-      console.error('Full error:', err);
+      // console.error('Full error:', err);
+      this.toastr.error('Failed to create employee', 'Error');
     }
   });
 }
@@ -541,8 +553,11 @@ createEmployee(): void {
       next: () => {
         this.loadEmployees();
         this.resetForm();
+        this.toastr.success('Employee updated successfully!', 'Success');
       },
-      error: (err) => console.error(err)
+      error: (err) =>{
+        this.toastr.error('Failed to update employee', 'Error');
+      }
     });
   }
   enableFormEditing(): void {
@@ -561,6 +576,7 @@ createEmployee(): void {
         next: () => {
           this.loadEmployees();
         this.resetForm();
+        this.toastr.success('Employee deleted successfully!', 'Success');
         },
         error: (err) => console.error(err)
       });
