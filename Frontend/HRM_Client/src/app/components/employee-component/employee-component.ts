@@ -183,12 +183,6 @@ constructor(
     });
   }
 
-  showSuccess() {
-    this.toastr.success('This is a success message!', 'Success!');
-  }
-showError() {
-    this.toastr.error('Something went wrong!', 'Error!');
-  }
 selectEmployee(employeeId: number): void {
   this.employeeService.getEmployeeById(this.idClient, employeeId).subscribe({
     next: (employee) => {
@@ -306,7 +300,7 @@ selectEmployee(employeeId: number): void {
     });
 
    employee.certifications.forEach(cert => {
-  const certGroup = this.fb.group({
+   const certGroup = this.fb.group({
     id: [cert.id],
     idClient: [cert.idClient],
     idEmployee: [cert.idEmployee],
@@ -364,7 +358,6 @@ clearFormArrays(): void {
     if (file) {
       this.employeeForm.patchValue({ profileImage: file });
       this.employeeForm.get('profileImage')?.updateValueAndValidity();
-      
       const reader = new FileReader();
       reader.onload = () => {
         this.profileImageUrl = this.sanitizer.bypassSecurityTrustUrl(
@@ -477,14 +470,17 @@ clearFormArrays(): void {
     }
   }
 
-  getDocumentPreviewUrl(document: any): SafeUrl | null {
-    if (document.FileBase64) {
-      return this.sanitizer.bypassSecurityTrustUrl(
-        `data:image/jpeg;base64,${document.FileBase64}`
-      );
-    }
-    return null;
-  }
+  // getDocumentPreviewUrl(document: any): SafeUrl | null {
+  //   if (document.fileBase64) {
+  //     return this.sanitizer.bypassSecurityTrustUrl(
+  //       `data:image/jpeg;base64,${document.fileBase64}`
+  //     );
+  //   }
+  //   console.log('Preview URL:', this.getDocumentPreviewUrl(document.value));
+
+  //   return null;
+  // }
+  
 
 
   startCreateMode(): void {

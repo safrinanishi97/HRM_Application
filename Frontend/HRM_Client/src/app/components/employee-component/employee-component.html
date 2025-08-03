@@ -295,13 +295,18 @@
                   <img [src]="profileImageUrl" 
                         class="img-thumbnail mb-2" 
                         style="width: 120px; height: 120px; object-fit: cover;">
-                  <input type="file" class="form-control" 
+                      <input type="file" class="form-control" 
                           (change)="onProfileImageChange($event)" 
                           accept="image/*">
-                </div>
-              </div>
+                     <!-- <label class="file-upload-label">
+                              <small class="btn btn-sm btn-outline-primary">{{ doc.get('fileName')?.value || 'No file chosen' }}</small>
+                              <input type="file" (change)="onDocumentFileChange($event, i)" style="display: none;">
+                            </label>
+                             -->
+                    </div>
+                  </div>
 
-              </div>
+                  </div>
 
 
              <div class="row mt-4">
@@ -397,15 +402,6 @@
                           </thead>
                           <tbody formArrayName="certifications">
                             <tr *ngFor="let cert of certifications.controls; let i = index" [formGroupName]="i">
-                            <!-- <td>
-                              <input type="text" class="form-control form-control-sm" formControlName="certificationTitle" 
-                              [ngClass]="{'is-invalid': cert.get('certificationTitle')?.touched && !cert.get('certificationTitle')?.value}">
-                                <small *ngIf="cert.get('certificationTitle')?.touched && !cert.get('certificationTitle')?.value" class="text-danger">
-                                Title is required.
-                              </small>
-                            </td> -->
-
-
                             <td>
                               <input type="text" class="form-control form-control-sm" formControlName="certificationTitle" >
                                 <small *ngIf="cert.get('certificationTitle')?.errors" class="text-danger">
@@ -460,8 +456,8 @@
                           <thead>
                             <tr>
                               <th>Document Name</th>
-                              <th>File Name</th>
                               <th>File</th>
+                              <th>File Name</th>
                               <th>Date</th>
                               <th>Action</th>
                             </tr>
@@ -474,18 +470,26 @@
                             Document Name is required.
                           </small>
                             </td>
+
+                             <td>
+                            <label class="file-upload-label">
+                              <small class="btn btn-sm btn-outline-primary">{{ doc.get('fileName')?.value || 'No file chosen' }}</small>
+                              <input type="file" (change)="onDocumentFileChange($event, i)" style="display: none;">
+                            </label>
+                            
+                            <!-- <img *ngIf="doc.get('fileBase64')?.value"
+                                [src]="getDocumentPreviewUrl(doc.value)"
+                                class="img-thumbnail"
+                                style="max-width: 80px; max-height: 80px;" /> -->
+                          </td>
                              <td>
                             <input type="text" class="form-control form-control-sm" formControlName="fileName">
                             <small *ngIf="doc.get('fileName')?.errors" class="text-danger">
                               File Name is required.
                             </small>
                             </td>
-                            <td>
-                              <input type="file" class="form-control form-control-sm" (change)="onDocumentFileChange($event, i)">
-                              <a *ngIf="doc.get('fileBase64')?.value" [href]="getDocumentPreviewUrl(doc.value)" target="_blank">
-                                View
-                              </a>
-                            </td>
+                           
+                            
                             <td>
                             <input type="date" class="form-control form-control-sm" formControlName="uploadDate">
                             <small *ngIf="doc.get('uploadDate')?.errors" class="text-danger">
@@ -503,7 +507,7 @@
                       </div>
                     </div>
                   </div>
-            </div>
+               </div>
        
               <div class="row">
                  <div class="card">
@@ -594,15 +598,12 @@
                                 <td>
                                 <input type="number" class="form-control form-control-sm" formControlName="marks">
                               </td>        
-                           <td>
+                            <td>
                              <input type="number" class="form-control form-control-sm" formControlName="passingYear" min="1">
-                            <small *ngIf="edu.get('passingYear')?.errors" class="text-danger">
-                              Passing Year is required.
-                            </small>
-                            <!-- <input type="number" class="form-select form-select-sm" formControlName="passingYear" 
-                                  [class.is-invalid]="edu.get('passingYear')?.invalid" min="1">
-                                <small *ngIf="edu.get('passingYear')?.invalid" class="text-danger">Passing Year is required.</small> -->
-                          </td>
+                              <small *ngIf="edu.get('passingYear')?.errors" class="text-danger">
+                                Passing Year is required.
+                              </small>
+                            </td>
                               <td>
                                 <input type="number" class="form-control form-control-sm" formControlName="duration">
                               </td>
