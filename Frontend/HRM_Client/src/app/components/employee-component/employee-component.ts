@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { EmployeeCreateDTO, EmployeeDTO, EmployeeUpdateDTO } from '../../models/employee-dto';
 import { EmployeeService } from '../../services/employee-service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -62,9 +62,9 @@ constructor(
   motherName: [''],
   birthDate: [null],
   joiningDate: [null],
-  idDepartment: [0, Validators.required],
+  idDepartment: [null, Validators.required],
   departmentName: [''],
-  idSection: [0, Validators.required],
+  idSection: [null, Validators.required],
   sectionName: [''],
   idDesignation: [null],
   designation: [''],
@@ -366,14 +366,15 @@ clearFormArrays(): void {
       reader.readAsDataURL(file);
     }
   }
+
   addFamilyInfo(): void {
     const famGroup = this.fb.group({
       id: [0],
       idClient: [this.idClient],
       idEmployee: [0],
       name: ['', Validators.required],
-      idGender: [0, Validators.required],
-      idRelationship: [0, Validators.required],
+      idGender: [null, Validators.required],
+      idRelationship: [null, Validators.required],
       dateOfBirth: [null],
       contactNo: [''],
       currentAddress: [''],
@@ -391,9 +392,9 @@ clearFormArrays(): void {
       id: [0],
       idClient: [this.idClient],
       idEmployee: [0],
-      idEducationLevel: [0, Validators.required],
-      idEducationExamination: [0, Validators.required],
-      idEducationResult: [0, Validators.required],
+      idEducationLevel: [null, Validators.required],
+      idEducationExamination: [null, Validators.required],
+      idEducationResult: [null, Validators.required],
       cgpa: [0],
       examScale: [0],
       marks: [0],
@@ -530,21 +531,7 @@ createEmployee(): void {
   });
 }
 
-// private markFormGroupTouched(formGroup: FormGroup) {
-//   Object.values(formGroup.controls).forEach(control => {
-//     control.markAsTouched();
 
-//     if (control instanceof FormGroup) {
-//       this.markFormGroupTouched(control);
-//     } else if (control instanceof FormArray) {
-//       control.controls.forEach(arrayControl => {
-//         if (arrayControl instanceof FormGroup) {
-//           this.markFormGroupTouched(arrayControl);
-//         }
-//       });
-//     }
-//   });
-// }
 
   updateEmployee(): void {
     if (this.employeeForm.invalid) return;

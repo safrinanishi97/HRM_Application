@@ -101,7 +101,7 @@
                   <label class="form-label">Department</label>
                   <select class="form-select" formControlName="idDepartment">
                      
-                    <option value="0">Select Department</option>
+                    <option value="null">Select Department</option>
                     <option *ngFor="let dept of departments" [value]="dept.id">
                       {{dept.text}}
                     </option>
@@ -116,7 +116,7 @@
                   <div class="col">
                   <label class="form-label">Designation</label>
                   <select class="form-select" formControlName="idDesignation">
-                    <option value="0">Select Designation</option>
+                    <option value="null">Select Designation</option>
                     <option *ngFor="let des of designations" [value]="des.id">
                       {{des.text}}
                     </option>
@@ -125,7 +125,7 @@
                  <div class="col">
                   <label class="form-label">Section</label>
                   <select class="form-select" formControlName="idSection">
-                    <option value="0">Select Section</option>
+                    <option value="null">Select Section</option>
                     <option *ngFor="let sec of sections" [value]="sec.id">
                       {{sec.text}}
                     </option>
@@ -138,7 +138,7 @@
                  <div class="col">
                   <label class="form-label">Gender</label>
                   <select class="form-select" formControlName="idGender">
-                    <option value="0">Select Gender</option>
+                    <option value="null">Select Gender</option>
                     <option *ngFor="let gen of genders" [value]="gen.id">
                       {{gen.text}}
                     </option>
@@ -152,7 +152,7 @@
                <div class="col">
                   <label class="form-label">Job Type</label>
                   <select class="form-select" formControlName="idJobType">
-                    <option value="0" selected>Select Job Type</option>
+                    <option value="null" selected>Select Job Type</option>
                     <option *ngFor="let job of jobTypes" [value]="job.id">
                       {{job.text}}
                     </option>
@@ -161,7 +161,7 @@
                  <div class="col">
                   <label class="form-label">Employee Type</label>
                   <select class="form-select" formControlName="idEmployeeType">
-                    <option value="0" selected>Select Employee Type</option>
+                    <option value="null" selected>Select Employee Type</option>
                     <option *ngFor="let empType of employeeTypes" [value]="empType.id">
                       {{empType.text}}
                     </option>
@@ -179,7 +179,7 @@
                <div class="col">
                   <label class="form-label">Marital Status</label>
                   <select class="form-select" formControlName="idMaritalStatus">
-                    <option value="0">Select Marital Status</option>
+                    <option value="null">Select Marital Status</option>
                     <option *ngFor="let mari of maritalStatus" [value]="mari.id">
                       {{mari.text}}
                     </option>
@@ -192,7 +192,7 @@
                 <div class="col">
                   <label class="form-label">Religion</label>
                   <select class="form-select" formControlName="idReligion">
-                    <option value="0">Select Religion</option>
+                    <option value="null">Select Religion</option>
                     <option *ngFor="let rel of religions" [value]="rel.id">
                       {{rel.text}}
                     </option>
@@ -214,7 +214,7 @@
                  <div class="col">
                   <label class="form-label">Weeks Off Day</label>
                   <select class="form-select" formControlName="idWeekOff">
-                    <option value="0">Select Weeks Off Day</option>
+                    <option value="null">Select Weeks Off Day</option>
                     <option *ngFor="let week of weekOffs" [value]="week.id">
                       {{week.text}}
                     </option>
@@ -336,7 +336,7 @@
                             
                              <td>
                               <select class="form-select form-select-sm" formControlName="idGender">
-                                <option value="0">Select Gender</option>
+                                <option value="null">Select Gender</option>
                                 <option *ngFor="let gen of genders" [value]="gen.id">
                                   {{gen.text}}
                                 </option>               
@@ -344,10 +344,11 @@
                               <small *ngIf="fam.get('idGender')?.errors" class="text-danger">
                                 Gender is required.
                               </small>
+                              
                             </td>
                             <td>
                               <select class="form-select form-select-sm" formControlName="idRelationship">
-                                <option value="0">Select Relationship</option>
+                                <option value="null">Select Relationship</option>
                                 <option *ngFor="let rel of relationship" [value]="rel.id">
                                   {{rel.text}}
                                 </option>               
@@ -535,20 +536,17 @@
                           <tbody formArrayName="educationInfos">
                             <tr *ngFor="let edu of educationInfos.controls; let i = index" [formGroupName]="i">
                              <td>
-                             <select class="form-select" formControlName="idEducationExamination">
-                                <option value="0">Select Examination</option>
+                             <select class="form-control form-control-sm" formControlName="idEducationExamination">
+                                <option value="null">Select Examination</option>
                                 <option *ngFor="let exam of educationExaminations" [value]="exam.id">{{ exam.text }}</option>
                               </select>
                               <small *ngIf="edu.get('idEducationExamination')?.errors" class="text-danger">
                                 Examination is required.
                               </small>
-
-
-
                           </td>
                            <td>
-                             <select class="form-select" formControlName="idEducationLevel">
-                              <option value="0">Select Education Level</option>
+                             <select class="form-control form-control-sm" formControlName="idEducationLevel">
+                              <option value="null">Select Education Level</option>
                               <option *ngFor="let level of educationLevels" [value]="level.id">{{ level.text }}</option>
                             </select>
                             <small *ngIf="edu.get('idEducationLevel')?.errors" class="text-danger">
@@ -556,11 +554,11 @@
                             </small>
                           </td>
                           <td>
-                          <select class="form-select" formControlName="idEducationResult">
-                                <option value="0">Select Result</option>
+                          <select class="form-control form-control-sm" formControlName="idEducationResult">
+                                <option value="null">Select Result</option>
                                 <option *ngFor="let res of educationResults" [value]="res.id">{{ res.text }}</option>
                               </select>
-                              <small *ngIf="edu.get('idEducationResult')?.errors" class="text-danger">
+                              <small *ngIf="edu.get('idEducationResult')?.invalid" class="text-danger">
                                 Result is required.
                               </small>
 
@@ -597,10 +595,13 @@
                                 <input type="number" class="form-control form-control-sm" formControlName="marks">
                               </td>        
                            <td>
-                             <input type="number" class="form-control form-control-sm" formControlName="passingYear">
+                             <input type="number" class="form-control form-control-sm" formControlName="passingYear" min="1">
                             <small *ngIf="edu.get('passingYear')?.errors" class="text-danger">
                               Passing Year is required.
                             </small>
+                            <!-- <input type="number" class="form-select form-select-sm" formControlName="passingYear" 
+                                  [class.is-invalid]="edu.get('passingYear')?.invalid" min="1">
+                                <small *ngIf="edu.get('passingYear')?.invalid" class="text-danger">Passing Year is required.</small> -->
                           </td>
                               <td>
                                 <input type="number" class="form-control form-control-sm" formControlName="duration">
