@@ -36,7 +36,10 @@ A full-featured Human Resource Management (HRM) system built using a 3-layered a
   Used to populate dropdowns dynamically in the frontend (Department, Designation, Gender, etc.)
 
 ---
-
+![Screenshot](Screenshot/Image1.png)
+![Screenshot](Screenshot/Image2.png)
+![Screenshot](Screenshot/Image3.png)
+![Screenshot](Screenshot/Image4.png)
 ## Planned Features (To Be Implemented)
 
 - Pagination and Filtering Support for List APIs

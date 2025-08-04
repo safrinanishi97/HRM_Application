@@ -421,7 +421,7 @@ clearFormArrays(): void {
       certificationTitle: ['', Validators.required],
       certificationInstitute: ['', Validators.required],
       instituteLocation: ['', Validators.required],
-      fromDate: [new Date(), Validators.required],
+      fromDate: [null, Validators.required],
       toDate: [null]
     });
     this.certifications.push(certGroup);

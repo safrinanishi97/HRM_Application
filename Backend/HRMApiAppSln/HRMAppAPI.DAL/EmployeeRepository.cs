@@ -76,7 +76,7 @@ namespace HRMApiApp.DAL
                 .Where(e => e.IdClient == idClient)
                 .ToListAsync(cancellationToken);
             return emp;
-        }
+      }
 
         public async Task<bool> CreateAsync(Employee employee, CancellationToken cancellationToken)
         {

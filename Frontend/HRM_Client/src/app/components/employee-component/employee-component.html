@@ -62,10 +62,10 @@
           </div>
         </div>
         
-        <div class="card-body">
-          <form [formGroup]="employeeForm">
+      <div class="card-body">
+        <form [formGroup]="employeeForm">
           
-            <div class="row mb-3">  
+          <div class="row mb-3">  
                 <div class="col">
                   <label class="form-label">Employee Name</label>
                   <input type="text" class="form-control" formControlName="employeeName">
@@ -109,11 +109,8 @@
                    <div *ngIf="employeeForm.get('idDepartment')?.errors" class="text-danger">
                     Department is required.
                   </div>
-                </div>
-
-
-                  
-                  <div class="col">
+                </div> 
+                <div class="col">
                   <label class="form-label">Designation</label>
                   <select class="form-select" formControlName="idDesignation">
                     <option value="null">Select Designation</option>
@@ -290,96 +287,23 @@
                 </div>  
               </div>
 
-              <div class="col">
-                <div class="text-center">
-                  <img [src]="profileImageUrl" 
+                <div class="col">
+                 <div class="text-center">
+                   <img [src]="profileImageUrl" 
                         class="img-thumbnail mb-2" 
                         style="width: 120px; height: 120px; object-fit: cover;">
                       <input type="file" class="form-control" 
                           (change)="onProfileImageChange($event)" 
                           accept="image/*">
-                     <!-- <label class="file-upload-label">
-                              <small class="btn btn-sm btn-outline-primary">{{ doc.get('fileName')?.value || 'No file chosen' }}</small>
-                              <input type="file" (change)="onDocumentFileChange($event, i)" style="display: none;">
-                            </label>
-                             -->
                     </div>
                   </div>
 
-                  </div>
+             </div>
 
 
              <div class="row mt-4">
-                <div class="col-md-4 mb-3">
-                  <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                      <h6 class="mb-0">Family Information</h6>
-                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addFamilyInfo()">
-                        <i class="bi bi-plus"></i> Add
-                      </button>
-                    </div>
-                    <div class="card-body p-0">
-                      <div class="table-responsive">
-                        <table class="table table-sm table-hover mb-0">
-                          <thead>
-                            <tr>
-                              <th>Name</th>
-                              <th>Gender</th>
-                              <th>Relationship</th>
-                              <th>Contact</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody formArrayName="familyInfos">
-                           <tr *ngFor="let fam of familyInfos.controls; let i = index" [formGroupName]="i" >
-                            <td>
-                              <input type="text" class="form-control form-control-sm" formControlName="name">
-                               <small *ngIf="fam.get('name')?.errors" class="text-danger">
-                                  Name is required.
-                                </small>    
-                            </td>
-                            
-                             <td>
-                              <select class="form-select form-select-sm" formControlName="idGender">
-                                <option value="null">Select Gender</option>
-                                <option *ngFor="let gen of genders" [value]="gen.id">
-                                  {{gen.text}}
-                                </option>               
-                              </select>
-                              <small *ngIf="fam.get('idGender')?.errors" class="text-danger">
-                                Gender is required.
-                              </small>
-                              
-                            </td>
-                            <td>
-                              <select class="form-select form-select-sm" formControlName="idRelationship">
-                                <option value="null">Select Relationship</option>
-                                <option *ngFor="let rel of relationship" [value]="rel.id">
-                                  {{rel.text}}
-                                </option>               
-                              </select>
-                              
-                              <small *ngIf="fam.get('idRelationship')?.errors" class="text-danger">
-                                Relationship is required.
-                              </small>
-                            </td>
-
-                            <td>
-                              <input type="text" class="form-control form-control-sm" formControlName="contactNo">
-                            </td>
-                            <td>
-                              <button type="button" class="btn btn-sm btn-danger" (click)="removeFamilyInfo(i)">
-                                <i class="bi bi-trash">Remove</i>
-                              </button>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-               <div class="col-md-4 mb-3">          
+              
+               <div class="col-md-6 mb-3">          
                   <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                       <h6 class="mb-0">Professional Certifications</h6>
@@ -423,9 +347,10 @@
                             <td>
                             <input type="date" 
                                   class="form-control form-control-sm" 
-                                  formControlName="fromDate"
-                                  [class.is-invalid]="!cert.get('fromDate')?.value">
-                            <small *ngIf="!cert.get('fromDate')?.value" class="text-muted">Not specified</small>
+                                  formControlName="fromDate">
+                             <small *ngIf="cert.get('fromDate')?.errors" class="text-danger">
+                                From Date is required.
+                             </small>
                             </td>
                             <td>
                             <input type="date" class="form-control form-control-sm" formControlName="toDate">
@@ -442,7 +367,7 @@
                     </div>
                   </div>              
                 </div>
-                 <div class="col-md-4 mb-3">
+                 <div class="col-md-6 mb-3">
                   <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                       <h6 class="mb-0">Documents</h6>
@@ -509,6 +434,91 @@
                   </div>
                </div>
        
+               <div class="row">
+                    <div class="col-md-12 mb-3">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0">Family Information</h6>
+                      <button type="button" class="btn btn-sm btn-outline-success" (click)="addFamilyInfo()">
+                        <i class="bi bi-plus"></i> Add
+                      </button>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Gender</th>
+                              <th>Relationship</th>
+                              <th>Date of Birth </th>
+                              <th>Contact No</th>
+                              <th>Current Address</th>
+                              <th>Permanent Address</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="familyInfos">
+                           <tr *ngFor="let fam of familyInfos.controls; let i = index" [formGroupName]="i" >
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="name">
+                               <small *ngIf="fam.get('name')?.errors" class="text-danger">
+                                  Name is required.
+                                </small>    
+                            </td>
+                            
+                             <td>
+                              <select class="form-select form-select-sm" formControlName="idGender">
+                                <option value="null">Select Gender</option>
+                                <option *ngFor="let gen of genders" [value]="gen.id">
+                                  {{gen.text}}
+                                </option>               
+                              </select>
+                              <small *ngIf="fam.get('idGender')?.errors" class="text-danger">
+                                Gender is required.
+                              </small>
+                              
+                            </td>
+                            <td>
+                              <select class="form-select form-select-sm" formControlName="idRelationship">
+                                <option value="null">Select Relationship</option>
+                                <option *ngFor="let rel of relationship" [value]="rel.id">
+                                  {{rel.text}}
+                                </option>               
+                              </select>
+                              
+                              <small *ngIf="fam.get('idRelationship')?.errors" class="text-danger">
+                                Relationship is required.
+                              </small>
+                            </td>
+                            <td>
+                              <input type="date" class="form-control form-control-sm" formControlName="dateOfBirth">
+                              <small *ngIf="fam.get('dateOfBirth')?.errors" class="text-danger">
+                                Date of Birth is required.
+                              </small>
+                              </td>
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="contactNo">
+                            </td>
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="currentAddress">
+                            </td>
+                            <td>
+                              <input type="text" class="form-control form-control-sm" formControlName="permanentAddress">
+                            <td>
+                              <button type="button" class="btn btn-sm btn-danger" (click)="removeFamilyInfo(i)">
+                                <i class="bi bi-trash">Remove</i>
+                              </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               </div>
+
               <div class="row">
                  <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
