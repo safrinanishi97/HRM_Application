@@ -178,7 +178,7 @@ namespace HRMApiApp.BLL
                     MaritalStatusName = e.MaritalStatus?.MaritalStatusName ?? "",
                     CreatedBy = e.CreatedBy ?? "",
                     FileBase64 = e.EmployeeImage != null ? Convert.ToBase64String(e.EmployeeImage) : null,
-                //FileBase64 = e.EmployeeImage != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(e.EmployeeImage)}" : null,
+                    //FileBase64 = e.EmployeeImage != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(e.EmployeeImage)}" : null,
                 Documents = e.EmployeeDocuments
                 .Select(d => new EmployeeDocumentDTO
                 {
@@ -200,11 +200,11 @@ namespace HRMApiApp.BLL
                 {
                     Id=ed.Id,
                     IdClient = ed.IdClient,
-                    //IdEducationLevel = ed.IdEducationLevel,
+                    IdEducationLevel = ed.IdEducationLevel,
                     EducationLevelName = ed.EducationLevel?.EducationLevelName ?? "",
-                    //IdEducationExamination = ed.IdEducationExamination,
+                    IdEducationExamination = ed.IdEducationExamination,
                     ExamName = ed.EducationExamination?.ExamName ?? "",
-                    //IdEducationResult = ed.IdEducationResult,
+                    IdEducationResult = ed.IdEducationResult,
                     ResultName = ed.EducationResult?.ResultName ?? "",
                     Cgpa = ed.Cgpa,
                     ExamScale = ed.ExamScale,
@@ -225,8 +225,8 @@ namespace HRMApiApp.BLL
                 {
                     Id = e.Id,
                     IdClient = e.IdClient,
-                    //IdGender = e.IdGender,
-                    //IdRelationship = e.IdRelationship,
+                    IdGender = e.IdGender,
+                    IdRelationship = e.IdRelationship,
                     GenderName = e.Gender?.GenderName ?? "",
                     RelationName = e.Relationship?.RelationName ?? "",
                     Name = e.Name,
