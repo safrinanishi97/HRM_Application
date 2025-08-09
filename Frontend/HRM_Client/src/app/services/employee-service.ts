@@ -21,7 +21,7 @@ export class EmployeeService {
     return this.http.get<EmployeeDTO>(`${this.apiUrl}/getbyid?idClient=${idClient}&id=${id}`);
   }
 
-    deleteEmployee(idClient: number, id: number): Observable<any> {
+  deleteEmployee(idClient: number, id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${idClient}/${id}`);
   }
 
